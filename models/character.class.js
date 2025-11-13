@@ -3,6 +3,7 @@ class Character extends MovableObject {
   height = 270;
   width = 140;
   y = 155;
+  speed = 23;
 
   IMAGES_IDLE = [
     "assets/img_pollo_locco/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -116,13 +117,10 @@ class Character extends MovableObject {
 
   walkLeft() {
     setInterval(() => {
-      if (this.world.input.LEFT && this.x >0) {
-        this.moveLeft();
+      if (this.world.input.LEFT && this.x > 0) {
+        this.x -= this.speed;
         this.otherDirection = true;
-        let i = this.currentImage % this.IMAGES_WALK.length;
-        let path = this.IMAGES_WALK[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+        this.playAnimation(this.IMAGES_WALK);
       }
       this.world.camera_x = -this.x + 100;
     }, 70);
@@ -131,14 +129,11 @@ class Character extends MovableObject {
   walkRight() {
     setInterval(() => {
       if (this.world.input.RIGHT && this.x < this.world.level.level_end) {
-        this.moveRight();
+        this.x += this.speed;
         this.otherDirection = false;
-        let i = this.currentImage % this.IMAGES_WALK.length;
-        let path = this.IMAGES_WALK[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
-        this.world.camera_x = -this.x;
+        this.playAnimation(this.IMAGES_WALK);
       }
+      this.world.camera_x = -this.x;
     }, 70);
   }
 
@@ -146,10 +141,7 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.world.input.UP) {
         // this.moveRight();
-        let i = this.currentImage % this.IMAGES_JUMP.length;
-        let path = this.IMAGES_JUMP[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+        this.playAnimation(this.IMAGES_JUMP);
       }
     }, 70);
   }

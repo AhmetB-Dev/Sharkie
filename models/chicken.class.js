@@ -14,7 +14,7 @@ class Chicken extends MovableObject {
   constructor() {
     super().loadImage("assets/img_pollo_locco/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadAssets();
-    this.AnimationChicken();
+    this.animationChicken();
     this.spawnChickenRandom();
     this.chickenSpeed();
   }
@@ -24,7 +24,7 @@ class Chicken extends MovableObject {
     this.animationImage(this.ENEMIES_DEAD);
   }
 
-  AnimationChicken() {
+  animationChicken() {
     this.animationChickenWalk();
     this.animationChickenDead();
   }
