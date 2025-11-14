@@ -10,6 +10,11 @@ const level1 = new Level(
     new Boss(),
   ],
 
+  [
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 500, 30),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_2.png", 800, 30),
+  ],
+
   // 2) Background-Objects
   [
     new BackgroundObject("assets/img_pollo_locco/img/5_background/layers/air.png", -719, 0),

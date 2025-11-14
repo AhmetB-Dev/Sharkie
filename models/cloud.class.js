@@ -13,7 +13,7 @@ class Cloud extends MovableObject {
   }
 
   spawnCloudsRandom() {
-    this.x = Math.random() * 500;
+    this.x = Math.random() * 2500;
   }
 
   animationCloud() {
