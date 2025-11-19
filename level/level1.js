@@ -11,8 +11,23 @@ const level1 = new Level(
   ],
 
   [
-    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 500, 30),
-    new Coin("assets/img_pollo_locco/img/8_coin/coin_2.png", 800, 30),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 500, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 550, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_2.png", 600, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 650, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 700, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 1000, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 1050, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_2.png", 1100, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 1150, 300),
+    new Coin("assets/img_pollo_locco/img/8_coin/coin_1.png", 1200, 300),
+  ],
+
+  [
+    new Bottle("assets/img_pollo_locco/img/6_salsa_bottle/1_salsa_bottle_on_ground.png", 600, 335),
+    new Bottle("assets/img_pollo_locco/img/6_salsa_bottle/2_salsa_bottle_on_ground.png", 233, 335),
+    new Bottle("assets/img_pollo_locco/img/6_salsa_bottle/1_salsa_bottle_on_ground.png", 900, 335),
+    new Bottle("assets/img_pollo_locco/img/6_salsa_bottle/2_salsa_bottle_on_ground.png", 700, 335),
   ],
 
   // 2) Background-Objects
