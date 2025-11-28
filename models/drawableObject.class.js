@@ -19,9 +19,9 @@ class DrawableObject {
     if (
       this instanceof Character ||
       this instanceof Coin ||
-      this instanceof Bottle ||
-      this instanceof Chicken ||
-      this instanceof SmallChicken ||
+      this instanceof AmmoPickup ||
+      this instanceof Enemy_Variant01 ||
+      this instanceof Enemy_Variant02 ||
       this instanceof Boss
     ) {
       ctx.beginPath();

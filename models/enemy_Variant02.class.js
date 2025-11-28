@@ -1,4 +1,4 @@
-class SmallChicken extends MovableObject {
+class Enemy_Variant02 extends MovableObject {
   y = 370;
   height = 50;
   width = 90;

@@ -1,12 +1,12 @@
 const level1 = new Level(
   // 1) Enemies
   [
-    new Chicken(),
-    new Chicken(),
-    new Chicken(),
-    new SmallChicken(),
-    new SmallChicken(),
-    new SmallChicken(),
+    new Enemy_Variant01(),
+    new Enemy_Variant01(),
+    new Enemy_Variant01(),
+    new Enemy_Variant02(),
+    new Enemy_Variant02(),
+    new Enemy_Variant02(),
     new Boss(),
   ],
 
@@ -24,10 +24,10 @@ const level1 = new Level(
   ],
 
   [
-    new Bottle("assets/assets_sharkie/4. Marcadores/Posión/Dark - Left.png", 600, 335),
-    new Bottle("assets/assets_sharkie/4. Marcadores/Posión/Dark - Right.png", 233, 335),
-    new Bottle("assets/assets_sharkie/4. Marcadores/Posión/Light - Left.png", 900, 335),
-    new Bottle("assets/assets_sharkie/4. Marcadores/Posión/Light - Right.png", 700, 335),
+    new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Dark - Left.png", 600, 335),
+    new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Dark - Right.png", 233, 335),
+    new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Light - Left.png", 900, 335),
+    new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Light - Right.png", 700, 335),
   ],
 
   // 2) Background-Objects

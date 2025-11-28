@@ -1,4 +1,4 @@
-class Bottle extends MovableObject {
+class AmmoPickup extends MovableObject {
   offset = {
     top: 25,
     left: 30,
