@@ -10,6 +10,9 @@ class Character extends MovableObject {
   longIdlePlayed = false;
   longIdleFrame = 0;
 
+  attack1ready = true;
+  ultimateReady = true;
+
   offset = {
     top: 130,
     left: 25,
@@ -216,6 +219,32 @@ class Character extends MovableObject {
     }
   }
 
+  shootAttack1Bubble() {
+    if (!this.world) return;
+
+    const shootToLeft = this.otherDirection;
+    const offsetX = shootToLeft ? -20 : this.width;
+    const startX = this.x + offsetX;
+    const startY = this.y + this.height * 0.5;
+
+    const bubble = new BubbleProjectile(startX, startY, this.IMAGES_ATTACK_BUBBLE_ANI1, shootToLeft);
+
+    this.world.throwableObjects.push(bubble);
+  }
+
+  shootUltimateBubble() {
+    if (!this.world) return;
+
+    const shootToLeft = this.otherDirection;
+    const offsetX = shootToLeft ? -20 : this.width;
+    const startX = this.x + offsetX;
+    const startY = this.y + this.height * 0.5;
+
+    const bubble = new BubbleProjectile(startX, startY, this.IMAGES_UTLIMATE_ATTACK_BUBBLE, shootToLeft);
+
+    this.world.throwableObjects.push(bubble);
+  }
+
   startAnimationLoop() {
     setInterval(() => {
       const now = Date.now();
@@ -248,9 +277,37 @@ class Character extends MovableObject {
         return;
       }
 
-      this.animationAttack1();
-      this.animationAttack2();
-      this.animationUltimateAttack();
+      if (this.world.input.ULTIMATE) {
+        this.playAnimation(this.IMAGES_UTLIMATE_ATTACK);
+
+        if (this.ultimateReady) {
+          this.shootUltimateBubble();
+          this.ultimateReady = false;
+        }
+
+        return;
+      } else {
+        this.ultimateReady = true;
+      }
+
+      if (this.world.input.ATA2) {
+        this.playAnimation(this.IMAGES_ATTACK_ANI2);
+        return;
+      }
+
+      if (this.world.input.ATA1) {
+        this.playAnimation(this.IMAGES_ATTACK_ANI1);
+
+        if (this.attack1Ready) {
+          this.shootAttack1Bubble();
+          this.attack1Ready = false;
+        }
+
+        return;
+      } else {
+        this.attack1Ready = true;
+      }
+
 
       if (idleTime > this.delay && !this.longIdlePlayed) {
         this.playLongIdleOnce();
@@ -266,32 +323,32 @@ class Character extends MovableObject {
     }, 1000 / 10);
   }
 
-  animationAttack1() {
-    setInterval(() => {
-      if (this.world.input.ATA1) {
-        this.playAnimation(this.IMAGES_ATTACK_ANI1);
-        return;
-      }
-    }, 1000 / 10);
-  }
+  // animationAttack1() {
+  //   setInterval(() => {
+  //     if (this.world.input.ATA1) {
+  //       this.playAnimation(this.IMAGES_ATTACK_ANI1);
+  //       return;
+  //     }
+  //   }, 1000 / 10);
+  // }
 
-  animationAttack2() {
-    setInterval(() => {
-      if (this.world.input.ATA2) {
-        this.playAnimation(this.IMAGES_ATTACK_ANI2);
-        return;
-      }
-    }, 1000 / 10);
-  }
+  // animationAttack2() {
+  //   setInterval(() => {
+  //     if (this.world.input.ATA2) {
+  //       this.playAnimation(this.IMAGES_ATTACK_ANI2);
+  //       return;
+  //     }
+  //   }, 1000 / 10);
+  // }
 
-  animationUltimateAttack() {
-    setInterval(() => {
-      if (this.world.input.ULTIMATE) {
-        this.playAnimation(this.IMAGES_UTLIMATE_ATTACK);
-        return;
-      }
-    }, 1000 / 10);
-  }
+  // animationUltimateAttack() {
+  //   setInterval(() => {
+  //     if (this.world.input.ULTIMATE) {
+  //       this.playAnimation(this.IMAGES_UTLIMATE_ATTACK);
+  //       return;
+  //     }
+  //   }, 1000 / 10);
+  // }
 
   startWalkAnimation() {
     this.walkRight();

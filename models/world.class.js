@@ -12,7 +12,7 @@ class World {
   healthBar = new Statusbars();
   coinBar = new Statusbars();
   ammoBar = new Statusbars();
-  throwableObjects = [new ThrowableObject()];
+  throwableObjects = [];
 
   constructor(canvas, input) {
     this.ctx = canvas.getContext("2d");
