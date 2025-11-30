@@ -52,12 +52,40 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowableObjects();
+      this.checkProjectileHits();
+      this.updateEnemyAI();
     }, 100);
   }
+  updateEnemyAI() {
+    for (const enemy of this.level.enemies) {
+      if (enemy instanceof Enemy_Variant02 && !enemy.isDead) {
+        enemy.updateAI(this.character);
+      }
+    }
+  }
+
   checkThrowableObjects() {
     if (this.input.THROW) {
       let ammo = new ThrowableObject(this.character.x + 100, this.character.y + 100);
       this.throwableObjects.push(ammo);
+    }
+  }
+
+  checkProjectileHits() {
+    for (let i = this.throwableObjects.length - 1; i >= 0; i--) {
+      const projectile = this.throwableObjects[i];
+
+      for (let j = this.level.enemies.length - 1; j >= 0; j--) {
+        const enemy = this.level.enemies[j];
+
+        if (projectile.isColliding(enemy)) {
+          if (enemy instanceof Enemy_Variant02) {
+            enemy.die();
+          }
+          this.throwableObjects.splice(i, 1);
+          break;
+        }
+      }
     }
   }
 
@@ -68,7 +96,15 @@ class World {
   }
 
   updateHealthBar() {
-    for (const enemy of this.level.enemies) {
+    for (let i = this.level.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.level.enemies[i];
+      if (enemy.isDead) {
+        if (this.character.isColliding(enemy)) {
+          this.level.enemies.splice(i, 1);
+        }
+        continue;
+      }
+
       if (this.character.isColliding(enemy)) {
         this.character.hit();
         this.healthBar.setPercentrage(this.character.energy);

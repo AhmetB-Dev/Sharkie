@@ -3,6 +3,9 @@ class Enemy_Variant02 extends MovableObject {
   height = 60;
   width = 90;
 
+  isDead = false;
+  isAttacking = false;
+
   ENEMIES_WALK = [
     "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png",
     "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 2.png",
@@ -34,6 +37,7 @@ class Enemy_Variant02 extends MovableObject {
 
   loadAssets() {
     this.animationImage(this.ENEMIES_WALK);
+    this.animationImage(this.ENEMIES_ATTACK);
     this.animationImage(this.ENEMIES_DEAD);
   }
 
@@ -50,13 +54,44 @@ class Enemy_Variant02 extends MovableObject {
     this.speed = 0.8 + Math.random() * 1.5;
   }
 
+  die() {
+    if (this.isDead) return;
+    this.isDead = true;
+    this.speed = 0;
+    this.currentImage = 0;
+  }
+
+  updateAI(character) {
+    const dx = character.x - this.x;
+    const dy = character.y - this.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    this.isAttacking = distance < 250;
+
+    this.otherDirection = character.x < this.x;
+  }
+
   animationSmallChickenWalk() {
     this.moveLeft();
-    // this.moveRight();
+
     setInterval(() => {
-      this.playAnimation(this.ENEMIES_WALK);
+      if (this.isDead) {
+        return;
+      }
+
+      if (this.isAttacking) {
+        this.playAnimation(this.ENEMIES_ATTACK);
+      } else {
+        this.playAnimation(this.ENEMIES_WALK);
+      }
     }, 175);
   }
 
-  animationSmallChickenDead() {}
+  animationSmallChickenDead() {
+    setInterval(() => {
+      if (this.isDead) {
+        this.playAnimation(this.ENEMIES_DEAD);
+      }
+    }, 175);
+  }
 }
