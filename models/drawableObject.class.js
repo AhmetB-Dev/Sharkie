@@ -29,8 +29,8 @@ class DrawableObject {
       this instanceof Character ||
       this instanceof Coin ||
       this instanceof AmmoPickup ||
-      this instanceof Enemy_Variant01 ||
-      this instanceof Enemy_Variant02 ||
+      this instanceof Enemy_Typ01 ||
+      this instanceof Enemy_Typ02 ||
       this instanceof Boss
     ) {
       ctx.beginPath();

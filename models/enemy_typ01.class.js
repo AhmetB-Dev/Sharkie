@@ -1,4 +1,4 @@
-class Enemy_Variant01 extends MovableObject {
+class Enemy_Typ01 extends MovableObject {
   y = 300;
   height = 70;
   width = 90;
@@ -8,38 +8,23 @@ class Enemy_Variant01 extends MovableObject {
 
   deathAnimationDone = false;
   deathFrame = 0;
-
-  ENEMIES_WALK = [
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim3.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim2.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim4.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim5.png",
-  ];
-
-  ENEMIES_ATTACK = [
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/3.bubbleswim1.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/3.bubbleswim2.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/3.bubbleswim4.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/3.bubbleswim3.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/3.bubbleswim5.png",
-  ];
-
-  ENEMIES_DEAD = [
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.2.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.3.png",
-    "assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.png",
-  ];
-
   constructor() {
     super().loadImage("assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png");
+
+    this.linkAssets();
     this.loadAssets();
-    this.groundY = 300;
     this.spawnRandomTyp1();
     this.enemySpeedTyp1();
-    this.otherDirection = true;
     this.startPatrol(300);
     this.animationTyp1();
+    this.otherDirection = true;
+    this.groundY = 300;
+  }
+
+  linkAssets() {
+    this.ENEMIES_WALK = EnemyAssets.TYPE1_WALK;
+    this.ENEMIES_ATTACK = EnemyAssets.TYPE1_ATTACK;
+    this.ENEMIES_DEAD = EnemyAssets.TYPE1_DEAD;
   }
 
   loadAssets() {

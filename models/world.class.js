@@ -59,13 +59,13 @@ class World {
 
   updateEnemyAI() {
     for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Variant02 && !enemy.isDead) {
+      if (enemy instanceof Enemy_Typ02 && !enemy.isDead) {
         enemy.updateAI(this.character);
       }
     }
 
     for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Variant01 && !enemy.isDead) {
+      if (enemy instanceof Enemy_Typ01 && !enemy.isDead) {
         enemy.updateAI(this.character);
       }
     }
@@ -99,7 +99,7 @@ class World {
         const enemy = this.level.enemies[j];
 
         if (projectile.isColliding(enemy)) {
-          if (enemy instanceof Enemy_Variant02) {
+          if (enemy instanceof Enemy_Typ02) {
             enemy.die();
           }
           this.throwableObjects.splice(i, 1);
@@ -128,7 +128,7 @@ class World {
         continue;
       }
 
-      if (enemy instanceof Enemy_Variant01 && char.hitmakerRange(enemy)) {
+      if (enemy instanceof Enemy_Typ01 && char.hitmakerRange(enemy)) {
         enemy.die();
         continue;
       }

@@ -1,39 +1,24 @@
-class Enemy_Variant02 extends MovableObject {
+class Enemy_Typ02 extends MovableObject {
   y = 300;
   height = 60;
   width = 90;
-
   isDead = false;
   isAttacking = false;
 
-  ENEMIES_WALK = [
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 2.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 3.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 4.png",
-  ];
-
-  ENEMIES_ATTACK = [
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Súper dangerous/Green 1.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Súper dangerous/Green 2.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Súper dangerous/Green 3.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Súper dangerous/Green 4.png",
-  ];
-
-  ENEMIES_DEAD = [
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Dead/Yellow/y1.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Dead/Yellow/y2.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Dead/Yellow/y3.png",
-    "assets/assets_sharkie/2.Enemy/2 Jelly fish/Dead/Yellow/y4.png",
-  ];
-
   constructor() {
     super().loadImage("assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png");
+    this.linkAssets();
     this.loadAssets();
     this.animationTyp2();
     this.spawnTyp2Random();
     this.enemySpeedTyp2();
     this.startPatrol(250);
+  }
+
+  linkAssets() {
+    this.ENEMIES_WALK = EnemyAssets.TYPE2_WALK;
+    this.ENEMIES_ATTACK = EnemyAssets.TYPE2_ATTACK;
+    this.ENEMIES_DEAD = EnemyAssets.TYPE2_DEAD;
   }
 
   loadAssets() {

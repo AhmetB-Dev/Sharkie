@@ -1,12 +1,12 @@
 const level1 = new Level(
   // 1) Enemies
   [
-    new Enemy_Variant01(),
-    new Enemy_Variant01(),
-    new Enemy_Variant01(),
-    new Enemy_Variant02(),
-    new Enemy_Variant02(),
-    new Enemy_Variant02(),
+    new Enemy_Typ01(),
+    new Enemy_Typ01(),
+    new Enemy_Typ01(),
+    new Enemy_Typ02(),
+    new Enemy_Typ02(),
+    new Enemy_Typ02(),
     new Boss(),
   ],
 
