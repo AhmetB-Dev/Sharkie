@@ -20,16 +20,17 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.input = input;
+    this.enemyManager = new EnemyManager(this.level, this.character, this.throwableObjects);
+    this.loadStatusBar();
+    this.draw();
+    this.setWorld();
+    this.handlePlayerInteractions();
+  }
 
+  loadStatusBar() {
     this.loadAmmoBar();
     this.loadHealthBar();
     this.loadCoinBar();
-
-    this.draw();
-    this.setWorld();
-
-    this.enemyManager = new EnemyManager(this.level, this.character);
-    this.handlePlayerInteractions();
   }
 
   loadAmmoBar() {
@@ -54,35 +55,7 @@ class World {
   handlePlayerInteractions() {
     setInterval(() => {
       this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkProjectileHits();
-      this.enemyManager.updateEnemyAI();
     }, 100);
-  }
-
-  checkThrowableObjects() {
-    if (this.input.THROW) {
-      let ammo = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-      this.throwableObjects.push(ammo);
-    }
-  }
-
-  checkProjectileHits() {
-    for (let i = this.throwableObjects.length - 1; i >= 0; i--) {
-      const projectile = this.throwableObjects[i];
-
-      for (let j = this.level.enemies.length - 1; j >= 0; j--) {
-        const enemy = this.level.enemies[j];
-
-        if (projectile.isColliding(enemy)) {
-          if (enemy instanceof Enemy_Typ02) {
-            enemy.die();
-          }
-          this.throwableObjects.splice(i, 1);
-          break;
-        }
-      }
-    }
   }
 
   checkCollisions() {

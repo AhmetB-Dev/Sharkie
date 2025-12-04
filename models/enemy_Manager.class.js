@@ -1,8 +1,16 @@
 class EnemyManager {
-  constructor(level, character) {
+  constructor(level, character, throwableObjects) {
     this.level = level;
     this.character = character;
-    this.updateEnemyAI;
+    this.throwableObjects = throwableObjects;
+    this.startUpdateEnemy();
+  }
+
+  startUpdateEnemy() {
+    setInterval(() => {
+      this.updateEnemyAI();
+      this.checkProjectileHits();
+    }, 100);
   }
 
   updateEnemyAI() {
@@ -38,6 +46,28 @@ class EnemyManager {
 
       if (enemy.playerInRange && enemy.introPlayed) {
         enemy.followCharacter(this.character);
+      }
+    }
+  }
+
+  checkProjectileHits() {
+    this.handleProjectileHits(this.throwableObjects);
+  }
+
+  handleProjectileHits(projectiles) {
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const projectile = projectiles[i];
+
+      for (let j = this.level.enemies.length - 1; j >= 0; j--) {
+        const enemy = this.level.enemies[j];
+
+        if (projectile.isColliding(enemy)) {
+          if (enemy instanceof Enemy_Typ02) {
+            enemy.die();
+          }
+          projectiles.splice(i, 1);
+          break;
+        }
       }
     }
   }
