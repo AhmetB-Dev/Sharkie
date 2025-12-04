@@ -14,6 +14,8 @@ class World {
   ammoBar = new Statusbars();
   throwableObjects = [];
 
+  enemyManager;
+
   constructor(canvas, input) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -26,6 +28,7 @@ class World {
     this.draw();
     this.setWorld();
 
+    this.enemyManager = new EnemyManager(this.level, this.character);
     this.handlePlayerInteractions();
   }
 
@@ -53,35 +56,8 @@ class World {
       this.checkCollisions();
       this.checkThrowableObjects();
       this.checkProjectileHits();
-      this.updateEnemyAI();
+      this.enemyManager.updateEnemyAI();
     }, 100);
-  }
-
-  updateEnemyAI() {
-    for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ02 && !enemy.isDead) {
-        enemy.updateAI(this.character);
-      }
-    }
-
-    for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ01 && !enemy.isDead) {
-        enemy.updateAI(this.character);
-      }
-    }
-
-    for (const enemy of this.level.enemies) {
-      if (!(enemy instanceof Boss)) continue;
-
-      if (!enemy.playerInRange && this.character.x >= enemy.triggerIntro) {
-        enemy.playerInRange = true;
-        enemy.isActive = true;
-      }
-
-      if (enemy.playerInRange && enemy.introPlayed) {
-        enemy.followCharacter(this.character);
-      }
-    }
   }
 
   checkThrowableObjects() {

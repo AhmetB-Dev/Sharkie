@@ -3,18 +3,9 @@ class Boss extends MovableObject {
   width = 250;
   y = 60;
   triggerIntro = 4200;
-
-  offset = {
-    top: 135,
-    left: 15,
-    right: 15,
-    bottom: 50,
-  };
-
   introPlayed = false;
   introFrame = 0;
   playerInRange = false;
-
   isActive = false;
   chaseSpeedFactor = 4;
   isAttacking = false;
@@ -30,8 +21,8 @@ class Boss extends MovableObject {
 
   constructor() {
     super();
-    this.loadImage("assets/assets_sharkie/2.Enemy/3 Final Enemy/1.Introduce/1.png");
     this.linkAssets();
+    this.loadImage(this.ENEMIES_INTRODUCE[0]);
     this.loadAssets();
     this.animationBoss();
     this.bossSpeed();
@@ -129,4 +120,11 @@ class Boss extends MovableObject {
     if (!this.isActive) return;
     super.showHitbox(ctx);
   }
+
+  offset = {
+    top: 135,
+    left: 15,
+    right: 15,
+    bottom: 50,
+  };
 }

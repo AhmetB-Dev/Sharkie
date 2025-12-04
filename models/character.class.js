@@ -21,34 +21,32 @@ class Character extends MovableObject {
     bottom: 60,
   };
 
-IMAGES_IDLE = CharacterAssets.IMAGES_IDLE;
-IMAGES_LONG_IDLE = CharacterAssets.IMAGES_LONG_IDLE;
-IMAGES_WALK = CharacterAssets.IMAGES_WALK;
-
-IMAGES_ATTACK_ANI1 = CharacterAssets.IMAGES_ATTACK_ANI1;
-IMAGES_ATTACK_BUBBLE_ANI1 = CharacterAssets.IMAGES_ATTACK_BUBBLE_ANI1;
-IMAGES_ATTACK_ANI2 = CharacterAssets.IMAGES_ATTACK_ANI2;
-
-IMAGES_UTLIMATE_ATTACK = CharacterAssets.IMAGES_UTLIMATE_ATTACK;
-IMAGES_UTLIMATE_ATTACK_BUBBLE = CharacterAssets.IMAGES_UTLIMATE_ATTACK_BUBBLE;
-
-IMAGES_HURT_ANI1 = CharacterAssets.IMAGES_HURT_ANI1;
-IMAGES_HURT_ANI2 = CharacterAssets.IMAGES_HURT_ANI2;
-
-IMAGES_DEAD_ANI1 = CharacterAssets.IMAGES_DEAD_ANI1;
-IMAGES_DEAD_ANI2 = CharacterAssets.IMAGES_DEAD_ANI2;
-
-
   constructor() {
-    super().loadImage("assets/assets_sharkie/1.Sharkie/1.IDLE/1.png");
-
+    super();
+    this.linkAssets();
+    this.loadImage(this.IMAGES_IDLE[0]);
+    this.loadAssets();
+    this.animation();
+    this.applyGravity();
     this.groundY = 155;
     this.y = this.groundY;
-
-    this.loadAssets();
-    this.applyGravity();
-    this.animation();
   }
+
+  linkAssets() {
+    this.IMAGES_IDLE = CharacterAssets.IMAGES_IDLE;
+    this.IMAGES_LONG_IDLE = CharacterAssets.IMAGES_LONG_IDLE;
+    this.IMAGES_WALK = CharacterAssets.IMAGES_WALK;
+    this.IMAGES_ATTACK_ANI1 = CharacterAssets.IMAGES_ATTACK_ANI1;
+    this.IMAGES_ATTACK_BUBBLE_ANI1 = CharacterAssets.IMAGES_ATTACK_BUBBLE_ANI1;
+    this.IMAGES_ATTACK_ANI2 = CharacterAssets.IMAGES_ATTACK_ANI2;
+    this.IMAGES_UTLIMATE_ATTACK = CharacterAssets.IMAGES_UTLIMATE_ATTACK;
+    this.IMAGES_UTLIMATE_ATTACK_BUBBLE = CharacterAssets.IMAGES_UTLIMATE_ATTACK_BUBBLE;
+    this.IMAGES_HURT_ANI1 = CharacterAssets.IMAGES_HURT_ANI1;
+    this.IMAGES_HURT_ANI2 = CharacterAssets.IMAGES_HURT_ANI2;
+    this.IMAGES_DEAD_ANI1 = CharacterAssets.IMAGES_DEAD_ANI1;
+    this.IMAGES_DEAD_ANI2 = CharacterAssets.IMAGES_DEAD_ANI2;
+  }
+
   loadAssets() {
     this.animationImage(this.IMAGES_IDLE);
     this.animationImage(this.IMAGES_LONG_IDLE);

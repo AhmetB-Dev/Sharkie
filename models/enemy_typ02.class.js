@@ -6,21 +6,20 @@ class Enemy_Typ02 extends MovableObject {
   isAttacking = false;
 
   constructor() {
-    super().loadImage("assets/assets_sharkie/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png");
+    super();
     this.linkAssets();
+    this.loadImage(this.ENEMIES_WALK[0]);
     this.loadAssets();
     this.animationTyp2();
     this.spawnTyp2Random();
     this.enemySpeedTyp2();
     this.startPatrol(250);
   }
-
   linkAssets() {
     this.ENEMIES_WALK = EnemyAssets.TYPE2_WALK;
     this.ENEMIES_ATTACK = EnemyAssets.TYPE2_ATTACK;
     this.ENEMIES_DEAD = EnemyAssets.TYPE2_DEAD;
   }
-
   loadAssets() {
     this.animationImage(this.ENEMIES_WALK);
     this.animationImage(this.ENEMIES_ATTACK);

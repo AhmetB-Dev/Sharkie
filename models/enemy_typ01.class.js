@@ -2,16 +2,15 @@ class Enemy_Typ01 extends MovableObject {
   y = 300;
   height = 70;
   width = 90;
-
   isDead = false;
   isAttacking = false;
-
   deathAnimationDone = false;
   deathFrame = 0;
-  constructor() {
-    super().loadImage("assets/assets_sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png");
 
+  constructor() {
+    super();
     this.linkAssets();
+    this.loadImage(this.ENEMIES_WALK[0]);
     this.loadAssets();
     this.spawnRandomTyp1();
     this.enemySpeedTyp1();
