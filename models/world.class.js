@@ -19,9 +19,9 @@ class World {
   constructor(canvas, input) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
-    this.input = input;
-    this.enemyManager = new EnemyManager(this.level, this.character, this.throwableObjects);
     this.loadStatusBar();
+    this.input = input;
+    this.enemyManager = new EnemyManager(this.level, this.character, this.throwableObjects, this.healthBar);
     this.draw();
     this.setWorld();
     this.handlePlayerInteractions();
@@ -59,74 +59,36 @@ class World {
   }
 
   checkCollisions() {
-    this.updateHealthBar();
     this.updateAmmoBar();
     this.updateCoinBar();
   }
 
-  updateHealthBar() {
-    const char = this.character;
+  updateAmmoBar() {
+    for (let i = this.level.ammo.length - 1; i >= 0; i--) {
+      const ammoPickup = this.level.ammo[i];
 
-    for (let i = this.level.enemies.length - 1; i >= 0; i--) {
-      const enemy = this.level.enemies[i];
+      if (this.character.isColliding(ammoPickup)) {
+        this.level.ammo.splice(i, 1);
+        this.character.getItems();
 
-      if (enemy.isDead) {
-        if (char.isColliding(enemy)) {
-          this.level.enemies.splice(i, 1);
-        }
-        continue;
-      }
-
-      if (enemy instanceof Enemy_Typ01 && char.hitmakerRange(enemy)) {
-        enemy.die();
-        continue;
-      }
-
-      if (char.isColliding(enemy)) {
-        if (!char.hitHurt()) {
-          char.hit();
-          this.healthBar.setPercentrage(char.energy);
-        }
+        const ammoPercent = this.character.items * 20;
+        this.ammoBar.setStack(ammoPercent);
       }
     }
   }
 
-  updateAmmoBar() {
-    setInterval(() => {
-      for (let i = this.level.ammo.length - 1; i >= 0; i--) {
-        const ammoPickup = this.level.ammo[i];
-
-        if (this.character.isColliding(ammoPickup)) {
-          this.level.ammo.splice(i, 1);
-          this.character.getItems();
-
-          const ammoPercent = this.character.items * 20;
-
-          this.ammoBar.setStack(ammoPercent);
-
-          console.log("Ammo collected:", this.character.items);
-        }
-      }
-    }, 100);
-  }
-
   updateCoinBar() {
-    setInterval(() => {
-      for (let i = this.level.coin.length - 1; i >= 0; i--) {
-        const coin = this.level.coin[i];
+    for (let i = this.level.coin.length - 1; i >= 0; i--) {
+      const coin = this.level.coin[i];
 
-        if (this.character.isColliding(coin)) {
-          this.level.coin.splice(i, 1);
+      if (this.character.isColliding(coin)) {
+        this.level.coin.splice(i, 1);
+        this.character.addCoin();
 
-          this.character.addCoin();
-
-          const coinPercent = this.character.coins * 20;
-          this.coinBar.setStack(coinPercent);
-
-          console.log("Coins collected: ", this.character.coins);
-        }
+        const coinPercent = this.character.coins * 20;
+        this.coinBar.setStack(coinPercent);
       }
-    }, 100);
+    }
   }
 
   draw() {

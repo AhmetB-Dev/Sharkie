@@ -1,8 +1,9 @@
 class EnemyManager {
-  constructor(level, character, throwableObjects) {
+  constructor(level, character, throwableObjects, healthBar) {
     this.level = level;
     this.character = character;
     this.throwableObjects = throwableObjects;
+    this.healthBar = healthBar;
     this.startUpdateEnemy();
   }
 
@@ -10,6 +11,7 @@ class EnemyManager {
     setInterval(() => {
       this.updateEnemyAI();
       this.checkProjectileHits();
+      this.updateCharacterHealth();
     }, 100);
   }
 
@@ -48,6 +50,45 @@ class EnemyManager {
         enemy.followCharacter(this.character);
       }
     }
+  }
+  updateCharacterHealth() {
+    const char = this.character;
+    const healthBar = this.healthBar;
+
+    for (let i = this.level.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.level.enemies[i];
+
+      if (this.handleDeadEnemy(enemy, i, char)) continue;
+      if (this.handleMeleeKill(enemy, char)) continue;
+
+      this.handleContactDamage(enemy, char, healthBar);
+    }
+  }
+
+  handleDeadEnemy(enemy, index, char) {
+    if (!enemy.isDead) return false;
+
+    if (char.isColliding(enemy)) {
+      this.level.enemies.splice(index, 1);
+    }
+    return true;
+  }
+
+  handleMeleeKill(enemy, char) {
+    if (!(enemy instanceof Enemy_Typ01)) return false;
+    if (!char.hitmakerRange(enemy)) return false;
+
+    enemy.die();
+    return true;
+  }
+
+  handleContactDamage(enemy, char, healthBar) {
+    if (!char.isColliding(enemy)) return;
+
+    if (char.hitHurt()) return;
+
+    char.hit();
+    healthBar.setPercentrage(char.energy);
   }
 
   checkProjectileHits() {
