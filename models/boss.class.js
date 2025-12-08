@@ -2,14 +2,15 @@ class Boss extends MovableObject {
   height = 400;
   width = 250;
   y = 60;
-  triggerIntro = 4200;
-  introPlayed = false;
+  attackRange = 150;
   introFrame = 0;
+  triggerIntro = 4200;
+  chaseSpeedFactor = 4;
+  introPlayed = false;
   playerInRange = false;
   isActive = false;
-  chaseSpeedFactor = 4;
   isAttacking = false;
-  attackRange = 150;
+  isDead = false;
 
   linkAssets() {
     this.ENEMIES_INTRODUCE = EnemyAssets.BOSS_INTRO;
@@ -43,6 +44,7 @@ class Boss extends MovableObject {
   }
 
   followCharacter(character) {
+    if (this.isDead || this.dead()) return;
     const dx = character.x - this.x;
     const dy = character.y - this.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -77,6 +79,16 @@ class Boss extends MovableObject {
         return;
       }
 
+      if (this.isDead || this.dead()) {
+        this.playDeathAnimation();
+        return;
+      }
+
+      if (this.hitHurt()) {
+        this.playAnimation(this.ENEMIES_HURT);
+        return;
+      }
+
       if (this.playerInRange && !this.introPlayed) {
         this.playIntroOnce();
         return;
@@ -94,11 +106,23 @@ class Boss extends MovableObject {
     }, 125);
   }
 
+  die() {
+    if (this.isDead) return;
+
+    this.isDead = true;
+    this.speed = 0;
+    this.isAttacking = false;
+    this.deathFrame = 0;
+    this.deathAnimationDone = false;
+  }
+
   playIntroOnce() {
     const frames = this.ENEMIES_INTRODUCE;
 
     if (this.introFrame < 0 || this.introFrame >= frames.length) {
-      this.introFrame = 0;
+      this.introFrame = frames.length - 1;
+      this.introPlayed = true;
+      return;
     }
 
     const path = frames[this.introFrame];
@@ -108,6 +132,32 @@ class Boss extends MovableObject {
       this.introFrame++;
     } else {
       this.introPlayed = true;
+    }
+  }
+
+  playDeathAnimation() {
+    const frames = this.ENEMIES_DEAD;
+
+    if (this.deathAnimationDone) {
+      const lastFrame = frames[frames.length - 1];
+      this.img = this.imageCache[lastFrame];
+      return;
+    }
+
+    if (this.deathFrame < 0 || this.deathFrame >= frames.length) {
+      this.deathFrame = frames.length - 1;
+      this.deathAnimationDone = true;
+      this.img = this.imageCache[frames[this.deathFrame]];
+      return;
+    }
+
+    const path = frames[this.deathFrame];
+    this.img = this.imageCache[path];
+
+    if (this.deathFrame < frames.length - 1) {
+      this.deathFrame++;
+    } else {
+      this.deathAnimationDone = true;
     }
   }
 

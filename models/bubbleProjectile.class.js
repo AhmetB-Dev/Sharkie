@@ -1,6 +1,8 @@
 class BubbleProjectile extends MovableObject {
-  constructor(x, y, images, shootToLeft = false) {
+  constructor(x, y, images, shootToLeft = false, isUltimate = false) {
     super();
+
+    this.isUltimate = isUltimate; // <--- wichtig
 
     this.animationFrames = images;
     this.animationImage(this.animationFrames);

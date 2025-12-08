@@ -41,6 +41,9 @@ class EnemyManager {
     for (const enemy of this.level.enemies) {
       if (!(enemy instanceof Boss)) continue;
 
+      // Boss ist tot → AI überspringen
+      if (enemy.isDead || enemy.dead()) continue;
+
       if (!enemy.playerInRange && this.character.x >= enemy.triggerIntro) {
         enemy.playerInRange = true;
         enemy.isActive = true;
@@ -51,6 +54,7 @@ class EnemyManager {
       }
     }
   }
+
   updateCharacterHealth() {
     const char = this.character;
     const healthBar = this.healthBar;
@@ -102,13 +106,39 @@ class EnemyManager {
       for (let j = this.level.enemies.length - 1; j >= 0; j--) {
         const enemy = this.level.enemies[j];
 
-        if (projectile.isColliding(enemy)) {
-          if (enemy instanceof Enemy_Typ02) {
-            enemy.die();
+        // Nur weitermachen, wenn wirklich Kollision
+        if (!projectile.isColliding(enemy)) {
+          continue;
+        }
+
+        // 1. Boss während Intro → Treffer ignorieren (kein Schaden)
+        if (enemy instanceof Boss && !enemy.introPlayed) {
+          // Bubble platzt am Boss, aber macht keinen Schaden
+          projectiles.splice(i, 1);
+          break;
+        }
+
+        // 2. Boss NACH Intro & Ultimate-Bubble → Schaden + Hurt/Death
+        if (enemy instanceof Boss && projectile.isUltimate && enemy.introPlayed) {
+          enemy.hit(); // -20 Energie, triggert hitHurt() über lastHit
+          if (enemy.dead()) {
+            enemy.die(); // setzt isDead, stoppt Bewegung, Death-Anim
           }
           projectiles.splice(i, 1);
           break;
         }
+
+        // 3. Normaler Typ-2 Gegner → stirbt sofort
+        if (enemy instanceof Enemy_Typ02) {
+          // ✅ nur der gültige Klassenname
+          enemy.die();
+          projectiles.splice(i, 1);
+          break;
+        }
+
+        // 4. Standard-Fall für andere Gegner: Bubble einfach entfernen
+        projectiles.splice(i, 1);
+        break;
       }
     }
   }
