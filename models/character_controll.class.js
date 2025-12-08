@@ -10,21 +10,23 @@ class CharacterController {
   }
 
   update() {
-    const c = this.character,
-      input = c.world && c.world.input;
+    const c = this.character;
+    const input = c.world && c.world.input;
     if (!input) return;
 
-    const idleTime = this.updateIdleState(c);
+    this.updateCharacter(c, input);
+  }
 
+  updateCharacter(c, input) {
+    const idleTime = this.updateIdleState(c);
     if (this.handleDead(c)) return;
     if (this.handleHurt(c)) return;
-    if (this.handleVerticalMove(c, input)) return;
-    if (this.handleHorizontalMove(c, input)) return;
     if (this.handleUltimate(c, input)) return;
     if (this.handleAttack1(c, input)) return;
     if (this.handleMelee(c, input)) return;
+    if (this.handleVerticalMove(c, input)) return;
+    if (this.handleHorizontalMove(c, input)) return;
     if (this.handleLongIdle(c, idleTime)) return;
-
     c.playAnimation(c.IMAGES_IDLE);
   }
 
@@ -46,7 +48,10 @@ class CharacterController {
 
   handleHurt(c) {
     if (!c.hitHurt()) return false;
-    c.playAnimation(c.IMAGES_HURT_ANI1);
+
+    const frames = c.lastHitByEnemy1 ? c.IMAGES_HURT_ANI1 : c.IMAGES_HURT_ANI2;
+
+    c.playAnimation(frames);
     return true;
   }
 

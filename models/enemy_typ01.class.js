@@ -17,7 +17,7 @@ class Enemy_Typ01 extends MovableObject {
     this.startPatrol(300);
     this.animationTyp1();
     this.otherDirection = true;
-    this.groundY = 300;
+    this.groundY = 325;
   }
 
   linkAssets() {
@@ -47,8 +47,8 @@ class Enemy_Typ01 extends MovableObject {
   }
 
   spawnRandomTyp1() {
-    const minX = 600;
-    const maxX = 1800;
+    const minX = 500;
+    const maxX = 1600;
     this.x = minX + Math.random() * (maxX - minX);
     const minY = 150;
     const maxY = 300;
@@ -64,8 +64,6 @@ class Enemy_Typ01 extends MovableObject {
     const dy = character.y - this.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     this.isAttacking = distance < 250;
-
-    this.otherDirection = character.x < this.x;
   }
 
   animationWalkTyp1() {

@@ -14,6 +14,7 @@ class Character extends MovableObject {
   attack1Ready = true;
   ultimateReady = true;
   hitRange = false;
+  lastHitByEnemy1 = false;
 
   offset = {
     top: 130,
@@ -38,9 +39,6 @@ class Character extends MovableObject {
     this.animation();
   }
 
-  /**
-   * Verknüpft die statischen Assets aus CharacterAssets mit dieser Instanz.
-   */
   linkAssets() {
     this.IMAGES_IDLE = CharacterAssets.IMAGES_IDLE;
     this.IMAGES_LONG_IDLE = CharacterAssets.IMAGES_LONG_IDLE;

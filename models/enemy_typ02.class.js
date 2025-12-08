@@ -4,6 +4,7 @@ class Enemy_Typ02 extends MovableObject {
   width = 90;
   isDead = false;
   isAttacking = false;
+  isHittingPlayer = false;
 
   constructor() {
     super();
@@ -32,7 +33,7 @@ class Enemy_Typ02 extends MovableObject {
   }
 
   spawnTyp2Random() {
-    const minX = 1800;
+    const minX = 1950;
     const maxX = 2600;
     this.x = minX + Math.random() * (maxX - minX);
 
@@ -50,6 +51,13 @@ class Enemy_Typ02 extends MovableObject {
     this.isDead = true;
     this.speed = 0;
     this.currentImage = 0;
+  }
+
+  startHitAnimation() {
+    this.isHittingPlayer = true;
+    setTimeout(() => {
+      this.isHittingPlayer = false;
+    }, 150);
   }
 
   updateAI(character) {

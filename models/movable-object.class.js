@@ -89,16 +89,19 @@ class MovableObject extends DrawableObject {
     }, 1000 / 60);
   }
 
-  startPatrol(range = 200) {
+  startPatrol(rangeX) {
+    this.patrolRangeX = rangeX;
     this.patrolOriginX = this.x;
-    this.patrolRangeX = range;
-    this.patrolDirectionX = -1;
+    this.patrolDirectionX = 1;
 
     setInterval(() => {
       if (this.isDead) return;
-
       this.x += this.patrolDirectionX * this.speed;
-
+      if (this.patrolDirectionX > 0) {
+        this.otherDirection = true;
+      } else if (this.patrolDirectionX < 0) {
+        this.otherDirection = false;
+      }
       if (this.x < this.patrolOriginX - this.patrolRangeX) {
         this.patrolDirectionX = 1;
       }
