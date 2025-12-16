@@ -11,6 +11,9 @@ class CharacterController {
 
   update() {
     const c = this.character;
+    const world = c.world;
+    if (!world || world.endScreen || world.isPaused) return;
+
     const input = c.world && c.world.input;
     if (!input) return;
 
@@ -42,7 +45,13 @@ class CharacterController {
 
   handleDead(c) {
     if (!c.dead()) return false;
+
     c.playAnimation(c.IMAGES_DEAD_ANI1);
+
+    if (c.world) {
+      c.world.showEndScreen(false);
+    }
+
     return true;
   }
 
@@ -51,6 +60,7 @@ class CharacterController {
 
     const frames = c.lastHitByEnemy1 ? c.IMAGES_HURT_ANI1 : c.IMAGES_HURT_ANI2;
 
+    if (window.audioManager) window.audioManager.play("hitMaker");
     c.playAnimation(frames);
     return true;
   }
@@ -68,15 +78,16 @@ class CharacterController {
   }
 
   handleUltimate(c, input) {
-    if (!input.ULTIMATE) {
+
+    if (!input.ULTIMATE || c.items <= 0) {
       c.ultimateReady = true;
       return false;
     }
+
     c.playAnimation(c.IMAGES_UTLIMATE_ATTACK);
     this.handleFrameShot(c, c.IMAGES_UTLIMATE_ATTACK, () => c.shootUltimateBubble(), "ultimateReady");
     return true;
   }
-
   handleAttack1(c, input) {
     if (!input.ATA1) {
       c.attack1Ready = true;

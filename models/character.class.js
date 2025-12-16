@@ -3,7 +3,10 @@ class Character extends MovableObject {
   height = 270;
   width = 140;
   y = 155;
-  speed = 60; // ursprünglich 23
+  speed = 60; 
+  normalSpeed = 60;
+  hurtSpeedFactor = 0.3;
+  isSlowed = false;
   coins = 0;
 
   lastActionTime = Date.now();
@@ -25,7 +28,7 @@ class Character extends MovableObject {
 
   constructor() {
     super();
-
+    this.normalSpeed = this.speed;
     this.linkAssets();
     this.loadImage(this.IMAGES_IDLE[0]);
     this.loadAssets();
@@ -91,11 +94,13 @@ class Character extends MovableObject {
   walkLeft() {
     setInterval(() => {
       if (!this.world) return;
+      if (this.dead() || this.world.endScreen) return;
 
       if (this.world.input.LEFT && this.x > 0) {
         this.x -= this.speed;
         this.otherDirection = true;
       }
+      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
 
       this.world.camera_x = -this.x + 100;
     }, 70);
@@ -104,11 +109,13 @@ class Character extends MovableObject {
   walkRight() {
     setInterval(() => {
       if (!this.world) return;
+      if (this.dead() || this.world.endScreen) return;
 
       if (this.world.input.RIGHT && this.x < this.world.level.level_end) {
         this.x += this.speed;
         this.otherDirection = false;
       }
+      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
 
       this.world.camera_x = -this.x;
     }, 70);
@@ -117,13 +124,14 @@ class Character extends MovableObject {
   startJumpAnimation() {
     setInterval(() => {
       if (!this.world) return;
+      if (this.dead() || this.world.endScreen) return;
 
       if (this.world.input.UP && !this.isAboveGround()) {
         this.setJumpHeight();
       }
+      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
     }, 115);
   }
-
   isPlayerActive() {
     if (!this.world) return false;
     const input = this.world.input;
@@ -177,10 +185,18 @@ class Character extends MovableObject {
     const bubble = new BubbleProjectile(startX, startY, this.IMAGES_ATTACK_BUBBLE_ANI1, shootToLeft);
 
     this.world.throwableObjects.push(bubble);
+    if (window.audioManager) window.audioManager.play("bubbleShot");
   }
 
   shootUltimateBubble() {
     if (!this.world) return;
+    if (this.items <= 0) {
+      return;
+    }
+    this.items--;
+
+    const ammoPercent = this.items * 20;
+    this.world.ammoBar.setStack(ammoPercent);
 
     const shootToLeft = this.otherDirection;
     const offsetX = shootToLeft ? -20 : this.width;
@@ -196,6 +212,7 @@ class Character extends MovableObject {
     );
 
     this.world.throwableObjects.push(bubble);
+    if (window.audioManager) window.audioManager.play("bubbleShot");
   }
 
   addCoin() {
@@ -223,5 +240,29 @@ class Character extends MovableObject {
     const maxVertical = this.height * 0.7;
 
     return Math.abs(dx) < maxHorizontal && Math.abs(dy) < maxVertical;
+  }
+  hit() {
+    super.hit();
+
+    if (this.dead()) {
+      this.speed = 0;
+      return;
+    }
+
+    this.applyHitSlowdown();
+  }
+
+  applyHitSlowdown() {
+    if (this.isSlowed) return;
+
+    this.isSlowed = true;
+    this.speed = this.normalSpeed * this.hurtSpeedFactor;
+
+    setTimeout(() => {
+      if (!this.dead() && this.world && !this.world.endScreen) {
+        this.speed = this.normalSpeed;
+      }
+      this.isSlowed = false;
+    }, 400);
   }
 }

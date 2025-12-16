@@ -37,11 +37,19 @@
 
     <script src="models/gameOver.class.js"></script>
     <script src="models/start.class.js"></script>
+    <script src="models/audio.class.js"></script>
     <script src="js/game.js"></script>
   </head>
   <body onload="init()">
     <h1>Sharkie</h1>
+    <button id="muteButton"></button>
     <div id="startScreen"></div>
-    <canvas id="canvas" width="720px" height="480px"></canvas>
+    <canvas id="canvas" width="720" height="480"></canvas>
+    <div id="rotateOverlay">
+      <div class="rotateCard">
+        <div class="phone"></div>
+        <h2>Bitte drehen</h2>
+      </div>
+    </div>
   </body>
 </html>

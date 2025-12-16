@@ -2,9 +2,8 @@ class World {
   canvas;
   ctx;
   input;
-
+  endScreen = null;
   level = level1;
-
   character = new Character();
   otherDirection = false;
   camera_x = 0;
@@ -15,6 +14,7 @@ class World {
   throwableObjects = [];
 
   enemyManager;
+  isPaused = false;
 
   constructor(canvas, input) {
     this.ctx = canvas.getContext("2d");
@@ -59,6 +59,7 @@ class World {
   }
 
   checkCollisions() {
+    if (this.isPaused || this.endScreen) return;
     this.updateAmmoBar();
     this.updateCoinBar();
   }
@@ -70,6 +71,8 @@ class World {
       if (this.character.isColliding(ammoPickup)) {
         this.level.ammo.splice(i, 1);
         this.character.getItems();
+
+        if (window.audioManager) window.audioManager.play("ammoPickup");
 
         const ammoPercent = this.character.items * 20;
         this.ammoBar.setStack(ammoPercent);
@@ -87,6 +90,9 @@ class World {
 
         const coinPercent = this.character.coins * 20;
         this.coinBar.setStack(coinPercent);
+        if (window.audioManager) {
+          window.audioManager.play("coin");
+        }
       }
     }
   }
@@ -94,6 +100,11 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.renderWorldScene();
+
+    if (this.endScreen) {
+      this.endScreen.draw(this.ctx);
+    }
+
     let self = this;
     requestAnimationFrame(() => self.draw());
   }
@@ -153,5 +164,13 @@ class World {
   flipImageBack(movableObject) {
     movableObject.x = movableObject.x * -1;
     this.ctx.restore();
+  }
+  showEndScreen(hasWon) {
+    if (this.endScreen) return;
+
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+
+    this.endScreen = new EndScreen(hasWon, width, height);
   }
 }

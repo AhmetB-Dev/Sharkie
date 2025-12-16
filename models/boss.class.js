@@ -12,6 +12,8 @@ class Boss extends MovableObject {
   isAttacking = false;
   isDead = false;
 
+  isDamageWindow = false;
+
   linkAssets() {
     this.ENEMIES_INTRODUCE = EnemyAssets.BOSS_INTRO;
     this.ENEMIES_WALK = EnemyAssets.BOSS_WALK;
@@ -100,8 +102,10 @@ class Boss extends MovableObject {
 
       if (this.isAttacking) {
         this.playAnimation(this.ENEMIES_ATTACK);
+        this.updateAttackDamageWindow();
       } else {
         this.playAnimation(this.ENEMIES_WALK);
+        this.inDamageWindow = false;Schaden
       }
     }, 125);
   }
@@ -133,6 +137,8 @@ class Boss extends MovableObject {
     } else {
       this.introPlayed = true;
     }
+
+    if (window.audioManager) window.audioManager.play("bossIntro");
   }
 
   playDeathAnimation() {
@@ -150,6 +156,7 @@ class Boss extends MovableObject {
       this.img = this.imageCache[frames[this.deathFrame]];
       return;
     }
+    if (window.audioManager) window.audioManager.play("enemyDeath");
 
     const path = frames[this.deathFrame];
     this.img = this.imageCache[path];
@@ -159,6 +166,22 @@ class Boss extends MovableObject {
     } else {
       this.deathAnimationDone = true;
     }
+  }
+
+  updateAttackDamageWindow() {
+    const frames = this.ENEMIES_ATTACK;
+    if (!frames || frames.length === 0) {
+      this.inDamageWindow = false;
+      return;
+    }
+    const currentFrameIndex = (this.currentImage - 1) % frames.length;
+    const lastFrameIndex = frames.length - 1;
+
+    this.inDamageWindow = currentFrameIndex === lastFrameIndex;
+  }
+
+  canDamagePlayer() {
+    return this.isActive && !this.isDead && !this.dead() && this.isAttacking && this.inDamageWindow;
   }
 
   draw(ctx) {
@@ -173,7 +196,7 @@ class Boss extends MovableObject {
 
   offset = {
     top: 135,
-    left: 15,
+    left: 0,
     right: 15,
     bottom: 50,
   };

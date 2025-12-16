@@ -1,9 +1,9 @@
 class AmmoPickup extends MovableObject {
   offset = {
-    top: 25,
-    left: 30,
-    right: 25,
-    bottom: 25,
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 5,
   };
 
   height = 100;

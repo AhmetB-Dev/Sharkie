@@ -51,6 +51,8 @@ class Enemy_Typ02 extends MovableObject {
     this.isDead = true;
     this.speed = 0;
     this.currentImage = 0;
+    this.width = 50;
+    this.height = 80;
   }
 
   startHitAnimation() {
