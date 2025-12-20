@@ -1,48 +1,44 @@
 <!DOCTYPE html>
 <html translate="no" lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sharkie</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/responsiveMobile.css" />
 
-    <script src="models/drawableObject.class.js"></script>
-    <script src="models/movable-object.class.js"></script>
-
-    <script src="models/character_assets.class.js"></script>
-    <script src="models/enemy_assets.class.js"></script>
-
-    <script src="models/input.class.js"></script>
-    <script src="models/statusbar.class.js"></script>
-
-    <script src="models/character_controll.class.js"></script>
-    <script src="models/character.class.js"></script>
-
-    <script src="models/enemy_typ01.class.js"></script>
-    <script src="models/enemy_typ02.class.js"></script>
-    <script src="models/boss.class.js"></script>
-
-    <script src="models/ambientObject.class.js"></script>
-    <script src="models/background-object.class.js"></script>
-    <script src="models/ammoPickup.class.js"></script>
-    <script src="models/coin.class.js"></script>
-    <script src="models/bubbleProjectile.class.js"></script>
-    <script src="models/throwable-object.class.js"></script>
-
-    <script src="models/level.class.js"></script>
-    <script src="level/level1.js"></script>
-
-    <script src="models/enemy_Manager.class.js"></script>
-    <script src="models/world.class.js"></script>
-
-    <script src="models/gameOver.class.js"></script>
-    <script src="models/start.class.js"></script>
-    <script src="models/audio.class.js"></script>
-    <script src="js/game.js"></script>
+    <script defer src="models/drawableObject.class.js"></script>
+    <script defer src="models/movable-object.class.js"></script>
+    <script defer src="models/character_assets.class.js"></script>
+    <script defer src="models/enemy_assets.class.js"></script>
+    <script defer src="models/input.class.js"></script>
+    <script defer src="models/statusbar.class.js"></script>
+    <script defer src="models/character_controll.class.js"></script>
+    <script defer src="models/character.class.js"></script>
+    <script defer src="models/enemy_typ01.class.js"></script>
+    <script defer src="models/enemy_typ02.class.js"></script>
+    <script defer src="models/boss.class.js"></script>
+    <script defer src="models/ambientObject.class.js"></script>
+    <script defer src="models/background-object.class.js"></script>
+    <script defer src="models/ammoPickup.class.js"></script>
+    <script defer src="models/coin.class.js"></script>
+    <script defer src="models/bubbleProjectile.class.js"></script>
+    <script defer src="models/throwable-object.class.js"></script>
+    <script defer src="models/level.class.js"></script>
+    <script defer src="level/level1.js"></script>
+    <script defer src="models/enemy_Manager.class.js"></script>
+    <script defer src="models/world.class.js"></script>
+    <script defer src="models/gameOver.class.js"></script>
+    <script defer src="models/touchButton.class.js"></script>
+    <script defer src="models/start.class.js"></script>
+    <script defer src="models/audio.class.js"></script>
+    <script defer src="js/game.js"></script>
   </head>
-  <body onload="init()">
+
+  <body onload="boot()">
     <h1>Sharkie</h1>
-    <button id="muteButton"></button>
     <div id="startScreen"></div>
     <canvas id="canvas" width="720" height="480"></canvas>
     <div id="rotateOverlay">

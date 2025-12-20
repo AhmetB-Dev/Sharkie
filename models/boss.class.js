@@ -196,7 +196,7 @@ class Boss extends MovableObject {
 
   offset = {
     top: 135,
-    left: 0,
+    left: -20,
     right: 15,
     bottom: 50,
   };

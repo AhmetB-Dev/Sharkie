@@ -1,6 +1,6 @@
 class AudioManager {
   constructor() {
-    this.enabled = true; 
+    this.enabled = true;
     this.cooldownMs = 120;
     this.lastPlay = {};
     this.sounds = {
@@ -13,12 +13,55 @@ class AudioManager {
       hitMaker: this.createSound("assets/assets_sharkie/audio/player_hit_soft.wav"),
       enemyDeath: this.createSound("assets/assets_sharkie/audio/enemy_die_soft.wav"),
     };
+    this.music = {
+      title: this.createMusic("assets/assets_sharkie/audio/main_loop.wav"),
+      game: this.createMusic("assets/assets_sharkie/audio/menu_loop.wav"),
+    };
+
+    this.currentMusic = null;
   }
 
   createSound(path) {
     const audio = new Audio(path);
-    audio.volume = 0.4;
+    audio.volume = 0.3;
     return audio;
+  }
+  createMusic(path) {
+    const audio = new Audio(path);
+    audio.loop = true;
+    audio.volume = 0.2;
+    return audio;
+  }
+
+  playMusic(key) {
+    const next = this.music[key];
+    if (!next) return;
+
+    if (this.currentMusic && this.currentMusic !== next) {
+      this.currentMusic.pause();
+      this.currentMusic.currentTime = 0;
+    }
+
+    this.currentMusic = next;
+    this.applyMusicState();
+  }
+
+  stopMusic() {
+    if (!this.currentMusic) return;
+    this.currentMusic.pause();
+    this.currentMusic.currentTime = 0;
+    this.currentMusic = null;
+  }
+
+  applyMusicState() {
+    if (!this.currentMusic) return;
+
+    if (!this.enabled) {
+      this.currentMusic.pause();
+      return;
+    }
+
+    this.currentMusic.play().catch(() => {});
   }
 
   play(name) {
@@ -36,20 +79,22 @@ class AudioManager {
     clone.volume = sound.volume;
     clone.play().catch(() => {});
   }
+
   toggleMute() {
     this.enabled = !this.enabled;
-    console.log("Audio mute:", !this.enabled);
+    this.applyMusicState();
+    window.syncSoundUI?.();
   }
 
   setEnabled(enabled) {
     this.enabled = enabled;
+    this.applyMusicState();
+    window.syncSoundUI?.();
   }
 }
 
-
 const audioManager = new AudioManager();
 window.audioManager = audioManager;
-
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "m" || e.key === "M") {
@@ -65,4 +110,14 @@ window.addEventListener("DOMContentLoaded", () => {
       btn.textContent = audioManager.enabled ? "🔊 Sound an" : "🔇 Sound aus";
     });
   }
+});
+function syncSoundUI() {
+  const toggle = document.getElementById("soundToggle");
+  if (toggle) toggle.checked = audioManager.enabled;
+
+  const btn = document.getElementById("muteButton");
+  if (btn) btn.textContent = audioManager.enabled ? "🔊 Sound an" : "🔇 Sound aus";
+}
+window.addEventListener("DOMContentLoaded", () => {
+  window.syncSoundUI?.();
 });
