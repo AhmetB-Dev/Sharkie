@@ -12,6 +12,7 @@ function boot() {
   startScreen = new StartScreen(() => startGame());
   startScreen.show();
   startScreen.el.addEventListener("pointerdown", startTitleMusicOnce, { once: true });
+  registerCanvasPointerHandlers();
 }
 
 function startGame() {
@@ -79,10 +80,43 @@ async function requestFullscreen() {
     if (el.requestFullscreen) {
       await el.requestFullscreen();
     }
-
   } finally {
     if (typeof applyResponsiveLayout === "function") {
       applyResponsiveLayout();
     }
   }
+}
+function registerCanvasPointerHandlers() {
+  canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
+  canvas.addEventListener("pointermove", onPointerMove, { passive: false });
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerUp);
+}
+
+function onPointerDown(e) {
+  e.preventDefault();
+  const p = getCanvasPointerPos(e);
+
+  if (world?.endScreen) {
+    world.endScreen.handleClick(p.x, p.y);
+    return;
+  }
+
+  world?.touchControls?.pointerDown(p.x, p.y, e.pointerId);
+}
+
+function onPointerMove(e) {
+  const p = getCanvasPointerPos(e);
+  world?.touchControls?.pointerMove(p.x, p.y, e.pointerId);
+}
+
+function onPointerUp(e) {
+  world?.touchControls?.pointerUp(e.pointerId);
+}
+
+function getCanvasPointerPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
 }

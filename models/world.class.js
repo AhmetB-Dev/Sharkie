@@ -24,6 +24,8 @@ class World {
     this.enemyManager = new EnemyManager(this.level, this.character, this.throwableObjects, this.healthBar);
     this.draw();
     this.setWorld();
+    this.touchControls = new TouchControls(this);
+
     this.handlePlayerInteractions();
   }
 
@@ -100,6 +102,8 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.renderWorldScene();
+
+    if (this.touchControls) this.touchControls.draw(this.ctx);
 
     if (this.endScreen) {
       this.endScreen.draw(this.ctx);
