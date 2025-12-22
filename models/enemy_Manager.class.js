@@ -82,7 +82,6 @@ class EnemyManager {
     return true;
   }
 
-  // ✅ Design-Regel: Melee killt nur Typ01
   handleMeleeKill(enemy, char) {
     if (!(enemy instanceof Enemy_Typ01)) return false;
     if (enemy.isDead) return false;

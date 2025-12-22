@@ -3,6 +3,11 @@ class AudioManager {
     this.enabled = true;
     this.cooldownMs = 120;
     this.lastPlay = {};
+    this.soundData();
+    this.currentMusic = null;
+  }
+
+  soundData() {
     this.sounds = {
       coin: this.createSound("assets/assets_sharkie/audio/coin.wav"),
       tailHit: this.createSound("assets/assets_sharkie/audio/tail.wav"),
@@ -17,8 +22,6 @@ class AudioManager {
       title: this.createMusic("assets/assets_sharkie/audio/bg_menu.wav"),
       game: this.createMusic("assets/assets_sharkie/audio/bg_main.wav"),
     };
-
-    this.currentMusic = null;
   }
 
   createSound(path) {
@@ -83,13 +86,12 @@ class AudioManager {
   toggleMute() {
     this.enabled = !this.enabled;
     this.applyMusicState();
-    window.syncSoundUI?.();
   }
 
   setEnabled(enabled) {
     this.enabled = enabled;
     this.applyMusicState();
-    window.syncSoundUI?.();
+
   }
 }
 
@@ -111,13 +113,4 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-function syncSoundUI() {
-  const toggle = document.getElementById("soundToggle");
-  if (toggle) toggle.checked = audioManager.enabled;
 
-  const btn = document.getElementById("muteButton");
-  if (btn) btn.textContent = audioManager.enabled ? "🔊 Sound an" : "🔇 Sound aus";
-}
-window.addEventListener("DOMContentLoaded", () => {
-  window.syncSoundUI?.();
-});

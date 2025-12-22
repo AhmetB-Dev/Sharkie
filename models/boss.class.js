@@ -1,11 +1,11 @@
 class Boss extends MovableObject {
-  height = 400;
-  width = 500;
+  height = 350;
+  width = 400;
   y = 70;
 
   energy = 100;
-  speed = 1.5;
-  attackRange = 250;
+  speed = 1;
+  attackRange = 200;
 
   isDead = false;
   deathFrame = 0;
@@ -19,7 +19,7 @@ class Boss extends MovableObject {
   isAttacking = false;
   inDamageWindow = false;
 
-  triggerIntro = 4500;
+  triggerIntro = 4000;
 
   constructor() {
     super();
@@ -146,7 +146,14 @@ class Boss extends MovableObject {
   }
 
   canDamagePlayer(character) {
-    return this.isActive && !this.isDead && !this.dead() && this.isAttacking && this.inDamageWindow && !character.isHurt();
+    return (
+      this.isActive &&
+      !this.isDead &&
+      !this.dead() &&
+      this.isAttacking &&
+      this.inDamageWindow &&
+      !character.isHurt()
+    );
   }
 
   playDeathAnimation() {

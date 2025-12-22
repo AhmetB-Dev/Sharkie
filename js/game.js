@@ -1,5 +1,4 @@
 let canvas, world, input, startScreen;
-
 const BASE_W = 720;
 const BASE_H = 480;
 const ROTATE_BREAKPOINT = 900;
@@ -12,7 +11,7 @@ function boot() {
 
   startScreen = new StartScreen(() => startGame());
   startScreen.show();
-  startScreen.el.addEventListener("pointerdown", startTitleMusicOnce, { once: true });
+  startScreen.screen.addEventListener("pointerdown", startTitleMusicOnce, { once: true });
   registerCanvasPointerHandlers();
 }
 
@@ -52,7 +51,6 @@ function applyResponsiveLayout() {
   overlay?.classList.toggle("show", shouldRotate);
 
   if (world) world.isPaused = shouldRotate;
-
 
   const enableTouch =
     !shouldRotate && window.matchMedia("(pointer:coarse)").matches && Math.min(vw, vh) <= 1024;
@@ -118,8 +116,8 @@ function onPointerDown(e) {
 }
 
 function onPointerMove(e) {
-  const p = getCanvasPointerPos(e);
-  world?.touchControls?.pointerMove(p.x, p.y, e.pointerId);
+  const pointer = getCanvasPointerPos(e);
+  world?.touchControls?.pointerMove(pointer.x, pointer.y, pointer.pointerId);
 }
 
 function onPointerUp(e) {

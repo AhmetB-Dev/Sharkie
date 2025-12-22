@@ -34,7 +34,7 @@ class Enemy_Typ02 extends MovableObject {
 
   spawnTyp2Random() {
     const minX = 1950;
-    const maxX = 2600;
+    const maxX = 2800;
     this.x = minX + Math.random() * (maxX - minX);
 
     const minY = 150;
