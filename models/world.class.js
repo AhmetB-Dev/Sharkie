@@ -2,10 +2,10 @@ class World {
   canvas;
   ctx;
   input;
+
   endScreen = null;
-  level = level1;
+  level = null;
   character = new Character();
-  otherDirection = false;
   camera_x = 0;
 
   healthBar = new Statusbars();
@@ -13,20 +13,91 @@ class World {
   ammoBar = new Statusbars();
   throwableObjects = [];
 
-  enemyManager;
   isPaused = false;
+  debugHitboxes = false;
 
   constructor(canvas, input) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
-    this.loadStatusBar();
     this.input = input;
-    this.enemyManager = new EnemyManager(this.level, this.character, this.throwableObjects, this.healthBar);
-    this.draw();
-    this.setWorld();
-    this.touchControls = new TouchControls(this);
 
-    this.handlePlayerInteractions();
+    this.loadStatusBar();
+    this.setWorld();
+
+    this.touchControls = new TouchControls(this);
+    this.level = this.level || (typeof level1 !== "undefined" ? level1 : null);
+    if (!this.level) throw new Error("level1 ist nicht geladen oder hat einen Fehler (level/level1.js)");
+
+    this.bgCache = new BackgroundCache();
+    this.enemyManager = new EnemyManager(
+      this.level,
+      this.character,
+      this.throwableObjects,
+      this.healthBar,
+      false
+    );
+
+    this.initLoop();
+  }
+
+  initLoop() {
+    this._lastTs = performance.now();
+    this._accMs = 0;
+    this._fixedStepMs = 100;
+    requestAnimationFrame((t) => this.frame(t));
+  }
+
+  frame(timestamp) {
+    const dtMs = timestamp - this._lastTs;
+    this._lastTs = timestamp;
+
+    this.updatePerFrame(dtMs / 1000);
+    this.updateFixed(dtMs);
+    this.render();
+
+    requestAnimationFrame((t) => this.frame(t));
+  }
+
+  updateFixed(dtMs) {
+    if (this.isPaused || this.endScreen) return;
+    this._accMs += dtMs;
+
+    while (this._accMs >= this._fixedStepMs) {
+      this.enemyManager?.tick?.();
+      this.checkCollisions();
+      this._accMs -= this._fixedStepMs;
+    }
+  }
+
+  updatePerFrame(dtSec) {
+    if (this.isPaused || this.endScreen) return;
+    this.character?.updateGravity?.(dtSec);
+    this.updateProjectiles(dtSec);
+    this.updateEnemies(dtSec);
+  }
+
+  updateEnemies(dtSec) {
+    for (const enemy of this.level.enemies) {
+      if (!enemy) continue;
+      if (enemy.update) enemy.update(dtSec);
+      else enemy.updatePatrol?.(dtSec);
+    }
+  }
+
+  updateProjectiles(dtSec) {
+    for (let i = this.throwableObjects.length - 1; i >= 0; i--) {
+      const p = this.throwableObjects[i];
+      p?.update?.(dtSec);
+      if (this.isOutOfView(p)) this.throwableObjects.splice(i, 1);
+    }
+  }
+
+  isOutOfView(p) {
+    if (!p) return true;
+    const left = -this.camera_x;
+    const right = left + this.canvas.width;
+    const pad = 300;
+    return p.x + p.width < left - pad || p.x > right + pad;
   }
 
   loadStatusBar() {
@@ -54,12 +125,6 @@ class World {
     this.character.world = this;
   }
 
-  handlePlayerInteractions() {
-    setInterval(() => {
-      this.checkCollisions();
-    }, 100);
-  }
-
   checkCollisions() {
     if (this.isPaused || this.endScreen) return;
     this.updateAmmoBar();
@@ -69,57 +134,64 @@ class World {
   updateAmmoBar() {
     for (let i = this.level.ammo.length - 1; i >= 0; i--) {
       const ammoPickup = this.level.ammo[i];
+      if (!this.character.isColliding(ammoPickup)) continue;
 
-      if (this.character.isColliding(ammoPickup)) {
-        this.level.ammo.splice(i, 1);
-        this.character.getItems();
-
-        if (window.audioManager) window.audioManager.play("ammoPickup");
-
-        const ammoPercent = this.character.items * 20;
-        this.ammoBar.setStack(ammoPercent);
-      }
+      this.level.ammo.splice(i, 1);
+      this.character.getItems();
+      if (window.audioManager) window.audioManager.play("ammoPickup");
+      this.ammoBar.setStack(this.character.items * 20);
     }
   }
 
   updateCoinBar() {
     for (let i = this.level.coin.length - 1; i >= 0; i--) {
       const coin = this.level.coin[i];
+      if (!this.character.isColliding(coin)) continue;
 
-      if (this.character.isColliding(coin)) {
-        this.level.coin.splice(i, 1);
-        this.character.addCoin();
-
-        const coinPercent = this.character.coins * 20;
-        this.coinBar.setStack(coinPercent);
-        if (window.audioManager) {
-          window.audioManager.play("coin");
-        }
-      }
+      this.level.coin.splice(i, 1);
+      this.addCoinToCharacter();
+      if (window.audioManager) window.audioManager.play("coin");
+      this.coinBar.setStack(this.getCoinPercent());
     }
   }
 
-  draw() {
+  addCoinToCharacter() {
+    if (this.character.addCoin) return this.character.addCoin();
+    if (this.character.getCoins) return this.character.getCoins();
+    this.character.coins = Math.min((this.character.coins || 0) + 1, 5);
+  }
+
+  getCoinPercent() {
+    const c = Number.isFinite(this.character.coins) ? this.character.coins : 0;
+    return c * 20;
+  }
+
+  render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.renderWorldScene();
-
     if (this.touchControls) this.touchControls.draw(this.ctx);
-
-    if (this.endScreen) {
-      this.endScreen.draw(this.ctx);
-    }
-
-    let self = this;
-    requestAnimationFrame(() => self.draw());
+    if (this.endScreen) this.endScreen.draw(this.ctx);
   }
 
   renderWorldScene() {
     this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
+    this.drawBackground();
     this.renderStatusBars();
     this.drawWorldActors();
     this.addLevelObjectsToMap();
     this.ctx.translate(-this.camera_x, 0);
+  }
+
+  drawBackground() {
+    const bg = this.level?.backgroundObjects;
+    if (!Array.isArray(bg) || bg.length === 0) return;
+
+    if (this.bgCache?.draw) {
+      this.bgCache.draw(this.ctx, bg, this.camera_x, this.canvas.width, this.canvas.height);
+      return;
+    }
+
+    this.addObjectsToMap(bg);
   }
 
   drawWorldActors() {
@@ -133,6 +205,7 @@ class World {
     this.addObjectsToMap(this.level.ambient);
     this.addObjectsToMap(this.throwableObjects);
   }
+
   renderStatusBars() {
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.ammoBar);
@@ -141,21 +214,16 @@ class World {
     this.ctx.translate(this.camera_x, 0);
   }
 
-  addObjectsToMap(object) {
-    object.forEach((o) => {
-      this.addToMap(o);
-    });
+  addObjectsToMap(list) {
+    if (!Array.isArray(list)) return;
+    list.forEach((o) => this.addToMap(o));
   }
 
   addToMap(movableObject) {
-    if (movableObject.otherDirection) {
-      this.flipImage(movableObject);
-    }
+    if (movableObject.otherDirection) this.flipImage(movableObject);
     movableObject.draw(this.ctx);
-    movableObject.showHitbox(this.ctx);
-    if (movableObject.otherDirection) {
-      this.flipImageBack(movableObject);
-    }
+    if (this.debugHitboxes && movableObject.showHitbox) movableObject.showHitbox(this.ctx);
+    if (movableObject.otherDirection) this.flipImageBack(movableObject);
   }
 
   flipImage(movableObject) {
@@ -169,12 +237,23 @@ class World {
     movableObject.x = movableObject.x * -1;
     this.ctx.restore();
   }
+
   showEndScreen(hasWon) {
     if (this.endScreen) return;
 
-    const width = this.canvas.width;
-    const height = this.canvas.height;
+    this.stopBackgroundMusic();
+    this.playEndSfx(hasWon);
 
-    this.endScreen = new EndScreen(hasWon, width, height);
+    this.endScreen = new EndScreen(hasWon, this.canvas.width, this.canvas.height);
   }
+
+  stopBackgroundMusic() {
+    window.audioManager?.stopMusic?.();
+  }
+
+  playEndSfx(hasWon) {
+    const key = hasWon ? "winSfx" : "deathSfx";
+    window.audioManager?.play?.(key);
+  }
+
 }

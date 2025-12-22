@@ -2,8 +2,10 @@ class Enemy_Typ01 extends MovableObject {
   y = 300;
   height = 70;
   width = 90;
+
   isDead = false;
   isAttacking = false;
+
   deathAnimationDone = false;
   deathFrame = 0;
 
@@ -15,7 +17,7 @@ class Enemy_Typ01 extends MovableObject {
     this.spawnRandomTyp1();
     this.enemySpeedTyp1();
     this.startPatrol(300);
-    this.animationTyp1();
+    this.initAnim();
     this.otherDirection = true;
     this.groundY = 325;
   }
@@ -32,9 +34,53 @@ class Enemy_Typ01 extends MovableObject {
     this.animationImage(this.ENEMIES_DEAD);
   }
 
-  animationTyp1() {
-    this.animationWalkTyp1();
-    this.animationDeadTyp1();
+  initAnim() {
+    this.animStepSec = 0.175;
+    this._animAcc = 0;
+    this._deathAcc = 0;
+  }
+
+  update(dtSec) {
+    if (this.isDead) return this.updateDead(dtSec);
+    this.updatePatrol(dtSec);
+    this.updateAlive(dtSec);
+  }
+
+  updateAlive(dtSec) {
+    const frames = this.isAttacking ? this.ENEMIES_ATTACK : this.ENEMIES_WALK;
+    this.stepAnim(dtSec, frames);
+  }
+
+  updateDead(dtSec) {
+    this.updateGravity(dtSec);
+    this._deathAcc += dtSec;
+    if (this._deathAcc < this.animStepSec) return;
+    this._deathAcc = 0;
+    this.stepDeathFrame();
+  }
+
+  stepAnim(dtSec, frames) {
+    this._animAcc += dtSec;
+    if (this._animAcc < this.animStepSec) return;
+    this._animAcc = 0;
+    this.playAnimation(frames);
+  }
+
+  stepDeathFrame() {
+    const frames = this.ENEMIES_DEAD;
+    if (!frames || frames.length === 0) return;
+
+    const i = this.getDeathIndex(frames.length);
+    this.img = this.imageCache[frames[i]];
+    if (i >= frames.length - 1) this.deathAnimationDone = true;
+    else this.deathFrame++;
+  }
+
+  getDeathIndex(len) {
+    if (this.deathAnimationDone) return len - 1;
+    if (this.deathFrame < 0) return 0;
+    if (this.deathFrame >= len) return len - 1;
+    return this.deathFrame;
   }
 
   die() {
@@ -44,19 +90,18 @@ class Enemy_Typ01 extends MovableObject {
     this.currentImage = 0;
     this.deathFrame = 0;
     this.deathAnimationDone = false;
+    this.enableGravity();
   }
 
   spawnRandomTyp1() {
-    const minX = 500;
-    const maxX = 1600;
-    this.x = minX + Math.random() * (maxX - minX);
-    const minY = 150;
-    const maxY = 300;
-    this.y = minY + Math.random() * (maxY - minY);
+    const minX = 400;
+    const maxX = 7000;
+    this.x = Math.random() * (maxX - minX) + minX;
+    this.y = 300;
   }
 
   enemySpeedTyp1() {
-    this.speed = 0.8 + Math.random() * 1.5;
+    this.speed = 3 + Math.random() * 2;
   }
 
   updateAI(character) {
@@ -64,42 +109,5 @@ class Enemy_Typ01 extends MovableObject {
     const dy = character.y - this.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     this.isAttacking = distance < 250;
-  }
-
-  animationWalkTyp1() {
-    setInterval(() => {
-      if (this.isDead) {
-        return;
-      }
-
-      if (this.isAttacking) {
-        this.playAnimation(this.ENEMIES_ATTACK);
-      } else {
-        this.playAnimation(this.ENEMIES_WALK);
-      }
-    }, 175);
-  }
-
-  animationDeadTyp1() {
-    setInterval(() => {
-      if (!this.isDead || this.deathAnimationDone) {
-        return;
-      }
-      const frames = this.ENEMIES_DEAD;
-      if (!frames || frames.length === 0) {
-        return;
-      }
-      if (this.deathFrame < 0 || this.deathFrame >= frames.length) {
-        this.deathFrame = frames.length - 1;
-      }
-      const path = frames[this.deathFrame];
-      this.img = this.imageCache[path];
-      if (this.deathFrame < frames.length - 1) {
-        this.deathFrame++;
-      } else {
-        this.deathAnimationDone = true;
-      }
-      this.applyGravity();
-    }, 175);
   }
 }

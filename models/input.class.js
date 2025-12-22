@@ -6,66 +6,37 @@ class Input extends MovableObject {
   ATA1 = false;
   ATA2 = false;
   ULTIMATE = false;
+
+  static active = null;
+  static _installed = false;
+
+  attachKeyboard() {
+    Input.active = this;
+    window.input = this; 
+    Input.installOnce();
+  }
+
+  static installOnce() {
+    if (Input._installed) return;
+    Input._installed = true;
+
+    window.addEventListener("keydown", (e) => Input.onKey(e, true));
+    window.addEventListener("keyup", (e) => Input.onKey(e, false));
+  }
+
+  static onKey(e, down) {
+    const i = Input.active || window.input;
+    if (!i) return;
+
+    const key = e.key;
+    const k = key.toLowerCase();
+
+    if (k === "d" || k === "arrowright") i.RIGHT = down;
+    if (k === "a" || k === "arrowleft") i.LEFT = down;
+    if (k === "w" || k === "arrowup") i.UP = down;
+
+    if (k === "k" || k === "x") i.ATA1 = down;
+    if (k === "j" || k === "y" || key === "z") i.ATA2 = down;
+    if (k === "l" || k === "c") i.ULTIMATE = down;
+  }
 }
-
-window.addEventListener("keydown", (e) => {
-  const key = e.key;
-  const k = key.toLowerCase();
-
-  if (k === "d" || k === "arrowright") {
-    input.RIGHT = true;
-  }
-
-  if (k === "a" || k === "arrowleft") {
-    input.LEFT = true;
-  }
-
-  if (k === "w" || k === "arrowup") {
-    input.UP = true;
-  }
-
-  if (k === "k" || k === "x") {
-    input.ATA1 = true;
-  }
-
-  if (k === "j" || k === "y" || key === "z") {
-    input.ATA2 = true;
-  }
-
-  if (k === "l" || k === "c") {
-    input.ULTIMATE = true;
-  }
-
-  // console.log(e);
-});
-
-window.addEventListener("keyup", (e) => {
-  const key = e.key;
-  const k = key.toLowerCase();
-
-  if (k === "d" || k === "arrowright") {
-    input.RIGHT = false;
-  }
-
-  if (k === "a" || k === "arrowleft") {
-    input.LEFT = false;
-  }
-
-  if (k === "w" || k === "arrowup") {
-    input.UP = false;
-  }
-
-  if (k === "k" || k === "x") {
-    input.ATA1 = false;
-  }
-
-  if (k === "j" || k === "y" || key === "z") {
-    input.ATA2 = false;
-  }
-
-  if (k === "l" || k === "c") {
-    input.ULTIMATE = false;
-  }
-
-  // console.log(e);
-});

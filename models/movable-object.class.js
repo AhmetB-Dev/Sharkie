@@ -1,12 +1,27 @@
 class MovableObject extends DrawableObject {
   speed = 0.15;
   otherDirection = false;
+
   speedY = 0;
   acceleration = 2.5;
+
   energy = 100;
   lastHit = 0;
+
   items = 0;
   groundY = 155;
+
+  gravityAutoDisable = true;
+  gravityActive = false;
+  _gravAcc = 0;
+
+  patrolActive = false;
+  patrolRangeX = 0;
+  patrolOriginX = 0;
+  patrolDirectionX = 1;
+
+  timers = new TimerBag();
+
   offset = {
     top: 0,
     left: 0,
@@ -25,11 +40,8 @@ class MovableObject extends DrawableObject {
 
   hit() {
     this.energy -= 20;
-    if (this.energy < 0) {
-      this.energy = 0;
-    } else {
-      this.lastHit = new Date().getTime();
-    }
+    if (this.energy < 0) this.energy = 0;
+    else this.lastHit = new Date().getTime();
   }
 
   hitHurt() {
@@ -38,11 +50,13 @@ class MovableObject extends DrawableObject {
     return timepassed < 1;
   }
 
+  isHurt() {
+    return this.hitHurt();
+  }
+
   getItems() {
     this.items += 1;
-    if (this.items > 5) {
-      this.items = 5;
-    }
+    if (this.items > 5) this.items = 5;
   }
 
   dead() {
@@ -50,20 +64,45 @@ class MovableObject extends DrawableObject {
   }
 
   applyGravity() {
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 20);
+    this.enableGravity();
+  }
+
+  enableGravity() {
+    this.gravityActive = true;
+  }
+
+  disableGravity() {
+    this.gravityActive = false;
+    this._gravAcc = 0;
+  }
+
+  updateGravity(dtSec) {
+    if (!Number.isFinite(dtSec) || dtSec <= 0) return;
+    if (!this.gravityActive && this.speedY > 0) this.enableGravity();
+    if (!this.gravityActive) return;
+
+    const step = 1 / 20;
+    this._gravAcc = (this._gravAcc || 0) + dtSec;
+
+    while (this._gravAcc >= step) {
+      this.gravityStep();
+      this._gravAcc -= step;
+    }
+  }
+
+  gravityStep() {
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+      return;
+    }
+    this.speedY = 0;
+    if (this.gravityAutoDisable) this.disableGravity();
   }
 
   isAboveGround() {
-    if (this instanceof ThrowableObject) {
-      return true;
-    } else {
-      return this.y < this.groundY;
-    }
+    if (this instanceof ThrowableObject) return true;
+    return this.y < this.groundY;
   }
 
   playAnimation(images) {
@@ -78,37 +117,36 @@ class MovableObject extends DrawableObject {
   }
 
   moveRight() {
-    setInterval(() => {
-      this.x += this.speed;
-    }, 1000 / 60);
+    this.timers.every(() => (this.x += this.speed), 1000 / 60);
   }
 
   moveLeft() {
-    setInterval(() => {
-      this.x -= this.speed;
-    }, 1000 / 60);
+    this.timers.every(() => (this.x -= this.speed), 1000 / 60);
   }
 
   startPatrol(rangeX) {
     this.patrolRangeX = rangeX;
     this.patrolOriginX = this.x;
     this.patrolDirectionX = 1;
+    this.patrolActive = true;
+  }
 
-    setInterval(() => {
-      if (this.isDead) return;
-      this.x += this.patrolDirectionX * this.speed;
-      if (this.patrolDirectionX > 0) {
-        this.otherDirection = true;
-      } else if (this.patrolDirectionX < 0) {
-        this.otherDirection = false;
-      }
-      if (this.x < this.patrolOriginX - this.patrolRangeX) {
-        this.patrolDirectionX = 1;
-      }
+  stopPatrol() {
+    this.patrolActive = false;
+  }
 
-      if (this.x > this.patrolOriginX + this.patrolRangeX) {
-        this.patrolDirectionX = -1;
-      }
-    }, 1000 / 60);
+  updatePatrol(dtSec) {
+    if (!this.patrolActive || this.isDead) return;
+
+    const pxPerSec = this.speed * 60;
+    this.x += this.patrolDirectionX * pxPerSec * dtSec;
+    this.otherDirection = this.patrolDirectionX > 0;
+
+    if (this.x < this.patrolOriginX - this.patrolRangeX) this.patrolDirectionX = 1;
+    if (this.x > this.patrolOriginX + this.patrolRangeX) this.patrolDirectionX = -1;
+  }
+
+  clearTimers() {
+    this.timers?.clearAll();
   }
 }

@@ -489,7 +489,6 @@ assets/assets_sharkie/6.Botones/icon_sound_v5.png
 assets/assets_sharkie/6.Botones/icon_mute_v7.png
 assets/assets_sharkie/6.Botones/controls_alternative_arrows_yxc_zxc_en_v4.png
 assets/assets_sharkie/background_title.png
-models/touchButton.class.js
 assets/assets_sharkie/audio/menu_loop.wav
 assets/assets_sharkie/audio/main_loop.wav
 assets/assets_sharkie/6.Botones/mobile_controls/touch_move_right_circle.png
@@ -506,3 +505,16 @@ assets/assets_sharkie/6.Botones/touch_attack_bubbleshot_circle.png
 assets/assets_sharkie/6.Botones/controls_alternative.png
 assets/assets_sharkie/6.Botones/controls_primary.png
 assets/assets_sharkie/icon/favicon.ico
+assets/assets_sharkie/audio/ammo.wav
+assets/assets_sharkie/audio/bg_boss.wav
+assets/assets_sharkie/audio/bg_main.wav
+assets/assets_sharkie/audio/bg_menu.wav
+assets/assets_sharkie/audio/boss_death.wav
+assets/assets_sharkie/audio/boss_roar.wav
+assets/assets_sharkie/audio/boss_hit.wav
+assets/assets_sharkie/audio/coin.wav
+assets/assets_sharkie/audio/shot.wav
+assets/assets_sharkie/audio/hit.wav
+assets/assets_sharkie/audio/enemy.wav
+assets/assets_sharkie/audio/death.wav
+assets/assets_sharkie/audio/tail.wav

@@ -6,6 +6,7 @@ const ROTATE_BREAKPOINT = 900;
 
 function boot() {
   canvas = document.getElementById("canvas");
+  canvas.style.display = "none";
   setupResponsive();
   applyResponsiveLayout();
 
@@ -17,15 +18,20 @@ function boot() {
 
 function startGame() {
   startScreen.hide();
+  canvas.style.display = "block";
   window.audioManager?.playMusic("game");
 
   input = new Input();
+  window.input = input;
+
+  input.attachKeyboard();
   world = new World(canvas, input);
   window.world = world;
 
   registerEndScreenInput();
   applyResponsiveLayout();
 }
+
 function startTitleMusicOnce() {
   window.audioManager?.playMusic("title");
 }
@@ -46,6 +52,12 @@ function applyResponsiveLayout() {
   overlay?.classList.toggle("show", shouldRotate);
 
   if (world) world.isPaused = shouldRotate;
+
+
+  const enableTouch =
+    !shouldRotate && window.matchMedia("(pointer:coarse)").matches && Math.min(vw, vh) <= 1024;
+
+  world?.touchControls?.setEnabled?.(enableTouch);
 }
 
 function restartGame() {

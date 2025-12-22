@@ -4,18 +4,18 @@ class AudioManager {
     this.cooldownMs = 120;
     this.lastPlay = {};
     this.sounds = {
-      coin: this.createSound("assets/assets_sharkie/audio/coin_collect_soft.wav"),
-      tailHit: this.createSound("assets/assets_sharkie/audio/tail_hit.wav"),
-      bubbleShot: this.createSound("assets/assets_sharkie/audio/bubble_shot_soft.wav"),
-      ammoPickup: this.createSound("assets/assets_sharkie/audio/ammo_pickup_soft.wav"),
-      bossHit: this.createSound("assets/assets_sharkie/audio/boss_hit_v1.wav"),
-      bossIntro: this.createSound("assets/assets_sharkie/audio/boss_roar_soft.wav"),
-      hitMaker: this.createSound("assets/assets_sharkie/audio/player_hit_soft.wav"),
-      enemyDeath: this.createSound("assets/assets_sharkie/audio/enemy_die_soft.wav"),
+      coin: this.createSound("assets/assets_sharkie/audio/coin.wav"),
+      tailHit: this.createSound("assets/assets_sharkie/audio/tail.wav"),
+      bubbleShot: this.createSound("assets/assets_sharkie/audio/shot.wav"),
+      ammoPickup: this.createSound("assets/assets_sharkie/audio/ammo.wav"),
+      bossHit: this.createSound("assets/assets_sharkie/audio/boss_hit.wav"),
+      bossIntro: this.createSound("assets/assets_sharkie/audio/boss_roar.wav"),
+      hitMaker: this.createSound("assets/assets_sharkie/audio/hit.wav"),
+      enemyDeath: this.createSound("assets/assets_sharkie/audio/enemy.wav"),
     };
     this.music = {
-      title: this.createMusic("assets/assets_sharkie/audio/main_loop.wav"),
-      game: this.createMusic("assets/assets_sharkie/audio/menu_loop.wav"),
+      title: this.createMusic("assets/assets_sharkie/audio/bg_menu.wav"),
+      game: this.createMusic("assets/assets_sharkie/audio/bg_main.wav"),
     };
 
     this.currentMusic = null;

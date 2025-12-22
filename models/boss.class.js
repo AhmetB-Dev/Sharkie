@@ -1,18 +1,35 @@
 class Boss extends MovableObject {
   height = 400;
-  width = 250;
-  y = 60;
-  attackRange = 150;
-  introFrame = 0;
-  triggerIntro = 4200;
-  chaseSpeedFactor = 4;
-  introPlayed = false;
-  playerInRange = false;
-  isActive = false;
-  isAttacking = false;
-  isDead = false;
+  width = 500;
+  y = 70;
 
-  isDamageWindow = false;
+  energy = 100;
+  speed = 1.5;
+  attackRange = 250;
+
+  isDead = false;
+  deathFrame = 0;
+  deathAnimationDone = false;
+
+  isActive = false;
+  playerInRange = false;
+  introPlayed = false;
+  introFrame = 0;
+
+  isAttacking = false;
+  inDamageWindow = false;
+
+  triggerIntro = 4500;
+
+  constructor() {
+    super();
+    this.linkAssets();
+    this.loadImage(this.ENEMIES_INTRODUCE[0]);
+    this.loadAssets();
+    this.initAnim();
+    this.bossSpeed();
+    this.x = 4500;
+  }
 
   linkAssets() {
     this.ENEMIES_INTRODUCE = EnemyAssets.BOSS_INTRO;
@@ -20,17 +37,6 @@ class Boss extends MovableObject {
     this.ENEMIES_ATTACK = EnemyAssets.BOSS_ATTACK;
     this.ENEMIES_HURT = EnemyAssets.BOSS_HURT;
     this.ENEMIES_DEAD = EnemyAssets.BOSS_DEAD;
-  }
-
-  constructor() {
-    super();
-    this.linkAssets();
-    this.loadImage(this.ENEMIES_INTRODUCE[0]);
-    this.loadAssets();
-    this.animationBoss();
-    this.bossSpeed();
-
-    this.x = 4500;
   }
 
   loadAssets() {
@@ -41,78 +47,69 @@ class Boss extends MovableObject {
     this.animationImage(this.ENEMIES_DEAD);
   }
 
+  initAnim() {
+    this.animStepSec = 0.125;
+    this._animAcc = 0;
+    this._deathAcc = 0;
+  }
+
   bossSpeed() {
-    this.speed = 0.8 + Math.random() * 5.5;
+    this.speed = 1.5;
   }
 
-  followCharacter(character) {
-    if (this.isDead || this.dead()) return;
-    const dx = character.x - this.x;
-    const dy = character.y - this.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance === 0) {
-      this.isAttacking = true;
-      return;
-    }
-
-    const nx = dx / distance;
-    const ny = dy / distance;
-    const step = this.speed * this.chaseSpeedFactor;
-
-    if (distance < 5) {
-      this.otherDirection = dx < 0;
-      this.isAttacking = true;
-      return;
-    }
-    this.x += nx * step;
-
-    if (character.y < this.y) {
-      this.y += ny * step;
-    }
-
-    this.otherDirection = dx > 0;
-    this.isAttacking = distance < this.attackRange;
+  update(dtSec) {
+    if (!this.isActive) return;
+    if (this.isDead || this.dead()) return this.stepDeath(dtSec);
+    if (this.hitHurt()) return this.stepAnim(dtSec, this.ENEMIES_HURT);
+    if (this.playerInRange && !this.introPlayed) return this.stepIntro(dtSec);
+    if (!this.playerInRange || !this.introPlayed) return;
+    this.stepCombat(dtSec);
   }
 
-  animationBoss() {
-    setInterval(() => {
-      if (!this.isActive) {
-        return;
-      }
+  stepIntro(dtSec) {
+    const frames = this.ENEMIES_INTRODUCE;
+    this._animAcc += dtSec;
+    if (this._animAcc < this.animStepSec) return;
+    this._animAcc = 0;
 
-      if (this.isDead || this.dead()) {
-        this.playDeathAnimation();
-        return;
-      }
+    const i = this.introFrame;
+    this.img = this.imageCache[frames[i]];
+    if (i >= frames.length - 1) return this.finishIntro();
+    this.introFrame++;
+  }
 
-      if (this.hitHurt()) {
-        this.playAnimation(this.ENEMIES_HURT);
-        return;
-      }
+  finishIntro() {
+    this.introPlayed = true;
+    if (window.audioManager) window.audioManager.play("bossIntro");
+  }
 
-      if (this.playerInRange && !this.introPlayed) {
-        this.playIntroOnce();
-        return;
-      }
+  stepCombat(dtSec) {
+    if (this.isAttacking) return this.stepAttack(dtSec);
+    this.stepAnim(dtSec, this.ENEMIES_WALK);
+    this.inDamageWindow = false;
+  }
 
-      if (!this.playerInRange || !this.introPlayed) {
-        return;
-      }
+  stepAttack(dtSec) {
+    this.stepAnim(dtSec, this.ENEMIES_ATTACK);
+    this.updateAttackDamageWindow();
+  }
 
-      if (this.isAttacking) {
-        this.playAnimation(this.ENEMIES_ATTACK);
-        this.updateAttackDamageWindow();
-      } else {
-        this.playAnimation(this.ENEMIES_WALK);
-        this.inDamageWindow = false;Schaden
-      }
-    }, 125);
+  stepAnim(dtSec, frames) {
+    this._animAcc += dtSec;
+    if (this._animAcc < this.animStepSec) return;
+    this._animAcc = 0;
+    this.playAnimation(frames);
+  }
+
+  stepDeath(dtSec) {
+    this._deathAcc += dtSec;
+    if (this._deathAcc < this.animStepSec) return;
+    this._deathAcc = 0;
+    this.playDeathAnimation();
   }
 
   die() {
     if (this.isDead) return;
-
     this.isDead = true;
     this.speed = 0;
     this.isAttacking = false;
@@ -120,52 +117,20 @@ class Boss extends MovableObject {
     this.deathAnimationDone = false;
   }
 
-  playIntroOnce() {
-    const frames = this.ENEMIES_INTRODUCE;
+  followCharacter(character) {
+    const dx = character.x - this.x;
+    const dy = character.y - this.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const step = 2;
 
-    if (this.introFrame < 0 || this.introFrame >= frames.length) {
-      this.introFrame = frames.length - 1;
-      this.introPlayed = true;
-      return;
-    }
+    const nx = dx / (distance || 1);
+    const ny = dy / (distance || 1);
 
-    const path = frames[this.introFrame];
-    this.img = this.imageCache[path];
+    this.x += nx * step;
+    this.y += ny * step;
 
-    if (this.introFrame < frames.length - 1) {
-      this.introFrame++;
-    } else {
-      this.introPlayed = true;
-    }
-
-    if (window.audioManager) window.audioManager.play("bossIntro");
-  }
-
-  playDeathAnimation() {
-    const frames = this.ENEMIES_DEAD;
-
-    if (this.deathAnimationDone) {
-      const lastFrame = frames[frames.length - 1];
-      this.img = this.imageCache[lastFrame];
-      return;
-    }
-
-    if (this.deathFrame < 0 || this.deathFrame >= frames.length) {
-      this.deathFrame = frames.length - 1;
-      this.deathAnimationDone = true;
-      this.img = this.imageCache[frames[this.deathFrame]];
-      return;
-    }
-    if (window.audioManager) window.audioManager.play("enemyDeath");
-
-    const path = frames[this.deathFrame];
-    this.img = this.imageCache[path];
-
-    if (this.deathFrame < frames.length - 1) {
-      this.deathFrame++;
-    } else {
-      this.deathAnimationDone = true;
-    }
+    this.otherDirection = dx > 0;
+    this.isAttacking = distance < this.attackRange;
   }
 
   updateAttackDamageWindow() {
@@ -174,14 +139,31 @@ class Boss extends MovableObject {
       this.inDamageWindow = false;
       return;
     }
+
     const currentFrameIndex = (this.currentImage - 1) % frames.length;
     const lastFrameIndex = frames.length - 1;
-
     this.inDamageWindow = currentFrameIndex === lastFrameIndex;
   }
 
-  canDamagePlayer() {
-    return this.isActive && !this.isDead && !this.dead() && this.isAttacking && this.inDamageWindow;
+  canDamagePlayer(character) {
+    return this.isActive && !this.isDead && !this.dead() && this.isAttacking && this.inDamageWindow && !character.isHurt();
+  }
+
+  playDeathAnimation() {
+    const frames = this.ENEMIES_DEAD;
+    if (!frames || frames.length === 0) return;
+
+    if (this.deathAnimationDone) {
+      const last = frames[frames.length - 1];
+      this.img = this.imageCache[last];
+      return;
+    }
+
+    const i = Math.min(this.deathFrame, frames.length - 1);
+    this.img = this.imageCache[frames[i]];
+
+    if (i >= frames.length - 1) this.deathAnimationDone = true;
+    else this.deathFrame++;
   }
 
   draw(ctx) {
@@ -193,11 +175,4 @@ class Boss extends MovableObject {
     if (!this.isActive) return;
     super.showHitbox(ctx);
   }
-
-  offset = {
-    top: 135,
-    left: -20,
-    right: 15,
-    bottom: 50,
-  };
 }

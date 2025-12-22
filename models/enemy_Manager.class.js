@@ -1,25 +1,27 @@
 class EnemyManager {
-  constructor(level, character, throwableObjects, healthBar) {
+  constructor(level, character, throwableObjects, healthBar, autoStart = false) {
     this.level = level;
     this.character = character;
     this.throwableObjects = throwableObjects;
     this.healthBar = healthBar;
-    this.startUpdateEnemy();
+    if (autoStart) this.startUpdateEnemy();
   }
 
   startUpdateEnemy() {
-    setInterval(() => {
-      const char = this.character;
-      const w = char.world;
-      if (char.dead() || (w && (w.endScreen || w.isPaused))) return;
-      if (char.dead() || (char.world && char.world.endScreen)) {
-        return;
-      }
+    setInterval(() => this.tick(), 100);
+  }
 
-      this.updateEnemyAI();
-      this.checkProjectileHits();
-      this.updateCharacterHealth();
-    }, 100);
+  tick() {
+    if (this.shouldSkipTick()) return;
+    this.updateEnemyAI();
+    this.checkProjectileHits();
+    this.updateCharacterHealth();
+  }
+
+  shouldSkipTick() {
+    const char = this.character;
+    const w = char.world;
+    return char.dead() || (w && (w.endScreen || w.isPaused));
   }
 
   updateEnemyAI() {
@@ -29,129 +31,140 @@ class EnemyManager {
   }
 
   updateTyp1() {
-    for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ01 && !enemy.isDead) {
-        enemy.updateAI(this.character);
-      }
+    for (const e of this.level.enemies) {
+      if (e instanceof Enemy_Typ01 && !e.isDead) e.updateAI(this.character);
     }
   }
 
   updateTyp2() {
-    for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ02 && !enemy.isDead) {
-        enemy.updateAI(this.character);
-      }
+    for (const e of this.level.enemies) {
+      if (e instanceof Enemy_Typ02 && !e.isDead) e.updateAI(this.character);
     }
   }
 
   updateBoss() {
-    for (const enemy of this.level.enemies) {
-      if (!(enemy instanceof Boss)) continue;
-      if (enemy.isDead || enemy.dead()) continue;
-      if (!enemy.playerInRange && this.character.x >= enemy.triggerIntro) {
-        enemy.playerInRange = true;
-        enemy.isActive = true;
-      }
-
-      if (enemy.playerInRange && enemy.introPlayed) {
-        enemy.followCharacter(this.character);
-      }
+    for (const e of this.level.enemies) {
+      if (!(e instanceof Boss)) continue;
+      this.activateBoss(e);
+      this.followBoss(e);
     }
+  }
+
+  activateBoss(boss) {
+    if (boss.playerInRange) return;
+    if (this.character.x < boss.triggerIntro) return;
+    boss.playerInRange = true;
+    boss.isActive = true;
+  }
+
+  followBoss(boss) {
+    if (boss.isDead || boss.dead()) return;
+    if (!boss.playerInRange || !boss.introPlayed) return;
+    boss.followCharacter(this.character);
   }
 
   updateCharacterHealth() {
     const char = this.character;
-    const healthBar = this.healthBar;
-
-    if (char.dead() || (char.world && char.world.endScreen)) {
-      return;
-    }
-    if (char.dead() || (char.world && (char.world.endScreen || char.world.isPaused))) return;
+    const bar = this.healthBar;
+    if (this.shouldSkipTick()) return;
 
     for (let i = this.level.enemies.length - 1; i >= 0; i--) {
       const enemy = this.level.enemies[i];
-
       if (this.handleDeadEnemy(enemy, i, char)) continue;
       if (this.handleMeleeKill(enemy, char)) continue;
-
-      this.handleContactDamage(enemy, char, healthBar);
+      this.handleContactDamage(enemy, char, bar);
     }
   }
 
   handleDeadEnemy(enemy, index, char) {
-    if (!enemy.isDead) return false;
-
-    if (char.isColliding(enemy)) {
-      this.level.enemies.splice(index, 1);
-    }
+    if (!enemy?.isDead) return false;
+    if (char.isColliding(enemy)) this.level.enemies.splice(index, 1);
     return true;
   }
+
+  // ✅ Design-Regel: Melee killt nur Typ01
   handleMeleeKill(enemy, char) {
     if (!(enemy instanceof Enemy_Typ01)) return false;
     if (enemy.isDead) return false;
     if (!char.hitmakerRange(enemy)) return false;
 
     enemy.die();
-    if (window.audioManager) window.audioManager.play("tailHit");
+    if (window.audioManager) window.audioManager.play("enemyDeath");
     return true;
   }
 
-  handleContactDamage(enemy, char, healthBar) {
+  handleContactDamage(enemy, char, bar) {
+    if (!enemy || enemy.isDead || enemy.dead()) return;
     if (!char.isColliding(enemy)) return;
-    if (char.hitHurt()) return;
-    if (enemy instanceof Boss) {
-      if (!enemy.canDamagePlayer()) {
-        return;
-      }
-      char.lastHitByEnemy1 = true;
-    } else {
-      if (enemy instanceof Enemy_Typ02) {
-        char.lastHitByEnemy1 = false;
-      } else {
-        char.lastHitByEnemy1 = true;
-      }
-    }
+    if (!this.canEnemyDamagePlayer(enemy, char)) return;
 
+    this.markLastHitSource(enemy, char);
     char.hit();
-    healthBar.setPercentrage(char.energy);
+    bar.setPercentrage(char.energy);
+  }
+
+  isPlayerHurt(character) {
+    if (character?.isHurt) return character.isHurt();
+    if (character?.hitHurt) return character.hitHurt();
+    return false;
+  }
+
+  canEnemyDamagePlayer(enemy, char) {
+    if (enemy instanceof Boss) return enemy.canDamagePlayer(char);
+    return !this.isPlayerHurt(char);
+  }
+
+  markLastHitSource(enemy, char) {
+    if (enemy instanceof Boss) return (char.lastHitByEnemy1 = true);
+    char.lastHitByEnemy1 = !(enemy instanceof Enemy_Typ02);
   }
 
   checkProjectileHits() {
-    this.handleProjectileHits(this.throwableObjects);
+    const list = this.throwableObjects;
+
+    for (let p = list.length - 1; p >= 0; p--) {
+      const proj = list[p];
+      const hitEnemy = this.findFirstHitEnemy(proj);
+      if (!hitEnemy) continue;
+
+      const consumed = this.applyProjectileRules(hitEnemy, proj);
+      if (consumed) list.splice(p, 1);
+    }
   }
 
-  handleProjectileHits(projectiles) {
-    for (let i = projectiles.length - 1; i >= 0; i--) {
-      const projectile = projectiles[i];
-
-      for (let j = this.level.enemies.length - 1; j >= 0; j--) {
-        const enemy = this.level.enemies[j];
-
-        if (enemy.isDead) continue;
-        if (!projectile.isColliding(enemy)) continue;
-
-        if (enemy instanceof Boss && projectile.isUltimate && enemy.introPlayed) {
-          enemy.hit();
-          if (enemy.dead()) {
-            enemy.die();
-            if (this.character.world) {
-              this.character.world.showEndScreen(true); 
-            }
-          }
-
-          projectiles.splice(i, 1);
-          break;
-        }
-
-        if (enemy instanceof Enemy_Typ02) {
-          enemy.die();
-          projectiles.splice(i, 1);
-          break;
-        }
-
-        projectiles.splice(i, 1);
-        break;
-      }
+  findFirstHitEnemy(projectile) {
+    for (const enemy of this.level.enemies) {
+      if (!enemy || enemy.isDead) continue;
+      if (projectile.isColliding(enemy)) return enemy;
     }
+    return null;
+  }
+
+  applyProjectileRules(enemy, projectile) {
+    if (enemy instanceof Boss) return this.hitBossWithUltimate(enemy, projectile);
+    if (enemy instanceof Enemy_Typ02) return this.killTyp2WithNormalBubble(enemy, projectile);
+    return false;
+  }
+
+  hitBossWithUltimate(boss, projectile) {
+    if (!projectile.isUltimate) return false;
+
+    if (window.audioManager) window.audioManager.play("bossHit");
+    boss.hit(20);
+
+    if (boss.dead()) {
+      boss.die();
+      boss.character?.world?.showEndScreen?.(true);
+      this.character.world?.showEndScreen?.(true);
+    }
+    return true;
+  }
+
+  killTyp2WithNormalBubble(enemy, projectile) {
+    if (projectile.isUltimate) return false;
+
+    enemy.die();
+    if (window.audioManager) window.audioManager.play("enemyDeath");
+    return true;
   }
 }

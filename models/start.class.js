@@ -17,9 +17,9 @@ class StartScreen {
       <h2 class="startTitle">SHARKIE</h2>
 
       <div class="startActions">
-        <button id="startBtn" class="pillBtn">START</button>
-        <button id="settingsBtn" class="pillBtn">SETTINGS</button>
-        <button id="fsBtn" class="pillBtn">FULLSCREEN</button>
+        <button id="startBtn" type="button" class="pillBtn">START</button>
+        <button id="settingsBtn" type="button" class="pillBtn">SETTINGS</button>
+        <button id="fsBtn" type="button" class="pillBtn">FULLSCREEN</button>
       </div>
 
       <div id="settingsPanel" class="settingsPanel">
@@ -39,7 +39,7 @@ class StartScreen {
         </div>
 
         <div class="settingsActions">
-          <button id="closeSettingsBtn" class="pillBtn pillBtnSmall">BACK</button>
+          <button id="closeSettingsBtn" type="button" class="pillBtn pillBtnSmall">BACK</button>
         </div>
       </div>
     </div>
@@ -47,22 +47,46 @@ class StartScreen {
   }
 
   bind() {
+
     this.el.addEventListener("click", (e) => {
+
       const btn = e.target.closest("button");
+
       if (!btn) return;
 
+
+      e.preventDefault();
+
+      e.stopPropagation();
+
+
       if (btn.id === "startBtn") return this.onStart?.();
+
       if (btn.id === "settingsBtn") return this.toggleSettings(true);
+
       if (btn.id === "closeSettingsBtn") return this.toggleSettings(false);
+
       if (btn.id === "fsBtn") return window.requestFullscreen?.();
-    });
-    this.el.addEventListener("change", (e) => {
-      if (e.target.id !== "soundToggle") return;
-      window.audioManager?.setEnabled(e.target.checked);
+
     });
 
-    this.loadSettings();
+
+    this.el.addEventListener("change", (e) => {
+
+      if (e.target.id !== "soundToggle") return;
+
+
+      e.stopPropagation();
+
+      window.audioManager?.setEnabled?.(e.target.checked);
+
+    });
+
+
+    this.syncSoundToggleState();
+
   }
+
   loadSettings() {
     const toggle = this.el.querySelector("#soundToggle");
     if (toggle && window.audioManager) toggle.checked = window.audioManager.enabled;
@@ -95,6 +119,11 @@ class StartScreen {
     this.muteHomeParent.insertBefore(this.muteBtn, this.muteHomeNext);
   }
 
+
+syncSoundToggleState() {
+  const toggle = this.el.querySelector("#soundToggle");
+  if (toggle) toggle.checked = !!window.audioManager?.enabled;
+}
   show() {
     this.el.classList.add("show");
   }
