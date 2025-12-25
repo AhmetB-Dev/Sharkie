@@ -27,12 +27,12 @@ class ThrowableObject extends MovableObject {
     this._animAcc = 0;
   }
 
-  throw(dir = 1) {
+  throw(directionX = 1) {
     this.isThrown = true;
     this.speedX = 10 / 0.025;
     this.speedY = 30 / 0.05;
     this.gravity = this.acceleration / 0.05;
-    this.dir = dir;
+    this.directionX = directionX;
   }
 
   update(dtSec) {
@@ -43,7 +43,7 @@ class ThrowableObject extends MovableObject {
   }
 
   move(dtSec) {
-    this.x += this.dir * this.speedX * dtSec;
+    this.x += this.directionX * this.speedX * dtSec;
   }
 
   applyGravityStep(dtSec) {

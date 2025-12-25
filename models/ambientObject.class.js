@@ -5,15 +5,11 @@ class AmbientObject extends MovableObject {
     this.x = x;
     this.width = width;
     this.height = height;
-    // this.spawnCloudsRandom();
-    // this.animationAmbient();
+    this.speed = 0.08;
+    this.animationAmbient();
   }
 
-  // spawnAmbientsRandom() {
-  //   this.x = Math.random() * 2500;
-  // }
-
-  // animationAmbient() {
-  //   this.moveLeft();
-  // }
+  animationAmbient() {
+    this.timers.every(() => (this.x -= this.speed), 1000 / 60);
+  }
 }

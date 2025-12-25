@@ -2,23 +2,18 @@ class Boss extends MovableObject {
   height = 350;
   width = 400;
   y = 70;
-
   energy = 100;
   speed = 1;
   attackRange = 200;
-
   isDead = false;
   deathFrame = 0;
   deathAnimationDone = false;
-
   isActive = false;
   playerInRange = false;
   introPlayed = false;
   introFrame = 0;
-
   isAttacking = false;
   inDamageWindow = false;
-
   triggerIntro = 4000;
 
   constructor() {
@@ -67,14 +62,14 @@ class Boss extends MovableObject {
   }
 
   stepIntro(dtSec) {
-    const frames = this.ENEMIES_INTRODUCE;
+    const introFrames = this.ENEMIES_INTRODUCE;
     this._animAcc += dtSec;
     if (this._animAcc < this.animStepSec) return;
     this._animAcc = 0;
 
-    const i = this.introFrame;
-    this.img = this.imageCache[frames[i]];
-    if (i >= frames.length - 1) return this.finishIntro();
+    const frameIndex = this.introFrame;
+    this.img = this.imageCache[introFrames[frameIndex]];
+    if (frameIndex >= introFrames.length - 1) return this.finishIntro();
     this.introFrame++;
   }
 
@@ -118,30 +113,30 @@ class Boss extends MovableObject {
   }
 
   followCharacter(character) {
-    const dx = character.x - this.x;
-    const dy = character.y - this.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const step = 2;
+    const deltaX = character.x - this.x;
+    const deltaY = character.y - this.y;
+    const distanceToCharacter = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const moveStep = 2;
 
-    const nx = dx / (distance || 1);
-    const ny = dy / (distance || 1);
+    const normX = deltaX / (distanceToCharacter || 1);
+    const normY = deltaY / (distanceToCharacter || 1);
 
-    this.x += nx * step;
-    this.y += ny * step;
+    this.x += normX * moveStep;
+    this.y += normY * moveStep;
 
-    this.otherDirection = dx > 0;
-    this.isAttacking = distance < this.attackRange;
+    this.otherDirection = deltaX > 0;
+    this.isAttacking = distanceToCharacter < this.attackRange;
   }
 
   updateAttackDamageWindow() {
-    const frames = this.ENEMIES_ATTACK;
-    if (!frames || frames.length === 0) {
+    const attackFrames = this.ENEMIES_ATTACK;
+    if (!attackFrames || attackFrames.length === 0) {
       this.inDamageWindow = false;
       return;
     }
 
-    const currentFrameIndex = (this.currentImage - 1) % frames.length;
-    const lastFrameIndex = frames.length - 1;
+    const currentFrameIndex = (this.currentImage - 1) % attackFrames.length;
+    const lastFrameIndex = attackFrames.length - 1;
     this.inDamageWindow = currentFrameIndex === lastFrameIndex;
   }
 
@@ -157,19 +152,19 @@ class Boss extends MovableObject {
   }
 
   playDeathAnimation() {
-    const frames = this.ENEMIES_DEAD;
-    if (!frames || frames.length === 0) return;
+    const deathFrames = this.ENEMIES_DEAD;
+    if (!deathFrames || deathFrames.length === 0) return;
 
     if (this.deathAnimationDone) {
-      const last = frames[frames.length - 1];
-      this.img = this.imageCache[last];
+      const lastFrame = deathFrames[deathFrames.length - 1];
+      this.img = this.imageCache[lastFrame];
       return;
     }
 
-    const i = Math.min(this.deathFrame, frames.length - 1);
-    this.img = this.imageCache[frames[i]];
+    const frameIndex = Math.min(this.deathFrame, deathFrames.length - 1);
+    this.img = this.imageCache[deathFrames[frameIndex]];
 
-    if (i >= frames.length - 1) this.deathAnimationDone = true;
+    if (frameIndex >= deathFrames.length - 1) this.deathAnimationDone = true;
     else this.deathFrame++;
   }
 

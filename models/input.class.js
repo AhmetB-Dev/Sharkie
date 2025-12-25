@@ -12,7 +12,7 @@ class Input extends MovableObject {
 
   attachKeyboard() {
     Input.active = this;
-    window.input = this; 
+    window.input = this;
     Input.installOnce();
   }
 
@@ -20,23 +20,34 @@ class Input extends MovableObject {
     if (Input._installed) return;
     Input._installed = true;
 
-    window.addEventListener("keydown", (e) => Input.onKey(e, true));
-    window.addEventListener("keyup", (e) => Input.onKey(e, false));
+    window.addEventListener("keydown", (event) => Input.onKey(event, true));
+    window.addEventListener("keyup", (event) => Input.onKey(event, false));
   }
 
-  static onKey(e, down) {
-    const i = Input.active || window.input;
-    if (!i) return;
+  static onKey(event, isDown) {
+    const input = Input.getActiveInput();
+    if (!input) return;
 
-    const key = e.key;
-    const k = key.toLowerCase();
+    const key = event.key;
+    const keyLower = key.toLowerCase();
 
-    if (k === "d" || k === "arrowright") i.RIGHT = down;
-    if (k === "a" || k === "arrowleft") i.LEFT = down;
-    if (k === "w" || k === "arrowup") i.UP = down;
+    Input.handleMoveKeys(input, keyLower, isDown);
+    Input.handleAttackKeys(input, keyLower, key, isDown);
+  }
 
-    if (k === "k" || k === "x") i.ATA1 = down;
-    if (k === "j" || k === "y" || key === "z") i.ATA2 = down;
-    if (k === "l" || k === "c") i.ULTIMATE = down;
+  static getActiveInput() {
+    return Input.active || window.input || null;
+  }
+
+  static handleMoveKeys(input, keyLower, isDown) {
+    if (keyLower === "d" || keyLower === "arrowright") input.RIGHT = isDown;
+    if (keyLower === "a" || keyLower === "arrowleft") input.LEFT = isDown;
+    if (keyLower === "w" || keyLower === "arrowup") input.UP = isDown;
+  }
+
+  static handleAttackKeys(input, keyLower, key, isDown) {
+    if (keyLower === "k" || keyLower === "x") input.ATA1 = isDown;
+    if (keyLower === "j" || keyLower === "y" || key === "z") input.ATA2 = isDown;
+    if (keyLower === "l" || keyLower === "c") input.ULTIMATE = isDown;
   }
 }

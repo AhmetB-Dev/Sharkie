@@ -2,10 +2,8 @@ class Enemy_Typ01 extends MovableObject {
   y = 300;
   height = 70;
   width = 90;
-
   isDead = false;
   isAttacking = false;
-
   deathAnimationDone = false;
   deathFrame = 0;
 

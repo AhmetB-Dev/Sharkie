@@ -97,7 +97,6 @@
     background-color: unset;
     padding: 34px 38px;
     border-radius: 64px;
-    box-shadow: unset;
     color: #fff;
     text-align: center;
   }
@@ -169,7 +168,6 @@
     background-color: unset;
     padding: 34px 38px;
     border-radius: 64px;
-    box-shadow: unset;
     color: #fff;
     text-align: center;
   }
@@ -246,7 +244,6 @@
     width: min(980px, 89vw);
     padding: 34px 38px;
     border-radius: 64px;
-    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
     color: #fff;
     text-align: center;
   }

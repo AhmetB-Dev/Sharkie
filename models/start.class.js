@@ -1,41 +1,74 @@
 class StartScreen {
   constructor(onStart) {
     this.onStart = onStart;
-    this.screen = document.getElementById("startScreen");
-
-    this.muteBtn = document.getElementById("muteButton");
-    this.muteHomeParent = this.muteBtn?.parentNode || null;
-    this.muteHomeNext = this.muteBtn?.nextSibling || null;
-
+    this.cacheElements();
+    this.cacheMuteHomePosition();
     this.render();
     this.bind();
   }
 
+  cacheElements() {
+    this.screen = document.getElementById("startScreen");
+    this.muteBtn = document.getElementById("muteButton");
+  }
+
+  cacheMuteHomePosition() {
+    this.muteHomeParent = this.muteBtn?.parentNode || null;
+    this.muteHomeNext = this.muteBtn?.nextSibling || null;
+  }
+
   render() {
+    const template = this.getTemplateOrThrow();
+    this.screen.replaceChildren(template.content.cloneNode(true));
+  }
+
+  getTemplateOrThrow() {
     const tpl = document.getElementById("startScreenTemplate");
     if (!tpl) throw new Error("startScreenTemplate fehlt in index.html");
-
-    // Startscreen-Root leeren und Template rein-klonen
-    this.screen.replaceChildren(tpl.content.cloneNode(true));
+    return tpl;
   }
 
   bind() {
-    this.screen.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (btn.id === "startBtn") return this.onStart?.();
-      if (btn.id === "settingsBtn") return this.toggleSettings(true);
-      if (btn.id === "closeSettingsBtn") return this.toggleSettings(false);
-      if (btn.id === "fsBtn") return window.requestFullscreen?.();
-    });
-    this.screen.addEventListener("change", (e) => {
-      if (e.target.id !== "soundToggle") return;
-      e.stopPropagation();
-      window.audioManager?.setEnabled?.(e.target.checked);
-    });
+    this.bindClick();
+    this.bindChange();
     this.syncSoundToggleState();
+  }
+
+  bindClick() {
+    this.screen.addEventListener("click", (event) => {
+      const button = this.getClickedButton(event);
+      if (!button) return;
+      this.handleButtonClick(button, event);
+    });
+  }
+
+  getClickedButton(event) {
+    return event.target.closest("button");
+  }
+
+  handleButtonClick(button, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.runButtonAction(button.id);
+  }
+
+  runButtonAction(buttonId) {
+    if (buttonId === "startBtn") return this.onStart?.();
+    if (buttonId === "settingsBtn") return this.toggleSettings(true);
+    if (buttonId === "closeSettingsBtn") return this.toggleSettings(false);
+    if (buttonId === "fsBtn") return window.requestFullscreen?.();
+  }
+
+  bindChange() {
+    this.screen.addEventListener("change", (event) => {
+      if (!this.isSoundToggle(event.target)) return;
+      event.stopPropagation();
+      window.audioManager?.setEnabled?.(event.target.checked);
+    });
+  }
+
+  isSoundToggle(target) {
+    return target?.id === "soundToggle";
   }
 
   loadSettings() {
@@ -44,13 +77,25 @@ class StartScreen {
   }
 
   toggleSettings(open) {
+    const elements = this.getSettingsElements();
+    if (!elements) return;
+    this.applySettingsClasses(elements, open);
+    this.toggleMuteButton(open);
+  }
+
+  getSettingsElements() {
     const panel = this.screen.querySelector("#settingsPanel");
     const card = this.screen.querySelector(".startCard");
-    if (!panel || !card) return;
+    if (!panel || !card) return null;
+    return { panel, card };
+  }
 
+  applySettingsClasses({ panel, card }, open) {
     panel.classList.toggle("show", open);
     card.classList.toggle("settingsOpen", open);
+  }
 
+  toggleMuteButton(open) {
     if (open) this.mountMuteButton();
     else this.unmountMuteButton();
   }

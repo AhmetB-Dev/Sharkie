@@ -91,7 +91,6 @@ class AudioManager {
   setEnabled(enabled) {
     this.enabled = enabled;
     this.applyMusicState();
-
   }
 }
 
@@ -103,14 +102,3 @@ document.addEventListener("keydown", (e) => {
     audioManager.toggleMute();
   }
 });
-
-window.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("muteButton");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      audioManager.toggleMute();
-      btn.textContent = audioManager.enabled ? "🔊 Sound an" : "🔇 Sound aus";
-    });
-  }
-});
-

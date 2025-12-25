@@ -19,9 +19,9 @@ class EnemyManager {
   }
 
   shouldSkipTick() {
-    const char = this.character;
-    const w = char.world;
-    return char.dead() || (w && (w.endScreen || w.isPaused));
+    const character = this.character;
+    const world = character.world;
+    return character.dead() || (world && (world.endScreen || world.isPaused));
   }
 
   updateEnemyAI() {
@@ -31,22 +31,22 @@ class EnemyManager {
   }
 
   updateTyp1() {
-    for (const e of this.level.enemies) {
-      if (e instanceof Enemy_Typ01 && !e.isDead) e.updateAI(this.character);
+    for (const enemy of this.level.enemies) {
+      if (enemy instanceof Enemy_Typ01 && !enemy.isDead) enemy.updateAI(this.character);
     }
   }
 
   updateTyp2() {
-    for (const e of this.level.enemies) {
-      if (e instanceof Enemy_Typ02 && !e.isDead) e.updateAI(this.character);
+    for (const enemy of this.level.enemies) {
+      if (enemy instanceof Enemy_Typ02 && !enemy.isDead) enemy.updateAI(this.character);
     }
   }
 
   updateBoss() {
-    for (const e of this.level.enemies) {
-      if (!(e instanceof Boss)) continue;
-      this.activateBoss(e);
-      this.followBoss(e);
+    for (const enemy of this.level.enemies) {
+      if (!(enemy instanceof Boss)) continue;
+      this.activateBoss(enemy);
+      this.followBoss(enemy);
     }
   }
 
@@ -64,42 +64,42 @@ class EnemyManager {
   }
 
   updateCharacterHealth() {
-    const char = this.character;
-    const bar = this.healthBar;
+    const character = this.character;
+    const healthBar = this.healthBar;
     if (this.shouldSkipTick()) return;
 
-    for (let i = this.level.enemies.length - 1; i >= 0; i--) {
-      const enemy = this.level.enemies[i];
-      if (this.handleDeadEnemy(enemy, i, char)) continue;
-      if (this.handleMeleeKill(enemy, char)) continue;
-      this.handleContactDamage(enemy, char, bar);
+    for (let enemyIndex = this.level.enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
+      const enemy = this.level.enemies[enemyIndex];
+      if (this.handleDeadEnemy(enemy, enemyIndex, character)) continue;
+      if (this.handleMeleeKill(enemy, character)) continue;
+      this.handleContactDamage(enemy, character, healthBar);
     }
   }
 
-  handleDeadEnemy(enemy, index, char) {
+  handleDeadEnemy(enemy, index, character) {
     if (!enemy?.isDead) return false;
-    if (char.isColliding(enemy)) this.level.enemies.splice(index, 1);
+    if (character.isColliding(enemy)) this.level.enemies.splice(index, 1);
     return true;
   }
 
-  handleMeleeKill(enemy, char) {
+  handleMeleeKill(enemy, character) {
     if (!(enemy instanceof Enemy_Typ01)) return false;
     if (enemy.isDead) return false;
-    if (!char.hitmakerRange(enemy)) return false;
+    if (!character.hitmakerRange(enemy)) return false;
 
     enemy.die();
     if (window.audioManager) window.audioManager.play("enemyDeath");
     return true;
   }
 
-  handleContactDamage(enemy, char, bar) {
+  handleContactDamage(enemy, character, healthBar) {
     if (!enemy || enemy.isDead || enemy.dead()) return;
-    if (!char.isColliding(enemy)) return;
-    if (!this.canEnemyDamagePlayer(enemy, char)) return;
+    if (!character.isColliding(enemy)) return;
+    if (!this.canEnemyDamagePlayer(enemy, character)) return;
 
-    this.markLastHitSource(enemy, char);
-    char.hit();
-    bar.setPercentrage(char.energy);
+    this.markLastHitSource(enemy, character);
+    character.hit();
+    healthBar.setPercentrage(character.energy);
   }
 
   isPlayerHurt(character) {
@@ -108,26 +108,26 @@ class EnemyManager {
     return false;
   }
 
-  canEnemyDamagePlayer(enemy, char) {
-    if (enemy instanceof Boss) return enemy.canDamagePlayer(char);
-    return !this.isPlayerHurt(char);
+  canEnemyDamagePlayer(enemy, character) {
+    if (enemy instanceof Boss) return enemy.canDamagePlayer(character);
+    return !this.isPlayerHurt(character);
   }
 
-  markLastHitSource(enemy, char) {
-    if (enemy instanceof Boss) return (char.lastHitByEnemy1 = true);
-    char.lastHitByEnemy1 = !(enemy instanceof Enemy_Typ02);
+  markLastHitSource(enemy, character) {
+    if (enemy instanceof Boss) return (character.lastHitByEnemy1 = true);
+    character.lastHitByEnemy1 = !(enemy instanceof Enemy_Typ02);
   }
 
   checkProjectileHits() {
-    const list = this.throwableObjects;
+    const projectiles = this.throwableObjects;
 
-    for (let p = list.length - 1; p >= 0; p--) {
-      const proj = list[p];
-      const hitEnemy = this.findFirstHitEnemy(proj);
+    for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
+      const projectile = projectiles[projectileIndex];
+      const hitEnemy = this.findFirstHitEnemy(projectile);
       if (!hitEnemy) continue;
 
-      const consumed = this.applyProjectileRules(hitEnemy, proj);
-      if (consumed) list.splice(p, 1);
+      const consumed = this.applyProjectileRules(hitEnemy, projectile);
+      if (consumed) projectiles.splice(projectileIndex, 1);
     }
   }
 

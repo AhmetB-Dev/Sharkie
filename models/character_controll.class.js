@@ -10,123 +10,136 @@ class CharacterController {
   }
 
   update() {
-    const c = this.character;
-    const world = c.world;
+    const character = this.character;
+    const world = character.world;
     if (!world || world.endScreen || world.isPaused) return;
 
-    const input = c.world && c.world.input;
+    const input = world.input;
     if (!input) return;
 
-    this.updateCharacter(c, input);
+    this.updateCharacter(character, input);
   }
 
-  updateCharacter(c, input) {
-    const idleTime = this.updateIdleState(c);
-    if (this.handleDead(c)) return;
-    if (this.handleHurt(c)) return;
-    if (this.handleUltimate(c, input)) return;
-    if (this.handleAttack1(c, input)) return;
-    if (this.handleMelee(c, input)) return;
-    if (this.handleVerticalMove(c, input)) return;
-    if (this.handleHorizontalMove(c, input)) return;
-    if (this.handleLongIdle(c, idleTime)) return;
-    c.playAnimation(c.IMAGES_IDLE);
+  updateCharacter(character, input) {
+    const idleDurationMs = this.updateIdleState(character);
+    if (this.handleDead(character)) return;
+    if (this.handleHurt(character)) return;
+    if (this.handleUltimate(character, input)) return;
+    if (this.handleAttack1(character, input)) return;
+    if (this.handleMelee(character, input)) return;
+    if (this.handleVerticalMove(character, input)) return;
+    if (this.handleHorizontalMove(character, input)) return;
+    if (this.handleLongIdle(character, idleDurationMs)) return;
+    character.playAnimation(character.IMAGES_IDLE);
   }
 
-  updateIdleState(c) {
+  updateIdleState(character) {
     const now = Date.now();
-    if (c.isPlayerActive()) {
-      c.lastActionTime = now;
-      c.longIdlePlayed = false;
-      c.longIdleFrame = 0;
+    if (character.isPlayerActive()) {
+      character.lastActionTime = now;
+      character.longIdlePlayed = false;
+      character.longIdleFrame = 0;
     }
-    return now - c.lastActionTime;
+    return now - character.lastActionTime;
   }
 
-  handleDead(c) {
-    if (!c.dead()) return false;
+  handleDead(character) {
+    if (!character.dead()) return false;
 
-    c.playAnimation(c.IMAGES_DEAD_ANI1);
+    character.playAnimation(character.IMAGES_DEAD_ANI1);
 
-    if (c.world) {
-      c.world.showEndScreen(false);
+    if (character.world) {
+      character.world.showEndScreen(false);
     }
 
     return true;
   }
 
-  handleHurt(c) {
-    if (!c.hitHurt()) return false;
+  handleHurt(character) {
+    if (!character.hitHurt()) return false;
 
-    const frames = c.lastHitByEnemy1 ? c.IMAGES_HURT_ANI1 : c.IMAGES_HURT_ANI2;
+    const hurtFrames = character.lastHitByEnemy1 ? character.IMAGES_HURT_ANI1 : character.IMAGES_HURT_ANI2;
 
     if (window.audioManager) window.audioManager.play("hitMaker");
-    c.playAnimation(frames);
+    character.playAnimation(hurtFrames);
     return true;
   }
 
-  handleVerticalMove(c, input) {
-    if (!(input.UP && !c.isAboveGround())) return false;
-    c.playAnimation(c.IMAGES_WALK);
+  handleVerticalMove(character, input) {
+    if (!(input.UP && !character.isAboveGround())) return false;
+    character.playAnimation(character.IMAGES_WALK);
     return true;
   }
 
-  handleHorizontalMove(c, input) {
+  handleHorizontalMove(character, input) {
     if (!(input.RIGHT || input.LEFT)) return false;
-    c.playAnimation(c.IMAGES_WALK);
+    character.playAnimation(character.IMAGES_WALK);
     return true;
   }
 
-  handleUltimate(c, input) {
-
-    if (!input.ULTIMATE || c.items <= 0) {
-      c.ultimateReady = true;
+  handleUltimate(character, input) {
+    if (!input.ULTIMATE || character.items <= 0) {
+      character.ultimateReady = true;
       return false;
     }
 
-    c.playAnimation(c.IMAGES_UTLIMATE_ATTACK);
-    this.handleFrameShot(c, c.IMAGES_UTLIMATE_ATTACK, () => c.shootUltimateBubble(), "ultimateReady");
+    character.playAnimation(character.IMAGES_UTLIMATE_ATTACK);
+    this.handleFrameShot(
+      character,
+      character.IMAGES_UTLIMATE_ATTACK,
+      () => character.shootUltimateBubble(),
+      "ultimateReady"
+    );
     return true;
   }
-  handleAttack1(c, input) {
+
+  handleAttack1(character, input) {
     if (!input.ATA1) {
-      c.attack1Ready = true;
+      character.attack1Ready = true;
       return false;
     }
-    c.playAnimation(c.IMAGES_ATTACK_ANI1);
-    this.handleFrameShot(c, c.IMAGES_ATTACK_ANI1, () => c.shootAttack1Bubble(), "attack1Ready");
+
+    character.playAnimation(character.IMAGES_ATTACK_ANI1);
+    this.handleFrameShot(
+      character,
+      character.IMAGES_ATTACK_ANI1,
+      () => character.shootAttack1Bubble(),
+      "attack1Ready"
+    );
     return true;
   }
 
-  handleMelee(c, input) {
+  handleMelee(character, input) {
     if (!input.ATA2) {
-      c.hitRange = false;
+      character.hitRange = false;
       return false;
     }
-    c.playAnimation(c.IMAGES_ATTACK_ANI2);
-    c.hitRange = true;
+
+    character.playAnimation(character.IMAGES_ATTACK_ANI2);
+    character.hitRange = true;
     return true;
   }
 
-  handleLongIdle(c, idleTime) {
-    if (idleTime <= c.delay) return false;
-    if (!c.longIdlePlayed) {
-      c.playLongIdleOnce();
+  handleLongIdle(character, idleDurationMs) {
+    if (idleDurationMs <= character.delay) return false;
+
+    if (!character.longIdlePlayed) {
+      character.playLongIdleOnce();
     } else {
-      c.playLongIdleTail();
+      character.playLongIdleTail();
     }
     return true;
   }
 
-  handleFrameShot(c, frames, shootFn, readyFlag) {
-    const idx = (c.currentImage - 1) % frames.length;
-    const last = frames.length - 1;
+  handleFrameShot(character, animationFrames, shootFn, readyFlagName) {
+    const currentFrameIndex = (character.currentImage - 1) % animationFrames.length;
+    const lastFrameIndex = animationFrames.length - 1;
 
-    if (idx === last && c[readyFlag]) {
+    if (currentFrameIndex === lastFrameIndex && character[readyFlagName]) {
       shootFn();
-      c[readyFlag] = false;
+      character[readyFlagName] = false;
     }
 
-    if (idx !== last) c[readyFlag] = true;
+    if (currentFrameIndex !== lastFrameIndex) character[readyFlagName] = true;
   }
 }

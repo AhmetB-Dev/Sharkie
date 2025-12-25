@@ -26,24 +26,24 @@ class DrawableObject {
   }
 
   showHitbox(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Coin ||
-      this instanceof AmmoPickup ||
-      this instanceof Enemy_Typ01 ||
-      this instanceof Enemy_Typ02 ||
-      this instanceof Boss
-    ) {
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "red";
-      const x = this.x + this.offset.left;
-      const y = this.y + this.offset.top;
-      const w = this.width - this.offset.left - this.offset.right;
-      const h = this.height - this.offset.top - this.offset.bottom;
+    if (!this.debugHitbox) return;
+    const strokeRect = this.getHitboxRect();
+    this.drawRect(ctx, strokeRect);
+  }
 
-      ctx.rect(x, y, w, h);
-      ctx.stroke();
-    }
+  getHitboxRect() {
+    const x = this.x + this.offset.left;
+    const y = this.y + this.offset.top;
+    const w = this.width - this.offset.left - this.offset.right;
+    const h = this.height - this.offset.top - this.offset.bottom;
+    return { x, y, w, h };
+  }
+
+  drawRect(ctx, strokeRect) {
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(strokeRect.x, strokeRect.y, strokeRect.w, strokeRect.h);
+    ctx.stroke();
   }
 }

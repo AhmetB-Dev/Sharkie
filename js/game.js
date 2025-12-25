@@ -2,32 +2,35 @@ let canvas, world, input, startScreen;
 const BASE_W = 720;
 const BASE_H = 480;
 const ROTATE_BREAKPOINT = 900;
+const TOUCH_MAX = 1024;
 
 function boot() {
-  canvas = document.getElementById("canvas");
-  canvas.style.display = "none";
+  initCanvas();
   setupResponsive();
   applyResponsiveLayout();
+  initStartScreen();
+  registerCanvasPointerHandlers();
+}
 
+function initCanvas() {
+  canvas = document.getElementById("canvas");
+  canvas.classList.add("d-none");
+}
+
+function initStartScreen() {
   startScreen = new StartScreen(() => startGame());
   startScreen.show();
   startScreen.screen.addEventListener("pointerdown", startTitleMusicOnce, { once: true });
-  registerCanvasPointerHandlers();
 }
 
 function startGame() {
   startScreen.hide();
   canvas.style.display = "block";
   window.audioManager?.playMusic("game");
-
   input = new Input();
-  window.input = input;
-
   input.attachKeyboard();
   world = new World(canvas, input);
   window.world = world;
-
-  registerEndScreenInput();
   applyResponsiveLayout();
 }
 
@@ -42,60 +45,45 @@ function setupResponsive() {
 
 function applyResponsiveLayout() {
   if (!canvas) return;
-
   const overlay = document.getElementById("rotateOverlay");
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  const shouldRotate = vw < ROTATE_BREAKPOINT && vh > vw;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const shouldRotate = shouldShowRotateOverlay(viewportWidth, viewportHeight);
   overlay?.classList.toggle("show", shouldRotate);
 
   if (world) world.isPaused = shouldRotate;
+  world?.touchControls?.setEnabled?.(shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight));
+}
 
-  const enableTouch =
-    !shouldRotate && window.matchMedia("(pointer:coarse)").matches && Math.min(vw, vh) <= 1024;
+function shouldShowRotateOverlay(viewportWidth, viewportHeight) {
+  const isPortrait = viewportHeight > viewportWidth;
+  return viewportWidth < ROTATE_BREAKPOINT && isPortrait;
+}
 
-  world?.touchControls?.setEnabled?.(enableTouch);
+function shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight) {
+  if (shouldRotate) return false;
+  const isCoarsePointer = window.matchMedia("(pointer:coarse)").matches;
+  const isSmallEnough = Math.min(viewportWidth, viewportHeight) <= TOUCH_MAX;
+  return isCoarsePointer && isSmallEnough;
 }
 
 function restartGame() {
   location.reload();
 }
 
-function registerEndScreenInput() {
-  canvas.addEventListener("pointerdown", onCanvasPointerDown);
-}
-
-function onCanvasPointerDown(e) {
-  if (!world || !world.endScreen) return;
-  const pos = getCanvasPointerPos(e);
-  world.endScreen.handleClick(pos.x, pos.y);
-}
-
-function getCanvasPointerPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
-}
 async function requestFullscreen() {
-  const el = document.documentElement;
-
+  const full = document.documentElement;
   try {
     if (document.fullscreenElement) {
       await document.exitFullscreen();
       return;
     }
-
-    if (el.requestFullscreen) {
-      await el.requestFullscreen();
-    }
+    if (full.requestFullscreen) await full.requestFullscreen();
   } finally {
-    if (typeof applyResponsiveLayout === "function") {
-      applyResponsiveLayout();
-    }
+    applyResponsiveLayout?.();
   }
 }
+
 function registerCanvasPointerHandlers() {
   canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
   canvas.addEventListener("pointermove", onPointerMove, { passive: false });
@@ -103,30 +91,35 @@ function registerCanvasPointerHandlers() {
   window.addEventListener("pointercancel", onPointerUp);
 }
 
-function onPointerDown(e) {
-  e.preventDefault();
-  const p = getCanvasPointerPos(e);
+function onPointerDown(event) {
+  event.preventDefault();
+  const pos = getCanvasPointerPos(event);
 
   if (world?.endScreen) {
-    world.endScreen.handleClick(p.x, p.y);
+    world.endScreen.handleClick(pos.x, pos.y);
     return;
   }
 
-  world?.touchControls?.pointerDown(p.x, p.y, e.pointerId);
+  world?.touchControls?.pointerDown(pos.x, pos.y, event.pointerId);
 }
 
-function onPointerMove(e) {
-  const pointer = getCanvasPointerPos(e);
-  world?.touchControls?.pointerMove(pointer.x, pointer.y, pointer.pointerId);
+function onPointerMove(event) {
+  event.preventDefault();
+  const pos = getCanvasPointerPos(event);
+  world?.touchControls?.pointerMove(pos.x, pos.y, event.pointerId);
 }
 
-function onPointerUp(e) {
-  world?.touchControls?.pointerUp(e.pointerId);
+function onPointerUp(event) {
+  world?.touchControls?.pointerUp(event.pointerId);
 }
 
-function getCanvasPointerPos(e) {
+function getCanvasPointerPos(event) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
-  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+
+  return {
+    x: (event.clientX - rect.left) * scaleX,
+    y: (event.clientY - rect.top) * scaleY,
+  };
 }
