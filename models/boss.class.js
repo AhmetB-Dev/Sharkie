@@ -186,7 +186,7 @@ class Boss extends MovableObject {
     const normY = deltaY / (distanceToCharacter || 1);
 
     this.x += normX * moveStep;
-    this.y += normY * moveStep;
+    this.y += Math.min(0, normY * moveStep);
 
     this.otherDirection = deltaX > 0;
     this.isAttacking = distanceToCharacter < this.attackRange;
