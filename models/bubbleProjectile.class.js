@@ -1,4 +1,15 @@
+/**
+ * Bubble projectile shot by the character (normal / ultimate).
+ * @extends MovableObject
+ */
 class BubbleProjectile extends MovableObject {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {string[]} images - Animation frame paths.
+   * @param {boolean} [shootToLeft=false]
+   * @param {boolean} [isUltimate=false]
+   */
   constructor(x, y, images, shootToLeft = false, isUltimate = false) {
     super();
     this.isUltimate = isUltimate;
@@ -15,12 +26,20 @@ class BubbleProjectile extends MovableObject {
     this.startMovement();
   }
 
+  /**
+   * Starts sprite animation loop.
+   * @returns {void}
+   */
   startAnimation() {
     setInterval(() => {
       this.playAnimation(this.animationFrames);
     }, 1000 / 15);
   }
 
+  /**
+   * Starts movement loop (left/right depending on otherDirection).
+   * @returns {void}
+   */
   startMovement() {
     setInterval(() => {
       if (this.otherDirection) {

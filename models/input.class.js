@@ -1,21 +1,36 @@
+/**
+ * Input state holder (keyboard -> boolean flags).
+ * Uses static singleton-like access via `Input.active` and `window.input`.
+ * @extends MovableObject
+ */
 class Input extends MovableObject {
-  LEFT = false;
-  RIGHT = false;
-  UP = false;
-  THROW = false;
-  ATA1 = false;
-  ATA2 = false;
-  ULTIMATE = false;
+  /** @type {boolean} */ LEFT = false;
+  /** @type {boolean} */ RIGHT = false;
+  /** @type {boolean} */ UP = false;
+  /** @type {boolean} */ THROW = false;
+  /** @type {boolean} */ ATA1 = false;
+  /** @type {boolean} */ ATA2 = false;
+  /** @type {boolean} */ ULTIMATE = false;
 
+  /** @type {Input|null} */
   static active = null;
+  /** @type {boolean} */
   static _installed = false;
 
+  /**
+   * Registers this instance as active input and installs keyboard listeners once.
+   * @returns {void}
+   */
   attachKeyboard() {
     Input.active = this;
     window.input = this;
     Input.installOnce();
   }
 
+  /**
+   * Installs global keydown/keyup listeners once.
+   * @returns {void}
+   */
   static installOnce() {
     if (Input._installed) return;
     Input._installed = true;
@@ -24,6 +39,12 @@ class Input extends MovableObject {
     window.addEventListener("keyup", (event) => Input.onKey(event, false));
   }
 
+  /**
+   * Main key handler; routes to move/attack key mapping.
+   * @param {KeyboardEvent} event
+   * @param {boolean} isDown
+   * @returns {void}
+   */
   static onKey(event, isDown) {
     const input = Input.getActiveInput();
     if (!input) return;
@@ -35,16 +56,35 @@ class Input extends MovableObject {
     Input.handleAttackKeys(input, keyLower, key, isDown);
   }
 
+  /**
+   * Returns the active input instance (static or global).
+   * @returns {Input|null}
+   */
   static getActiveInput() {
     return Input.active || window.input || null;
   }
 
+  /**
+   * Maps movement keys to flags.
+   * @param {Input} input
+   * @param {string} keyLower
+   * @param {boolean} isDown
+   * @returns {void}
+   */
   static handleMoveKeys(input, keyLower, isDown) {
     if (keyLower === "d" || keyLower === "arrowright") input.RIGHT = isDown;
     if (keyLower === "a" || keyLower === "arrowleft") input.LEFT = isDown;
     if (keyLower === "w" || keyLower === "arrowup") input.UP = isDown;
   }
 
+  /**
+   * Maps attack keys to flags.
+   * @param {Input} input
+   * @param {string} keyLower
+   * @param {string} key
+   * @param {boolean} isDown
+   * @returns {void}
+   */
   static handleAttackKeys(input, keyLower, key, isDown) {
     if (keyLower === "k" || keyLower === "x") input.ATA1 = isDown;
     if (keyLower === "j" || keyLower === "y" || key === "z") input.ATA2 = isDown;

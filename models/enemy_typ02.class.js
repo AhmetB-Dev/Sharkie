@@ -1,3 +1,7 @@
+/**
+ * Enemy type 2 (jellyfish): patrol + interval-driven walk/attack/death animations.
+ * @extends MovableObject
+ */
 class Enemy_Typ02 extends MovableObject {
   y = 300;
   height = 60;
@@ -16,22 +20,34 @@ class Enemy_Typ02 extends MovableObject {
     this.enemySpeedTyp2();
     this.startPatrol(250);
   }
+
+  /** @returns {void} */
   linkAssets() {
     this.ENEMIES_WALK = EnemyAssets.TYPE2_WALK;
     this.ENEMIES_ATTACK = EnemyAssets.TYPE2_ATTACK;
     this.ENEMIES_DEAD = EnemyAssets.TYPE2_DEAD;
   }
+
+  /** @returns {void} */
   loadAssets() {
     this.animationImage(this.ENEMIES_WALK);
     this.animationImage(this.ENEMIES_ATTACK);
     this.animationImage(this.ENEMIES_DEAD);
   }
 
+  /**
+   * Starts animation intervals.
+   * @returns {void}
+   */
   animationTyp2() {
     this.animationWalktyp2();
     this.animationDeadtyp2();
   }
 
+  /**
+   * Spawns enemy at random x/y within predefined ranges.
+   * @returns {void}
+   */
   spawnTyp2Random() {
     const minX = 1950;
     const maxX = 2800;
@@ -42,10 +58,18 @@ class Enemy_Typ02 extends MovableObject {
     this.y = minY + Math.random() * (maxY - minY);
   }
 
+  /**
+   * Randomizes movement speed.
+   * @returns {void}
+   */
   enemySpeedTyp2() {
     this.speed = 0.8 + Math.random() * 1.5;
   }
 
+  /**
+   * Switches enemy into dead state and changes sprite size.
+   * @returns {void}
+   */
   die() {
     if (this.isDead) return;
     this.isDead = true;
@@ -55,6 +79,10 @@ class Enemy_Typ02 extends MovableObject {
     this.height = 80;
   }
 
+  /**
+   * Temporary "hit" flag (short window).
+   * @returns {void}
+   */
   startHitAnimation() {
     this.isHittingPlayer = true;
     setTimeout(() => {
@@ -62,6 +90,11 @@ class Enemy_Typ02 extends MovableObject {
     }, 150);
   }
 
+  /**
+   * Sets attack state based on distance to character.
+   * @param {Character} character
+   * @returns {void}
+   */
   updateAI(character) {
     const dx = character.x - this.x;
     const dy = character.y - this.y;
@@ -69,6 +102,10 @@ class Enemy_Typ02 extends MovableObject {
     this.isAttacking = distance < 250;
   }
 
+  /**
+   * Interval loop for walk/attack animation while alive.
+   * @returns {void}
+   */
   animationWalktyp2() {
     setInterval(() => {
       if (this.isDead) {
@@ -83,6 +120,10 @@ class Enemy_Typ02 extends MovableObject {
     }, 175);
   }
 
+  /**
+   * Interval loop for death animation while dead.
+   * @returns {void}
+   */
   animationDeadtyp2() {
     setInterval(() => {
       if (this.isDead) {

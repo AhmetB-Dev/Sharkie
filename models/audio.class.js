@@ -1,13 +1,34 @@
+/**
+ * @typedef {"coin"|"tailHit"|"bubbleShot"|"ammoPickup"|"bossHit"|"bossIntro"|"hitMaker"|"enemyDeath"} SoundName
+ * @typedef {"title"|"game"} MusicKey
+ */
+
+/**
+ * Central audio manager for SFX and background music.
+ */
 class AudioManager {
   constructor() {
+    /** @type {boolean} */
     this.enabled = true;
+
+    /** @type {number} */
     this.cooldownMs = 120;
+
+    /** @type {Record<string, number>} */
     this.lastPlay = {};
-    this.soundData();
+
+    /** @type {HTMLAudioElement|null} */
     this.currentMusic = null;
+
+    this.soundData();
   }
 
+  /**
+   * Initializes all sound and music assets.
+   * @returns {void}
+   */
   soundData() {
+    /** @type {Record<SoundName, HTMLAudioElement>} */
     this.sounds = {
       coin: this.createSound("assets/assets_sharkie/audio/coin.wav"),
       tailHit: this.createSound("assets/assets_sharkie/audio/tail.wav"),
@@ -18,17 +39,30 @@ class AudioManager {
       hitMaker: this.createSound("assets/assets_sharkie/audio/hit.wav"),
       enemyDeath: this.createSound("assets/assets_sharkie/audio/enemy.wav"),
     };
+
+    /** @type {Record<MusicKey, HTMLAudioElement>} */
     this.music = {
       title: this.createMusic("assets/assets_sharkie/audio/bg_menu.wav"),
       game: this.createMusic("assets/assets_sharkie/audio/bg_main.wav"),
     };
   }
 
+  /**
+   * Creates a non-looping SFX audio element.
+   * @param {string} path
+   * @returns {HTMLAudioElement}
+   */
   createSound(path) {
     const audio = new Audio(path);
     audio.volume = 0.3;
     return audio;
   }
+
+  /**
+   * Creates a looping music audio element.
+   * @param {string} path
+   * @returns {HTMLAudioElement}
+   */
   createMusic(path) {
     const audio = new Audio(path);
     audio.loop = true;
@@ -36,6 +70,11 @@ class AudioManager {
     return audio;
   }
 
+  /**
+   * Switches and plays background music by key.
+   * @param {MusicKey|string} key
+   * @returns {void}
+   */
   playMusic(key) {
     const next = this.music[key];
     if (!next) return;
@@ -49,6 +88,10 @@ class AudioManager {
     this.applyMusicState();
   }
 
+  /**
+   * Stops current music and resets playback position.
+   * @returns {void}
+   */
   stopMusic() {
     if (!this.currentMusic) return;
     this.currentMusic.pause();
@@ -56,6 +99,10 @@ class AudioManager {
     this.currentMusic = null;
   }
 
+  /**
+   * Applies mute state to current music (play/pause).
+   * @returns {void}
+   */
   applyMusicState() {
     if (!this.currentMusic) return;
 
@@ -67,6 +114,11 @@ class AudioManager {
     this.currentMusic.play().catch(() => {});
   }
 
+  /**
+   * Plays a sound effect (with cooldown throttling).
+   * @param {SoundName|string} name
+   * @returns {void}
+   */
   play(name) {
     if (!this.enabled) return;
 
@@ -83,11 +135,20 @@ class AudioManager {
     clone.play().catch(() => {});
   }
 
+  /**
+   * Toggles global audio enabled state.
+   * @returns {void}
+   */
   toggleMute() {
     this.enabled = !this.enabled;
     this.applyMusicState();
   }
 
+  /**
+   * Sets global audio enabled state.
+   * @param {boolean} enabled
+   * @returns {void}
+   */
   setEnabled(enabled) {
     this.enabled = enabled;
     this.applyMusicState();

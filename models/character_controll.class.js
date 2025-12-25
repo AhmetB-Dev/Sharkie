@@ -1,14 +1,31 @@
+/**
+ * Controller that decides which character animation/action runs based on input and state.
+ * Runs in a low-frequency interval (10 FPS) to keep logic simple.
+ */
 class CharacterController {
+  /**
+   * @param {Character} character
+   */
   constructor(character) {
+    /** @type {Character} */
     this.character = character;
+    /** @type {number|null} */
     this.intervalId = null;
   }
 
+  /**
+   * Starts the controller update loop (10 FPS).
+   * @returns {void}
+   */
   start() {
     if (this.intervalId) return;
     this.intervalId = setInterval(() => this.update(), 1000 / 10);
   }
 
+  /**
+   * Main controller tick: reads world/input and updates character state.
+   * @returns {void}
+   */
   update() {
     const character = this.character;
     const world = character.world;
@@ -20,6 +37,12 @@ class CharacterController {
     this.updateCharacter(character, input);
   }
 
+  /**
+   * Executes state priority order (dead > hurt > ultimate > attack1 > melee > move > idle).
+   * @param {Character} character
+   * @param {any} input
+   * @returns {void}
+   */
   updateCharacter(character, input) {
     const idleDurationMs = this.updateIdleState(character);
     if (this.handleDead(character)) return;
@@ -33,6 +56,11 @@ class CharacterController {
     character.playAnimation(character.IMAGES_IDLE);
   }
 
+  /**
+   * Updates lastActionTime and resets long-idle flags when player is active.
+   * @param {Character} character
+   * @returns {number} Idle duration in milliseconds.
+   */
   updateIdleState(character) {
     const now = Date.now();
     if (character.isPlayerActive()) {
@@ -43,6 +71,11 @@ class CharacterController {
     return now - character.lastActionTime;
   }
 
+  /**
+   * Handles death animation and triggers losing end screen.
+   * @param {Character} character
+   * @returns {boolean} True when handled.
+   */
   handleDead(character) {
     if (!character.dead()) return false;
 
@@ -55,6 +88,11 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Handles hurt animation (different sets depending on last hit source).
+   * @param {Character} character
+   * @returns {boolean} True when handled.
+   */
   handleHurt(character) {
     if (!character.hitHurt()) return false;
 
@@ -65,18 +103,36 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Handles "UP" input (jumping/swim up) animation.
+   * @param {Character} character
+   * @param {any} input
+   * @returns {boolean} True when handled.
+   */
   handleVerticalMove(character, input) {
     if (!(input.UP && !character.isAboveGround())) return false;
     character.playAnimation(character.IMAGES_WALK);
     return true;
   }
 
+  /**
+   * Handles left/right movement animation.
+   * @param {Character} character
+   * @param {any} input
+   * @returns {boolean} True when handled.
+   */
   handleHorizontalMove(character, input) {
     if (!(input.RIGHT || input.LEFT)) return false;
     character.playAnimation(character.IMAGES_WALK);
     return true;
   }
 
+  /**
+   * Handles ultimate attack animation and fires bubble on last frame.
+   * @param {Character} character
+   * @param {any} input
+   * @returns {boolean} True when handled.
+   */
   handleUltimate(character, input) {
     if (!input.ULTIMATE || character.items <= 0) {
       character.ultimateReady = true;
@@ -93,6 +149,12 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Handles attack 1 animation and fires bubble on last frame.
+   * @param {Character} character
+   * @param {any} input
+   * @returns {boolean} True when handled.
+   */
   handleAttack1(character, input) {
     if (!input.ATA1) {
       character.attack1Ready = true;
@@ -109,6 +171,12 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Handles melee animation and toggles `hitRange` flag.
+   * @param {Character} character
+   * @param {any} input
+   * @returns {boolean} True when handled.
+   */
   handleMelee(character, input) {
     if (!input.ATA2) {
       character.hitRange = false;
@@ -120,6 +188,12 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Handles long idle sequence after `character.delay` milliseconds.
+   * @param {Character} character
+   * @param {number} idleDurationMs
+   * @returns {boolean} True when handled.
+   */
   handleLongIdle(character, idleDurationMs) {
     if (idleDurationMs <= character.delay) return false;
 
@@ -131,6 +205,14 @@ class CharacterController {
     return true;
   }
 
+  /**
+   * Fires a shot once on the last animation frame using a readiness flag.
+   * @param {Character} character
+   * @param {string[]} animationFrames
+   * @param {Function} shootFn
+   * @param {string} readyFlagName
+   * @returns {void}
+   */
   handleFrameShot(character, animationFrames, shootFn, readyFlagName) {
     const currentFrameIndex = (character.currentImage - 1) % animationFrames.length;
     const lastFrameIndex = animationFrames.length - 1;

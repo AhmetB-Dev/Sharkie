@@ -1,3 +1,7 @@
+/**
+ * Level 1 definition (enemies, coins, ammo, background layers, ambient objects).
+ * @type {Level}
+ */
 const level1 = new Level(
   // 1) Enemies
   [
@@ -10,6 +14,7 @@ const level1 = new Level(
     new Boss(),
   ],
 
+  // 2) Coins
   [
     new Coin(500, 300),
     new Coin(558, 192),
@@ -51,6 +56,7 @@ const level1 = new Level(
     new Coin(558 * 6, 192),
   ],
 
+  // 3) Ammo pickups
   [
     new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Light - Left.png", 150, 320),
     new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Light - Right.png", 700, 320),
@@ -69,6 +75,7 @@ const level1 = new Level(
     new AmmoPickup("assets/assets_sharkie/4. Marcadores/Posión/Dark - Right.png", 4200, 320),
   ],
 
+  // 4) Background objects (layers + barrier)
   [
     new BackgroundObject("assets/assets_sharkie/3. Background/Layers/5. Water/L1.png", -719 * 2, 0, 720, 480),
     new BackgroundObject(
@@ -134,6 +141,8 @@ const level1 = new Level(
     new BackgroundObject("assets/assets_sharkie/3. Background/Layers/3.Fondo 1/D2.png", 719 * 7, 0, 720, 480),
     new BackgroundObject("assets/assets_sharkie/3. Background/Layers/2. Floor/D2.png", 719 * 7, 0, 720, 480),
   ],
+
+  // 5) Ambient objects
   [
     new AmbientObject("assets/assets_sharkie/3. Background/Layers/1. Light/1.png", 0, 0, 1000, 500),
     new AmbientObject("assets/assets_sharkie/3. Background/Layers/1. Light/2.png", 0, 1000, 1000, 500),
