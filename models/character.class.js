@@ -29,11 +29,6 @@ class Character extends MovableObject {
   /** @type {boolean} */ ultimateReady = true;
   /** @type {boolean} */ hitRange = false;
   /** @type {boolean} */ lastHitByEnemy1 = false;
-  /** @type {number} */ deathFrame = 0;
-  /** @type {boolean} */ deathAnimationDone = false;
-  /** @type {number} */ deathStepSec = 0.125;
-  /** @type {number} */ _deathAcc = 0;
-  /** @type {boolean} */ _deathStarted = false;
   /** @type {Offset} */
   offset = {
     top: 130,
@@ -112,8 +107,7 @@ class Character extends MovableObject {
    * @returns {void}
    */
   startWalkAnimation() {
-    this.walkRight();
-    this.walkLeft();
+    this.controller.startMovementLoops();
   }
 
   /**
@@ -121,18 +115,7 @@ class Character extends MovableObject {
    * @returns {void}
    */
   walkLeft() {
-    setInterval(() => {
-      if (!this.world) return;
-      if (this.dead() || this.world.endScreen) return;
-
-      if (this.world.input.LEFT && this.x > 0) {
-        this.x -= this.speed;
-        this.otherDirection = true;
-      }
-      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
-
-      this.world.camera_x = -this.x + 100;
-    }, 70);
+    this.controller.walkLeft();
   }
 
   /**
@@ -140,18 +123,7 @@ class Character extends MovableObject {
    * @returns {void}
    */
   walkRight() {
-    setInterval(() => {
-      if (!this.world) return;
-      if (this.dead() || this.world.endScreen) return;
-
-      if (this.world.input.RIGHT && this.x < this.world.level.level_end) {
-        this.x += this.speed;
-        this.otherDirection = false;
-      }
-      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
-
-      this.world.camera_x = -this.x;
-    }, 70);
+    this.controller.walkRight();
   }
 
   /**
@@ -159,15 +131,7 @@ class Character extends MovableObject {
    * @returns {void}
    */
   startJumpAnimation() {
-    setInterval(() => {
-      if (!this.world) return;
-      if (this.dead() || this.world.endScreen) return;
-
-      if (this.world.input.UP && !this.isAboveGround()) {
-        this.setJumpHeight();
-      }
-      if (this.dead() || this.world.endScreen || this.world.isPaused) return;
-    }, 115);
+    this.controller.startMovementLoops();
   }
 
   /**
@@ -400,11 +364,12 @@ class Character extends MovableObject {
    */
   hit() {
     super.hit();
+
     if (this.dead()) {
       this.speed = 0;
-      this.startDeath();
       return;
     }
+
     this.applyHitSlowdown();
   }
 
@@ -424,57 +389,5 @@ class Character extends MovableObject {
       }
       this.isSlowed = false;
     }, 400);
-  }
-
-  /**
-   * Starts the death animation (once).
-   * @returns {void}
-   */
-  startDeath() {
-    if (this._deathStarted) return;
-    this._deathStarted = true;
-    this.deathFrame = 0;
-    this.deathAnimationDone = false;
-    this._deathAcc = 0;
-  }
-
-  /**
-   * Updates death animation even when the end screen is visible.
-   * @param {number} dtSec
-   * @returns {void}
-   */
-  updateDeath(dtSec) {
-    if (!this.dead()) return;
-    this.startDeath();
-    if (this.deathAnimationDone) return this.holdLastDeathFrame();
-    this.advanceDeathFrame(dtSec);
-  }
-
-  /**
-   * Advances death frames based on a fixed step time.
-   * @param {number} dtSec
-   * @returns {void}
-   */
-  advanceDeathFrame(dtSec) {
-    const frames = this.IMAGES_DEAD_ANI1;
-    this._deathAcc += dtSec;
-    if (this._deathAcc < this.deathStepSec) return;
-    this._deathAcc = 0;
-
-    const index = Math.min(this.deathFrame, frames.length - 1);
-    this.img = this.imageCache[frames[index]];
-
-    if (index >= frames.length - 1) this.deathAnimationDone = true;
-    else this.deathFrame++;
-  }
-
-  /**
-   * Keeps the last death frame on screen.
-   * @returns {void}
-   */
-  holdLastDeathFrame() {
-    const frames = this.IMAGES_DEAD_ANI1;
-    const lastFrame = frames[frames.length - 1];
-    this.img = this.imageCache[lastFrame];
   }
 }

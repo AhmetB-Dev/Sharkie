@@ -11,6 +11,10 @@ class CharacterController {
     this.character = character;
     /** @type {number|null} */
     this.intervalId = null;
+    /** @type {boolean} */
+    this.movementStarted = false;
+    /** @type {number[]} */
+    this.movementIntervalIds = [];
   }
 
   /**
@@ -78,8 +82,13 @@ class CharacterController {
    */
   handleDead(character) {
     if (!character.dead()) return false;
-    character.startDeath?.();
-    character.world?.showEndScreen(false);
+
+    character.playAnimation(character.IMAGES_DEAD_ANI1);
+
+    if (character.world) {
+      character.world.showEndScreen(false);
+    }
+
     return true;
   }
 
@@ -218,5 +227,96 @@ class CharacterController {
     }
 
     if (currentFrameIndex !== lastFrameIndex) character[readyFlagName] = true;
+  }
+
+  /**
+   * Starts movement-related intervals (left/right + jump).
+   * Guarded so it only runs once per Character instance.
+   * @returns {void}
+   */
+  startMovementLoops() {
+    if (this.movementStarted) return;
+    this.movementStarted = true;
+    this.startWalkAnimation();
+    this.startJumpAnimation();
+  }
+
+  /**
+   * Starts left/right movement intervals.
+   * @returns {void}
+   */
+  startWalkAnimation() {
+    this.walkRight();
+    this.walkLeft();
+  }
+
+  /**
+   * Interval-based left movement and camera follow.
+   * @returns {void}
+   */
+  walkLeft() {
+    const c = this.character;
+    const id = setInterval(() => {
+      if (!c.world) return;
+      if (c.dead() || c.world.endScreen) return;
+
+      if (c.world.input.LEFT && c.x > 0) {
+        c.x -= c.speed;
+        c.otherDirection = true;
+      }
+      if (c.dead() || c.world.endScreen || c.world.isPaused) return;
+
+      c.world.camera_x = -c.x + 100;
+    }, 70);
+    this.movementIntervalIds.push(id);
+  }
+
+  /**
+   * Interval-based right movement and camera follow.
+   * @returns {void}
+   */
+  walkRight() {
+    const c = this.character;
+    const id = setInterval(() => {
+      if (!c.world) return;
+      if (c.dead() || c.world.endScreen) return;
+
+      if (c.world.input.RIGHT && c.x < c.world.level.level_end) {
+        c.x += c.speed;
+        c.otherDirection = false;
+      }
+      if (c.dead() || c.world.endScreen || c.world.isPaused) return;
+
+      c.world.camera_x = -c.x;
+    }, 70);
+    this.movementIntervalIds.push(id);
+  }
+
+  /**
+   * Interval-based jumping (sets vertical speed).
+   * @returns {void}
+   */
+  startJumpAnimation() {
+    const c = this.character;
+    const id = setInterval(() => {
+      if (!c.world) return;
+      if (c.dead() || c.world.endScreen) return;
+
+      if (c.world.input.UP && !c.isAboveGround()) {
+        c.setJumpHeight();
+      }
+      if (c.dead() || c.world.endScreen || c.world.isPaused) return;
+    }, 115);
+    this.movementIntervalIds.push(id);
+  }
+
+  /**
+   * Clears all movement intervals (useful for restart without page reload).
+   * @returns {void}
+   */
+  stopMovementLoops() {
+    for (const id of this.movementIntervalIds) clearInterval(id);
+    this.movementIntervalIds.length = 0;
+    this.movementStarted = false;
   }
 }
