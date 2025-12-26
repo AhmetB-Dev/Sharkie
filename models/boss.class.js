@@ -7,7 +7,7 @@ class Boss extends MovableObject {
   /** @type {number} */ width = 400;
   /** @type {number} */ y = 70;
   /** @type {number} */ energy = 100;
-  /** @type {number} */ speed = 1;
+  /** @type {number} */ speed = 40;
   /** @type {number} */ attackRange = 200;
   /** @type {boolean} */ isDead = false;
   /** @type {number} */ deathFrame = 0;
@@ -26,7 +26,6 @@ class Boss extends MovableObject {
     this.loadImage(this.ENEMIES_INTRODUCE[0]);
     this.loadAssets();
     this.initAnim();
-    this.bossSpeed();
     this.x = 4500;
   }
 
@@ -65,14 +64,6 @@ class Boss extends MovableObject {
   }
 
   /**
-   * Sets boss movement speed.
-   * @returns {void}
-   */
-  bossSpeed() {
-    this.speed = 1.5;
-  }
-
-  /**
    * Main boss update step.
    * @param {number} dtSec
    * @returns {void}
@@ -97,7 +88,7 @@ class Boss extends MovableObject {
     if (!this.introPlayed) return;
     super.hit(damage);
   }
-  
+
   /**
    * Plays intro animation frames once.
    * @param {number} dtSec
@@ -192,7 +183,7 @@ class Boss extends MovableObject {
     const deltaX = character.x - this.x;
     const deltaY = character.y - this.y;
     const distanceToCharacter = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const moveStep = 2;
+    const moveStep = 15;
 
     const normX = deltaX / (distanceToCharacter || 1);
     const normY = deltaY / (distanceToCharacter || 1);
