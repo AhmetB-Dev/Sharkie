@@ -8,7 +8,6 @@ class Input extends MovableObject {
   /** @type {boolean} */ RIGHT = false;
   /** @type {boolean} */ UP = false;
   /** @type {boolean} */ DOWN = false;
-  /** @type {boolean} */ SPACE = false;
   /** @type {boolean} */ THROW = false;
   /** @type {boolean} */ ATA1 = false;
   /** @type {boolean} */ ATA2 = false;
@@ -18,6 +17,9 @@ class Input extends MovableObject {
   static active = null;
   /** @type {boolean} */
   static _installed = false;
+
+  /** @type {number} */
+  static ATTACK_PULSE_MS = 180;
 
   /**
    * Registers this instance as active input and installs keyboard listeners once.
@@ -47,6 +49,21 @@ class Input extends MovableObject {
    * @param {boolean} isDown
    * @returns {void}
    */
+
+  /**
+   * Sets a flag to true for a short time so taps are not missed by the 10 FPS controller.
+   * @param {Input} input
+   * @param {"ATA1"|"ATA2"|"ULTIMATE"} flagName
+   * @param {number} durationMs
+   * @returns {void}
+   */
+  static pulseFlag(input, flagName, durationMs) {
+    input._pulseTimers = input._pulseTimers || {};
+    clearTimeout(input._pulseTimers[flagName]);
+    input[flagName] = true;
+    input._pulseTimers[flagName] = setTimeout(() => (input[flagName] = false), durationMs);
+  }
+
   static onKey(event, isDown) {
     const input = Input.getActiveInput();
     if (!input) return;
@@ -60,7 +77,7 @@ class Input extends MovableObject {
     }
 
     Input.handleMoveKeys(input, keyLower, key, isDown);
-    Input.handleAttackKeys(input, keyLower, key, isDown);
+    Input.handleAttackKeys(input, keyLower, key, isDown, event.repeat);
   }
 
   /**
@@ -95,9 +112,13 @@ class Input extends MovableObject {
    * @param {boolean} isDown
    * @returns {void}
    */
-  static handleAttackKeys(input, keyLower, key, isDown) {
-    if (keyLower === "k" || keyLower === "x") input.ATA1 = isDown;
-    if (keyLower === "j" || keyLower === "y" || key === "z") input.ATA2 = isDown;
-    if (keyLower === "l" || keyLower === "c") input.ULTIMATE = isDown;
+  static handleAttackKeys(input, keyLower, key, isDown, isRepeat) {
+    if (!isDown) return;
+    if (isRepeat) return;
+
+    if (keyLower === "k" || keyLower === "x") Input.pulseFlag(input, "ATA1", Input.ATTACK_PULSE_MS);
+    if (keyLower === "j" || keyLower === "y" || key === "z")
+      Input.pulseFlag(input, "ATA2", Input.ATTACK_PULSE_MS);
+    if (keyLower === "l" || keyLower === "c") Input.pulseFlag(input, "ULTIMATE", Input.ATTACK_PULSE_MS);
   }
 }

@@ -15,6 +15,12 @@ class CharacterController {
     this.movementStarted = false;
     /** @type {number[]} */
     this.movementIntervalIds = [];
+
+    /** @type {boolean} */
+    this.meleeReady = true;
+
+    /** @type {null|{frames:string[], i:number, fired:boolean, onStart?:Function, onEnd?:Function, onLastFrame?:Function}} */
+    this.actionLock = null;
   }
 
   /**
@@ -51,6 +57,7 @@ class CharacterController {
     const idleDurationMs = this.updateIdleState(character);
     if (this.handleDead(character)) return;
     if (this.handleHurt(character)) return;
+    if (this.tickActionLock(character)) return;
     if (this.handleUltimate(character, input)) return;
     if (this.handleAttack1(character, input)) return;
     if (this.handleMelee(character, input)) return;
@@ -67,12 +74,68 @@ class CharacterController {
    */
   updateIdleState(character) {
     const now = Date.now();
-    if (character.isPlayerActive()) {
+    if (character.isPlayerActive() || this.hasActionLock()) {
       character.lastActionTime = now;
       character.longIdlePlayed = false;
       character.longIdleFrame = 0;
     }
     return now - character.lastActionTime;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  hasActionLock() {
+    return !!this.actionLock;
+  }
+
+  /**
+   * Starts an uninterruptible action animation (tap-to-play).
+   * @param {Character} character
+   * @param {string[]} frames
+   * @param {{onStart?:Function, onEnd?:Function, onLastFrame?:Function}} hooks
+   * @returns {void}
+   */
+  startActionLock(character, frames, hooks = {}) {
+    if (!Array.isArray(frames) || frames.length === 0) return;
+    this.cancelActionLock(character);
+    this.actionLock = { frames, i: 0, fired: false, ...hooks };
+    this.actionLock.onStart?.();
+    this.tickActionLock(character);
+  }
+
+  /**
+   * Plays the locked action animation until it completes.
+   * @param {Character} character
+   * @returns {boolean} True when lock is active.
+   */
+  tickActionLock(character) {
+    const lock = this.actionLock;
+    if (!lock) return false;
+
+    const idx = Math.min(lock.i, lock.frames.length - 1);
+    character.img = character.imageCache[lock.frames[idx]];
+
+    if (idx === lock.frames.length - 1 && !lock.fired) {
+      lock.fired = true;
+      lock.onLastFrame?.();
+    }
+
+    lock.i += 1;
+    if (lock.i >= lock.frames.length) this.cancelActionLock(character);
+    return true;
+  }
+
+  /**
+   * Cancels the current action lock (runs onEnd hook if present).
+   * @param {Character} character
+   * @returns {void}
+   */
+  cancelActionLock(character) {
+    const lock = this.actionLock;
+    if (!lock) return;
+    lock.onEnd?.();
+    this.actionLock = null;
   }
 
   /**
@@ -83,6 +146,7 @@ class CharacterController {
   handleDead(character) {
     if (!character.dead()) return false;
 
+    this.cancelActionLock(character);
     character.playAnimation(character.IMAGES_DEAD_ANI1);
 
     if (character.world) {
@@ -100,6 +164,7 @@ class CharacterController {
   handleHurt(character) {
     if (!character.hitHurt()) return false;
 
+    this.cancelActionLock(character);
     const hurtFrames = character.lastHitByEnemy1 ? character.IMAGES_HURT_ANI1 : character.IMAGES_HURT_ANI2;
 
     if (window.audioManager) window.audioManager.play("hitMaker");
@@ -142,17 +207,17 @@ class CharacterController {
       character.ultimateReady = true;
       return false;
     }
+    if (!character.ultimateReady) return false;
 
-    character.playAnimation(character.IMAGES_UTLIMATE_ATTACK);
-    this.handleFrameShot(
-      character,
-      character.IMAGES_UTLIMATE_ATTACK,
-      () => character.shootUltimateBubble(),
-      "ultimateReady"
-    );
+    character.ultimateReady = false;
+    this.startActionLock(character, character.IMAGES_UTLIMATE_ATTACK, {
+      onLastFrame: () => character.shootUltimateBubble(),
+    });
     return true;
   }
 
+  /**
+   * Handles attack 1 animation and fires bubble on last frame.
   /**
    * Handles attack 1 animation and fires bubble on last frame.
    * @param {Character} character
@@ -164,17 +229,17 @@ class CharacterController {
       character.attack1Ready = true;
       return false;
     }
+    if (!character.attack1Ready) return false;
 
-    character.playAnimation(character.IMAGES_ATTACK_ANI1);
-    this.handleFrameShot(
-      character,
-      character.IMAGES_ATTACK_ANI1,
-      () => character.shootAttack1Bubble(),
-      "attack1Ready"
-    );
+    character.attack1Ready = false;
+    this.startActionLock(character, character.IMAGES_ATTACK_ANI1, {
+      onLastFrame: () => character.shootAttack1Bubble(),
+    });
     return true;
   }
 
+  /**
+   * Handles melee animation and toggles `hitRange` flag.
   /**
    * Handles melee animation and toggles `hitRange` flag.
    * @param {Character} character
@@ -183,15 +248,22 @@ class CharacterController {
    */
   handleMelee(character, input) {
     if (!input.ATA2) {
+      this.meleeReady = true;
       character.hitRange = false;
       return false;
     }
+    if (!this.meleeReady) return false;
 
-    character.playAnimation(character.IMAGES_ATTACK_ANI2);
-    character.hitRange = true;
+    this.meleeReady = false;
+    this.startActionLock(character, character.IMAGES_ATTACK_ANI2, {
+      onStart: () => (character.hitRange = true),
+      onEnd: () => (character.hitRange = false),
+    });
     return true;
   }
 
+  /**
+   * Handles long idle sequence after `character.delay` milliseconds.
   /**
    * Handles long idle sequence after `character.delay` milliseconds.
    * @param {Character} character
@@ -339,7 +411,7 @@ class CharacterController {
     if (this.character.y < 0) this.character.y = 0;
     if (this.character.y > maxY) this.character.y = maxY;
   }
-  
+
   /**
    * Clears all movement intervals (useful for restart without page reload).
    * @returns {void}
