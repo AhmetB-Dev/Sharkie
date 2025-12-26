@@ -114,7 +114,7 @@ class CharacterController {
    * @returns {boolean} True when handled.
    */
   handleVerticalMove(character, input) {
-    if (!(input.UP && !character.isAboveGround())) return false;
+    if (!(input.UP || input.DOWN)) return false;
     character.playAnimation(character.IMAGES_WALK);
     return true;
   }
@@ -230,7 +230,7 @@ class CharacterController {
   }
 
   /**
-   * Starts movement-related intervals (left/right + jump).
+   * Starts movement-related intervals (left/right + vertical swim).
    * Guarded so it only runs once per Character instance.
    * @returns {void}
    */
@@ -238,7 +238,7 @@ class CharacterController {
     if (this.movementStarted) return;
     this.movementStarted = true;
     this.startWalkAnimation();
-    this.startJumpAnimation();
+    this.startVerticalMovement();
   }
 
   /**
@@ -310,6 +310,36 @@ class CharacterController {
     this.movementIntervalIds.push(id);
   }
 
+  /**
+   * Interval-based vertical movement (swim up/down) within canvas bounds.
+   * @returns {void}
+   */
+  startVerticalMovement() {
+    const id = setInterval(() => {
+      if (!this.character.world) return;
+      if (this.character.dead() || this.character.world.endScreen || this.character.world.isPaused) return;
+
+      const input = this.character.world.input;
+      if (input.UP) this.character.y -= this.character.speed;
+      if (input.DOWN) this.character.y += this.character.speed;
+      this.clampYToCanvas();
+    }, 70);
+    this.movementIntervalIds.push(id);
+  }
+
+  /**
+   * Clamps the character y position to the visible canvas area.
+   * @param {Character}
+   * @returns {void}
+   */
+  clampYToCanvas() {
+    const height = this.character.world?.canvas?.height ?? 0;
+    if (!height) return;
+    const maxY = Math.max(0, height - this.character.height);
+    if (this.character.y < 0) this.character.y = 0;
+    if (this.character.y > maxY) this.character.y = maxY;
+  }
+  
   /**
    * Clears all movement intervals (useful for restart without page reload).
    * @returns {void}

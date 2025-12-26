@@ -7,6 +7,8 @@ class Input extends MovableObject {
   /** @type {boolean} */ LEFT = false;
   /** @type {boolean} */ RIGHT = false;
   /** @type {boolean} */ UP = false;
+  /** @type {boolean} */ DOWN = false;
+  /** @type {boolean} */ SPACE = false;
   /** @type {boolean} */ THROW = false;
   /** @type {boolean} */ ATA1 = false;
   /** @type {boolean} */ ATA2 = false;
@@ -52,7 +54,12 @@ class Input extends MovableObject {
     const key = event.key;
     const keyLower = key.toLowerCase();
 
-    Input.handleMoveKeys(input, keyLower, isDown);
+    // Prevent arrow keys / space from scrolling the page while playing.
+    if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(keyLower) || key === " ") {
+      event.preventDefault();
+    }
+
+    Input.handleMoveKeys(input, keyLower, key, isDown);
     Input.handleAttackKeys(input, keyLower, key, isDown);
   }
 
@@ -68,13 +75,16 @@ class Input extends MovableObject {
    * Maps movement keys to flags.
    * @param {Input} input
    * @param {string} keyLower
+   * @param {string} key
    * @param {boolean} isDown
    * @returns {void}
    */
-  static handleMoveKeys(input, keyLower, isDown) {
+  static handleMoveKeys(input, keyLower, key, isDown) {
     if (keyLower === "d" || keyLower === "arrowright") input.RIGHT = isDown;
     if (keyLower === "a" || keyLower === "arrowleft") input.LEFT = isDown;
     if (keyLower === "w" || keyLower === "arrowup") input.UP = isDown;
+    if (keyLower === "s" || keyLower === "arrowdown") input.DOWN = isDown;
+    if (key === " " || keyLower === "spacebar") input.SPACE = isDown;
   }
 
   /**

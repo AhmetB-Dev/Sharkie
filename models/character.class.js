@@ -46,8 +46,7 @@ class Character extends MovableObject {
 
     /** @type {CharacterController} */
     this.controller = new CharacterController(this);
-
-    this.applyGravity();
+    this.disableGravity();
     this.groundY = 155;
     this.y = this.groundY;
 

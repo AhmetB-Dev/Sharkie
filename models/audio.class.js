@@ -9,7 +9,7 @@
 class AudioManager {
   constructor() {
     /** @type {boolean} */
-    this.enabled = true;
+    this.enabled = this.loadEnabled();
 
     /** @type {number} */
     this.cooldownMs = 120;
@@ -21,6 +21,38 @@ class AudioManager {
     this.currentMusic = null;
 
     this.soundData();
+  }
+
+  /**
+   * LocalStorage key for audio enabled state.
+   * @returns {string}
+   */
+  storageKey() {
+    return "sharkie.audio.enabled";
+  }
+
+  /**
+   * Loads persisted audio enabled state (defaults to true).
+   * @returns {boolean}
+   */
+  loadEnabled() {
+    try {
+      const raw = localStorage.getItem(this.storageKey());
+      if (raw === null) return true;
+      return raw === "1" || raw === "true";
+    } catch (_) {
+      return true;
+    }
+  }
+
+  /**
+   * Persists current audio enabled state.
+   * @returns {void}
+   */
+  saveEnabled() {
+    try {
+      localStorage.setItem(this.storageKey(), this.enabled ? "1" : "0");
+    } catch (_) {}
   }
 
   /**
@@ -141,6 +173,7 @@ class AudioManager {
    */
   toggleMute() {
     this.enabled = !this.enabled;
+    this.saveEnabled();
     this.applyMusicState();
   }
 
@@ -151,6 +184,7 @@ class AudioManager {
    */
   setEnabled(enabled) {
     this.enabled = enabled;
+    this.saveEnabled();
     this.applyMusicState();
   }
 }

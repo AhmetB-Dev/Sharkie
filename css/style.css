@@ -53,6 +53,10 @@ canvas {
   display: flex;
 }
 
+button {
+  cursor: pointer;
+}
+
 .startCard {
   padding: 34px 38px;
   border-radius: 64px;

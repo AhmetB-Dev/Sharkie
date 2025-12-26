@@ -182,17 +182,27 @@ class Boss extends MovableObject {
   followCharacter(character) {
     const deltaX = character.x - this.x;
     const deltaY = character.y - this.y;
-    const distanceToCharacter = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const moveStep = 15;
+    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
+    const step = 15;
 
-    const normX = deltaX / (distanceToCharacter || 1);
-    const normY = deltaY / (distanceToCharacter || 1);
+    this.x += (deltaX / dist) * step;
+    this.y += (deltaY / dist) * step;
 
-    this.x += normX * moveStep;
-    this.y += Math.min(0, normY * moveStep);
-
+    this.clampToWorldY();
     this.otherDirection = deltaX > 0;
-    this.isAttacking = distanceToCharacter < this.attackRange;
+    this.isAttacking = dist < this.attackRange;
+  }
+
+  /**
+   * Keeps the boss inside the visible world vertically.
+   * @returns {void}
+   */
+  clampToWorldY() {
+    const worldH = this.character?.world?.canvas?.height || this.world?.canvas?.height;
+    if (!worldH) return;
+    const minY = 0;
+    const maxY = Math.max(0, worldH - this.height);
+    this.y = Math.max(minY, Math.min(maxY, this.y));
   }
 
   /**
