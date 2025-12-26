@@ -78,13 +78,8 @@ class CharacterController {
    */
   handleDead(character) {
     if (!character.dead()) return false;
-
-    character.playAnimation(character.IMAGES_DEAD_ANI1);
-
-    if (character.world) {
-      character.world.showEndScreen(false);
-    }
-
+    character.startDeath?.();
+    character.world?.showEndScreen(false);
     return true;
   }
 

@@ -80,12 +80,24 @@ class Boss extends MovableObject {
   update(dtSec) {
     if (!this.isActive) return;
     if (this.isDead || this.dead()) return this.stepDeath(dtSec);
-    if (this.hitHurt()) return this.stepAnim(dtSec, this.ENEMIES_HURT);
     if (this.playerInRange && !this.introPlayed) return this.stepIntro(dtSec);
+
+    if (this.hitHurt()) return this.stepAnim(dtSec, this.ENEMIES_HURT);
     if (!this.playerInRange || !this.introPlayed) return;
+
     this.stepCombat(dtSec);
   }
 
+  /**
+   * Applies damage to the boss (only after the intro has finished).
+   * @param {number} [damage=5] - Damage amount to subtract from energy.
+   * @returns {void}
+   */
+  hit(damage = 5) {
+    if (!this.introPlayed) return;
+    super.hit(damage);
+  }
+  
   /**
    * Plays intro animation frames once.
    * @param {number} dtSec

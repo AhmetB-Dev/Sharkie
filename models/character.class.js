@@ -13,30 +13,27 @@
 class Character extends MovableObject {
   /** @type {World} */
   world;
-
   /** @type {number} */ height = 270;
   /** @type {number} */ width = 140;
   /** @type {number} */ y = 155;
   /** @type {number} */ speed = 60;
-
   /** @type {number} */ normalSpeed = 60;
   /** @type {number} */ hurtSpeedFactor = 0.3;
   /** @type {boolean} */ isSlowed = false;
-
   /** @type {number} */ coins = 0;
-
   /** @type {number} */ lastActionTime = Date.now();
   /** @type {number} */ delay = 3000;
-
   /** @type {boolean} */ longIdlePlayed = false;
   /** @type {number} */ longIdleFrame = 0;
-
   /** @type {boolean} */ attack1Ready = true;
   /** @type {boolean} */ ultimateReady = true;
-
   /** @type {boolean} */ hitRange = false;
   /** @type {boolean} */ lastHitByEnemy1 = false;
-
+  /** @type {number} */ deathFrame = 0;
+  /** @type {boolean} */ deathAnimationDone = false;
+  /** @type {number} */ deathStepSec = 0.125;
+  /** @type {number} */ _deathAcc = 0;
+  /** @type {boolean} */ _deathStarted = false;
   /** @type {Offset} */
   offset = {
     top: 130,
@@ -403,12 +400,11 @@ class Character extends MovableObject {
    */
   hit() {
     super.hit();
-
     if (this.dead()) {
       this.speed = 0;
+      this.startDeath();
       return;
     }
-
     this.applyHitSlowdown();
   }
 
@@ -428,5 +424,57 @@ class Character extends MovableObject {
       }
       this.isSlowed = false;
     }, 400);
+  }
+
+  /**
+   * Starts the death animation (once).
+   * @returns {void}
+   */
+  startDeath() {
+    if (this._deathStarted) return;
+    this._deathStarted = true;
+    this.deathFrame = 0;
+    this.deathAnimationDone = false;
+    this._deathAcc = 0;
+  }
+
+  /**
+   * Updates death animation even when the end screen is visible.
+   * @param {number} dtSec
+   * @returns {void}
+   */
+  updateDeath(dtSec) {
+    if (!this.dead()) return;
+    this.startDeath();
+    if (this.deathAnimationDone) return this.holdLastDeathFrame();
+    this.advanceDeathFrame(dtSec);
+  }
+
+  /**
+   * Advances death frames based on a fixed step time.
+   * @param {number} dtSec
+   * @returns {void}
+   */
+  advanceDeathFrame(dtSec) {
+    const frames = this.IMAGES_DEAD_ANI1;
+    this._deathAcc += dtSec;
+    if (this._deathAcc < this.deathStepSec) return;
+    this._deathAcc = 0;
+
+    const index = Math.min(this.deathFrame, frames.length - 1);
+    this.img = this.imageCache[frames[index]];
+
+    if (index >= frames.length - 1) this.deathAnimationDone = true;
+    else this.deathFrame++;
+  }
+
+  /**
+   * Keeps the last death frame on screen.
+   * @returns {void}
+   */
+  holdLastDeathFrame() {
+    const frames = this.IMAGES_DEAD_ANI1;
+    const lastFrame = frames[frames.length - 1];
+    this.img = this.imageCache[lastFrame];
   }
 }

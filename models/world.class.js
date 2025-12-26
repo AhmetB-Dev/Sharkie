@@ -190,10 +190,38 @@ class World {
    * @returns {void}
    */
   updatePerFrame(deltaSec) {
-    if (this.isStopped()) return;
-    this.character?.updateGravity?.(deltaSec);
+    if (this.isPaused) return;
+    if (this.endScreen) return this.updateDeathOnly(deltaSec);
+
+    if (this.character?.dead?.()) this.character.updateDeath?.(deltaSec);
+    else this.character?.updateGravity?.(deltaSec);
+
     this.updateProjectiles(deltaSec);
     this.updateEnemies(deltaSec);
+  }
+
+  /**
+   * Keeps death animations running behind the end screen overlay.
+   * @param {number} deltaSec
+   * @returns {void}
+   */
+  updateDeathOnly(deltaSec) {
+    if (this.character?.dead?.()) this.character.updateDeath?.(deltaSec);
+    this.updateBossDeath(deltaSec);
+  }
+
+  /**
+   * Updates the boss death animation while the end screen is visible.
+   * @param {number} deltaSec
+   * @returns {void}
+   */
+  updateBossDeath(deltaSec) {
+    if (!this.level?.enemies) return;
+    for (const enemy of this.level.enemies) {
+      if (!(enemy instanceof Boss)) continue;
+      if (!(enemy.isDead || enemy.dead?.())) continue;
+      enemy.update?.(deltaSec);
+    }
   }
 
   /**
