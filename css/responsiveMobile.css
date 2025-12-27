@@ -58,7 +58,7 @@
   }
 }
 
-@media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1200px) {
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1800px) {
   h1 {
     font-size: 18px;
     display: none;

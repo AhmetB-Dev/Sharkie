@@ -56,13 +56,14 @@ class TouchControls {
   /**
    * Builds the button collection.
    * @param {string} basePath
-   * @returns {{left:TouchButton,right:TouchButton,up:TouchButton,atk1:TouchButton,melee:TouchButton,ult:TouchButton}}
+   * @returns {{left:TouchButton,right:TouchButton,up:TouchButton,down:TouchButton,atk1:TouchButton,melee:TouchButton,ult:TouchButton}}
    */
   buildButtons(basePath) {
     return {
       left: this.createHoldButton("LEFT", basePath + "touch_move_left_circle.png"),
       right: this.createHoldButton("RIGHT", basePath + "touch_move_right_circle.png"),
       up: this.createHoldButton("UP", basePath + "touch_jump_circle.png"),
+      down: this.createHoldButton("DOWN", basePath + "touch_move_down_circle.png"),
       atk1: this.createPulseButton("ATA1", basePath + "touch_attack_bubbleshot_circle.png", 220),
       melee: this.createPulseButton("ATA2", basePath + "touch_melee_circle.png", 220),
       ult: this.createPulseButton("ULTIMATE", basePath + "touch_attack_ultimate_bubble_no_cross.png", 260),
@@ -144,12 +145,9 @@ class TouchControls {
     const leftBaseX = padding;
     const stepX = buttonSize + padding * 0.7;
     this.buttons.left.setRect(leftBaseX, baseY, buttonSize);
-    this.buttons.right.setRect(leftBaseX + stepX, baseY, buttonSize);
-    this.buttons.up.setRect(
-      leftBaseX + Math.round(stepX / 2),
-      baseY - buttonSize - padding * 0.6,
-      buttonSize
-    );
+    this.buttons.down.setRect(leftBaseX + stepX, baseY, buttonSize);
+    this.buttons.right.setRect(leftBaseX + stepX * 2, baseY, buttonSize);
+    this.buttons.up.setRect(leftBaseX + stepX, baseY - buttonSize - padding * 0.6, buttonSize);
   }
 
   /**
