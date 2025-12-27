@@ -1,14 +1,12 @@
 /**
- * HUD status bar (health / coins / ammo) using sprite steps.
+ * HUD status bar (health / coins / ammo / boss) using sprite steps.
  * @extends DrawableObject
  */
 class Statusbars extends DrawableObject {
-  /** @type {string[]} */
-  IMAGES;
-  /** @type {number} */
-  percentage = 100;
-  /** @type {number} */
-  stackObjects = 0;
+  /** @type {string[]} */ IMAGES;
+  /** @type {number} */ percentage = 100;
+  /** @type {number} */ stackObjects = 0;
+  /** @type {boolean} */ isHidden = false;
 
   /** @type {string[]} */
   STATUS_HEALTH = [
@@ -40,6 +38,16 @@ class Statusbars extends DrawableObject {
     "assets/assets_sharkie/4. Marcadores/Purple/100_.png",
   ];
 
+  /** @type {string[]} */
+  STATUS_BOSS = [
+    "assets/assets_sharkie/4. Marcadores/boss_bar/0.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/20.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/40.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/60.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/80.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/100.png",
+  ];
+
   constructor() {
     super();
     this.height = 80;
@@ -55,10 +63,8 @@ class Statusbars extends DrawableObject {
    */
   setPercentrage(percentage) {
     this.percentage = percentage;
-
     const index = this.resolveImageIndex();
     const path = this.IMAGES[index];
-
     this.img = this.imageCache[path];
   }
 
@@ -75,21 +81,6 @@ class Statusbars extends DrawableObject {
   }
 
   /**
-   * Initializes ammo bar (stack-based).
-   * @param {number} x
-   * @param {number} y
-   * @param {number} [stackObjects=0]
-   * @returns {void}
-   */
-  initAmmoBar(x, y, stackObjects = 0) {
-    this.IMAGES = this.STATUS_AMMO;
-    this.animationImage(this.IMAGES);
-    this.x = x;
-    this.y = y;
-    this.setStack(stackObjects);
-  }
-
-  /**
    * Initializes health bar (percentage-based).
    * @param {number} x
    * @param {number} y
@@ -101,22 +92,82 @@ class Statusbars extends DrawableObject {
     this.animationImage(this.IMAGES);
     this.setPercentrage(percentage);
     this.x = x;
-    this.y = y;
+    this.y = 65;
   }
 
   /**
    * Initializes coin bar (stack-based).
    * @param {number} x
+   * @param {number} [stackObjects=0]
+   * @returns {void}
+   */
+  initCoinBar(x, stackObjects = 0) {
+    this.IMAGES = this.STATUS_COIN;
+    this.animationImage(this.IMAGES);
+    this.x = x;
+    this.y = 25;
+    this.setStack(stackObjects);
+  }
+
+  /**
+   * Initializes ammo bar (stack-based).
+   * @param {number} x
    * @param {number} y
    * @param {number} [stackObjects=0]
    * @returns {void}
    */
-  initCoinBar(x, y, stackObjects = 0) {
-    this.IMAGES = this.STATUS_COIN;
+  initAmmoBar(x, stackObjects = 0) {
+    this.IMAGES = this.STATUS_AMMO;
     this.animationImage(this.IMAGES);
     this.x = x;
-    this.y = y;
+    this.y = -20;
     this.setStack(stackObjects);
+  }
+
+  /**
+   * Initializes boss health bar (percentage-based).
+   * @param {number} [percentage=100]
+   * @returns {void}
+   */
+  initBossBar(percentage = 100) {
+    this.width = 260;
+    this.height = 280;
+    this.IMAGES = this.STATUS_BOSS;
+    this.animationImage(this.IMAGES);
+    this.setPercentrage(percentage);
+    this.setHudPosition();
+    this.show();
+  }
+
+  /**
+   * Stores HUD position (used by show/hide).
+   * @param {number} x
+   * @param {number} y
+   * @returns {void}
+   */
+  setHudPosition() {
+    if (!this.isHidden) {
+      this.x = 490;
+      this.y = -115;
+    }
+  }
+
+  /**
+   * Hides the bar by moving it off-canvas (renderer-safe).
+   * @returns {void}
+   */
+  hide() {
+    this.isHidden = true;
+    this.x = -10000;
+    this.y = -10000;
+  }
+
+  /**
+   * Shows the bar at its HUD position.
+   * @returns {void}
+   */
+  show() {
+    this.isHidden = false;
   }
 
   /**

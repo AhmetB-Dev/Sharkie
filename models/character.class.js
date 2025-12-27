@@ -16,7 +16,7 @@ class Character extends MovableObject {
   /** @type {number} */ height = 270;
   /** @type {number} */ width = 140;
   /** @type {number} */ y = 155;
-  /** @type {number} */ speed = 25;
+  /** @type {number} */ speed = 70;
   /** @type {number} */ normalSpeed = 60;
   /** @type {number} */ hurtSpeedFactor = 0.3;
   /** @type {boolean} */ isSlowed = false;
@@ -49,7 +49,6 @@ class Character extends MovableObject {
     this.disableGravity();
     this.groundY = 155;
     this.y = this.groundY;
-
     this.animation();
   }
 

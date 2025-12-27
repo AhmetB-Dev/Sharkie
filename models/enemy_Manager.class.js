@@ -12,11 +12,12 @@ class EnemyManager {
    * @param {Statusbars} healthBar - HUD health bar.
    * @param {boolean} [autoStart=false] - If true, starts internal interval ticking.
    */
-  constructor(level, character, throwableObjects, healthBar, autoStart = false) {
+  constructor(level, character, throwableObjects, healthBar, bossBar = null, autoStart = false) {
     this.level = level;
     this.character = character;
     this.throwableObjects = throwableObjects;
     this.healthBar = healthBar;
+    this.bossBar = bossBar;
     if (autoStart) this.startUpdateEnemy();
   }
 
@@ -37,6 +38,7 @@ class EnemyManager {
     this.updateEnemyAI();
     this.checkProjectileHits();
     this.updateCharacterHealth();
+    this.syncBossHud();
   }
 
   /**
@@ -129,6 +131,38 @@ class EnemyManager {
       if (this.handleMeleeKill(enemy, character)) continue;
       this.handleContactDamage(enemy, character, healthBar);
     }
+  }
+
+  /**
+   * Syncs boss health HUD: hidden until intro finished, then tracks boss energy.
+   * @returns {void}
+   */
+  syncBossHud() {
+    if (!this.bossBar) return;
+    const boss = this.findBoss();
+    if (!boss || !boss.introPlayed) return this.bossBar.hide();
+    this.bossBar.show();
+    this.bossBar.setPercentrage(this.clamp01to100(boss.energy));
+  }
+
+  /**
+   * Finds the first boss in the level.
+   * @returns {Boss|null}
+   */
+  findBoss() {
+    for (const enemy of this.level.enemies) if (enemy instanceof Boss) return enemy;
+    return null;
+  }
+
+  /**
+   * Keeps percentage within 0..100.
+   * @param {number} value
+   * @returns {number}
+   */
+  clamp01to100(value) {
+    if (value > 100) return 100;
+    if (value < 0) return 0;
+    return value;
   }
 
   /**
@@ -264,6 +298,7 @@ class EnemyManager {
     if (window.audioManager) window.audioManager.play("bossHit");
     boss.hit(20);
 
+    this.syncBossHud();
     if (boss.dead()) {
       boss.die();
       boss.character?.world?.showEndScreen?.(true);

@@ -39,6 +39,9 @@ class World {
   /** @type {Statusbars} */
   ammoBar = new Statusbars();
 
+  /** @type {Statusbars} */
+  bossBar = new Statusbars();
+
   /** @type {Array<any>} */
   throwableObjects = [];
 
@@ -83,6 +86,7 @@ class World {
     this.loadAmmoBar();
     this.loadHealthBar();
     this.loadCoinBar();
+    this.loadBossBar();
   }
 
   /**
@@ -117,6 +121,7 @@ class World {
       this.character,
       this.throwableObjects,
       this.healthBar,
+      this.bossBar,
       false
     );
   }
@@ -301,6 +306,36 @@ class World {
   }
 
   /**
+   * Loads the boss health bar (hidden by default).
+   * @returns {void}
+   */
+  loadBossBar() {
+    this.bossBar = new Statusbars();
+    this.bossBar.initBossBar();
+    this.updateBossBarPosition();
+    this.bossBar.hide();
+  }
+
+  /**
+   * Updates HUD element anchor positions (for responsive canvas sizes).
+   * @returns {void}
+   */
+  updateHudPositions() {
+    this.updateBossBarPosition();
+  }
+
+  /**
+   * Anchors the boss bar to the top-right corner of the canvas.
+   * @param {number} [margin=20]
+   * @returns {void}
+   */
+  updateBossBarPosition(margin = 20) {
+    if (!this.canvas || !this.bossBar?.setHudPosition) return;
+    const x = Math.max(margin, this.canvas.width - this.bossBar.width - margin);
+    this.bossBar.setHudPosition(x, 10);
+  }
+
+  /**
    * Injects the world reference into the character.
    * @returns {void}
    */
@@ -392,6 +427,7 @@ class World {
    * @returns {void}
    */
   render() {
+    this.updateHudPositions();
     this.renderer.render();
   }
 

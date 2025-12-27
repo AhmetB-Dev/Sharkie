@@ -89,7 +89,7 @@ class WorldRenderer {
     this.addToMap(ammoBar);
     this.addToMap(healthBar);
     this.addToMap(coinBar);
-
+    this.addToMap(this.world.bossBar);
     ctx.restore();
   }
 
