@@ -154,6 +154,10 @@ function registerCanvasPointerHandlers() {
   canvas.addEventListener("pointermove", onPointerMove, { passive: false });
   window.addEventListener("pointerup", onPointerUp);
   window.addEventListener("pointercancel", onPointerUp);
+  canvas.addEventListener("pointermove", () => {
+    canvas.style.cursor = world?.endScreen ? "pointer" : "default";
+  });
+  canvas.addEventListener("pointerleave", () => (canvas.style.cursor = "default"));
 }
 
 /**
@@ -169,7 +173,7 @@ function onPointerDown(event) {
     world.endScreen.handleClick(pos.x, pos.y);
     return;
   }
-  
+
   world?.touchControls?.pointerDown(pos.x, pos.y, event.pointerId);
 }
 

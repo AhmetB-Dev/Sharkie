@@ -50,8 +50,8 @@ class Statusbars extends DrawableObject {
 
   constructor() {
     super();
-    this.height = 80;
-    this.width = 220;
+    this.height = 70;
+    this.width = 200;
     this.x = 0;
     this.y = 0;
   }
@@ -130,8 +130,8 @@ class Statusbars extends DrawableObject {
    * @returns {void}
    */
   initBossBar(percentage = 100) {
-    this.width = 260;
-    this.height = 280;
+    this.width = 290;
+    this.height = 370;
     this.IMAGES = this.STATUS_BOSS;
     this.animationImage(this.IMAGES);
     this.setPercentrage(percentage);
@@ -147,8 +147,8 @@ class Statusbars extends DrawableObject {
    */
   setHudPosition() {
     if (!this.isHidden) {
-      this.x = 490;
-      this.y = -115;
+      this.x = 460;
+      this.y = -150;
     }
   }
 
