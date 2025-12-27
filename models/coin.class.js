@@ -34,7 +34,7 @@ class Coin extends MovableObject {
   animationCoin() {
     this.animationImage(this.IMAGES_COIN);
     this.loadImage(this.IMAGES_COIN[0]);
-    setInterval(() => {
+    this.timers.every(() => {
       this.playAnimation(this.IMAGES_COIN);
     }, 325);
   }

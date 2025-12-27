@@ -53,6 +53,7 @@ function initStartScreen() {
  */
 function startGame() {
   startScreen.hide();
+  canvas.classList.remove("d-none");
   canvas.style.display = "block";
   window.audioManager?.playMusic("game");
   input = new Input();
@@ -125,7 +126,33 @@ function shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight) {
  * @returns {void}
  */
 function restartGame() {
-  location.reload();
+  stopWorld();
+  showMainMenu();
+}
+
+/**
+ * Stops the current world instance and releases resources.
+ * @returns {void}
+ */
+function stopWorld() {
+  world?.destroy?.();
+  world = undefined;
+  window.world = undefined;
+  input = undefined;
+}
+
+/**
+ * Returns to the start screen without reloading the page.
+ * @returns {void}
+ */
+function showMainMenu() {
+  if (canvas) {
+    canvas.classList.add("d-none");
+    canvas.style.display = "none";
+  }
+  startScreen?.show?.();
+  window.audioManager?.playMusic?.("title");
+  applyResponsiveLayout?.();
 }
 
 /**

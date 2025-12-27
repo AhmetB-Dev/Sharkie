@@ -18,8 +18,7 @@ class WorldPickups {
    * @returns {void}
    */
   checkCollisions() {
-    const w = this.world;
-    if (w.isStopped()) return;
+    if (this.world.isStopped()) return;
     this.updateAmmoBar();
     this.updateCoinBar();
   }
@@ -29,8 +28,7 @@ class WorldPickups {
    * @returns {void}
    */
   updateAmmoBar() {
-    const w = this.world;
-    for (let index = w.level.ammo.length - 1; index >= 0; index--) {
+    for (let index = this.world.level.ammo.length - 1; index >= 0; index--) {
       this.tryPickupAmmo(index);
     }
   }
@@ -41,14 +39,13 @@ class WorldPickups {
    * @returns {void}
    */
   tryPickupAmmo(index) {
-    const w = this.world;
-    const ammoPickup = w.level.ammo[index];
-    if (!w.character.isColliding(ammoPickup)) return;
-
-    w.level.ammo.splice(index, 1);
-    w.character.getItems();
+    const ammoPickup = this.world.level.ammo[index];
+    if (!this.world.character.isColliding(ammoPickup)) return;
+    ammoPickup?.timers?.clearAll?.();
+    this.world.level.ammo.splice(index, 1);
+    this.world.character.getItems();
     window.audioManager?.play?.("ammoPickup");
-    w.ammoBar.setStack(w.character.items * 20);
+    this.world.ammoBar.setStack(this.world.character.items * 20);
   }
 
   /**
@@ -56,8 +53,8 @@ class WorldPickups {
    * @returns {void}
    */
   updateCoinBar() {
-    const w = this.world;
-    for (let index = w.level.coin.length - 1; index >= 0; index--) {
+    const world = this.world;
+    for (let index = world.level.coin.length - 1; index >= 0; index--) {
       this.tryPickupCoin(index);
     }
   }
@@ -68,14 +65,13 @@ class WorldPickups {
    * @returns {void}
    */
   tryPickupCoin(index) {
-    const w = this.world;
-    const coin = w.level.coin[index];
-    if (!w.character.isColliding(coin)) return;
-
-    w.level.coin.splice(index, 1);
+    const coin = this.world.level.coin[index];
+    if (!this.world.character.isColliding(coin)) return;
+    coin?.timers?.clearAll?.();
+    this.world.level.coin.splice(index, 1);
     this.addCoinToCharacter();
     window.audioManager?.play?.("coin");
-    w.coinBar.setStack(this.getCoinPercent());
+    this.world.coinBar.setStack(this.getCoinPercent());
   }
 
   /**
@@ -83,10 +79,10 @@ class WorldPickups {
    * @returns {void}
    */
   addCoinToCharacter() {
-    const c = this.world.character;
-    if (c.addCoin) return c.addCoin();
-    if (c.getCoins) return c.getCoins();
-    c.coins = Math.min((c.coins || 0) + 1, 5);
+    const character = this.world.character;
+    if (character.addCoin) return character.addCoin();
+    if (character.getCoins) return character.getCoins();
+    character.coins = Math.min((character.coins || 0) + 1, 5);
   }
 
   /**
@@ -94,8 +90,8 @@ class WorldPickups {
    * @returns {number}
    */
   getCoinPercent() {
-    const c = this.world.character;
-    const coins = Number.isFinite(c.coins) ? c.coins : 0;
+    const character = this.world.character;
+    const coins = Number.isFinite(character.coins) ? character.coins : 0;
     return coins * 20;
   }
 }

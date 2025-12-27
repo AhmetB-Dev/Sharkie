@@ -16,13 +16,13 @@ class WorldEndFlow {
    * @returns {void}
    */
   showEndScreen(hasWon) {
-    const w = this.world;
-    if (w.endScreen) return;
+    const world = this.world;
+    if (world.endScreen) return;
 
     this.stopBackgroundMusic();
     this.playEndSfx(hasWon);
 
-    w.endScreen = new EndScreen(hasWon, w.canvas.width, w.canvas.height);
+    world.endScreen = new EndScreen(hasWon, world.canvas.width, world.canvas.height);
   }
 
   /**

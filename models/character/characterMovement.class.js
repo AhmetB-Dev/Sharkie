@@ -51,59 +51,59 @@ class CharacterMovement {
 
   /** @returns {void} */
   stepLeft() {
-    const c = this.character;
+    const character = this.character;
     if (!this.canMove()) return;
-    if (!c.world.input.LEFT || c.x <= 0) return;
-    c.x -= c.speed;
-    c.otherDirection = true;
-    c.world.camera_x = -c.x + 100;
+    if (!character.world.input.LEFT || character.x <= 0) return;
+    character.x -= character.speed;
+    character.otherDirection = true;
+    character.world.camera_x = -character.x + 100;
   }
 
   /** @returns {void} */
   stepRight() {
-    const c = this.character;
+    const character = this.character;
     if (!this.canMove()) return;
-    if (!c.world.input.RIGHT || c.x >= c.world.level.level_end) return;
-    c.x += c.speed;
-    c.otherDirection = false;
-    c.world.camera_x = -c.x + 100;
+    if (!character.world.input.RIGHT || character.x >= character.world.level.level_end) return;
+    character.x += character.speed;
+    character.otherDirection = false;
+    character.world.camera_x = -character.x + 100;
   }
 
   /** @returns {void} */
   stepJump() {
-    const c = this.character;
+    const character = this.character;
     if (!this.canMove()) return;
-    if (!c.world.input.UP || c.isAboveGround()) return;
-    c.setJumpHeight();
+    if (!character.world.input.UP || character.isAboveGround()) return;
+    character.setJumpHeight();
   }
 
   /** @returns {void} */
   stepVertical() {
-    const c = this.character;
+    const character = this.character;
     if (!this.canMove()) return;
-    const input = c.world.input;
-    if (input.UP) c.y -= c.speed;
-    if (input.DOWN) c.y += c.speed;
+    const input = character.world.input;
+    if (input.UP) character.y -= character.speed;
+    if (input.DOWN) character.y += character.speed;
     this.clampYToCanvas();
   }
 
   /** @returns {void} */
   clampYToCanvas() {
-    const c = this.character;
-    const h = c.world?.canvas?.height ?? 0;
-    if (!h) return;
+    const character = this.character;
+    const characterHeight = character.world?.canvas?.height ?? 0;
+    if (!characterHeight) return;
 
-    const maxY = Math.max(0, h - c.height);
-    if (c.y < 0) c.y = 0;
-    if (c.y > maxY) c.y = maxY;
+    const maxY = Math.max(0, characterHeight - character.height);
+    if (character.y < 0) character.y = 0;
+    if (character.y > maxY) character.y = maxY;
   }
 
   /** @returns {boolean} */
   canMove() {
-    const c = this.character;
-    if (!c.world) return false;
-    if (c.dead() || c.world.endScreen) return false;
-    return !c.world.isPaused;
+    const character = this.character;
+    if (!character.world) return false;
+    if (character.dead() || character.world.endScreen) return false;
+    return !character.world.isPaused;
   }
 
   /** @returns {void} */

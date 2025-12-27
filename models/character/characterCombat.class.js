@@ -8,7 +8,7 @@ class CharacterCombat {
    */
   constructor(character) {
     /** @type {Character} */
-    this.c = character;
+    this.character = character;
   }
 
   /**
@@ -16,16 +16,16 @@ class CharacterCombat {
    * @returns {void}
    */
   shootAttack1Bubble() {
-    const c = this.c;
-    if (!c.world) return;
+    const character = this.character;
+    if (!character.world) return;
 
-    const shootToLeft = c.otherDirection;
-    const offsetX = shootToLeft ? -20 : c.width;
-    const startX = c.x + offsetX;
-    const startY = c.y + c.height * 0.5;
+    const shootToLeft = character.otherDirection;
+    const offsetX = shootToLeft ? -20 : character.width;
+    const startX = character.x + offsetX;
+    const startY = character.y + character.height * 0.5;
 
-    const bubble = new BubbleProjectile(startX, startY, c.IMAGES_ATTACK_BUBBLE_ANI1, shootToLeft);
-    c.world.throwableObjects.push(bubble);
+    const bubble = new BubbleProjectile(startX, startY, character.IMAGES_ATTACK_BUBBLE_ANI1, shootToLeft);
+    character.world.throwableObjects.push(bubble);
 
     if (window.audioManager) window.audioManager.play("bubbleShot");
   }
@@ -35,7 +35,6 @@ class CharacterCombat {
    * @returns {void}
    */
   shootUltimateBubble() {
-    const c = this.c;
     if (!this.canShootUltimate()) return;
 
     this.consumeUltimateAmmo();
@@ -50,9 +49,9 @@ class CharacterCombat {
    * @returns {boolean}
    */
   canShootUltimate() {
-    const c = this.c;
-    if (!c.world) return false;
-    return c.items > 0;
+    const character = this.character;
+    if (!character.world) return false;
+    return character.items > 0;
   }
 
   /**
@@ -60,8 +59,8 @@ class CharacterCombat {
    * @returns {void}
    */
   consumeUltimateAmmo() {
-    const c = this.c;
-    c.items--;
+    const character = this.character;
+    character.items--;
     this.updateAmmoBar();
   }
 
@@ -70,9 +69,9 @@ class CharacterCombat {
    * @returns {void}
    */
   updateAmmoBar() {
-    const c = this.c;
-    if (!c.world || !c.world.ammoBar) return;
-    c.world.ammoBar.setStack(c.items * 20);
+    const character = this.character;
+    if (!character.world || !character.world.ammoBar) return;
+    character.world.ammoBar.setStack(character.items * 20);
   }
 
   /**
@@ -80,13 +79,13 @@ class CharacterCombat {
    * @returns {{x:number, y:number, shootToLeft:boolean}}
    */
   getUltimateShotStart() {
-    const c = this.c;
-    const shootToLeft = c.otherDirection;
-    const offsetX = shootToLeft ? -20 : c.width;
+    const character = this.character;
+    const shootToLeft = character.otherDirection;
+    const offsetX = shootToLeft ? -20 : character.width;
 
     return {
-      x: c.x + offsetX,
-      y: c.y + c.height * 0.5,
+      x: character.x + offsetX,
+      y: character.y + character.height * 0.5,
       shootToLeft,
     };
   }
@@ -97,8 +96,8 @@ class CharacterCombat {
    * @returns {BubbleProjectile}
    */
   createUltimateBubble(pos) {
-    const c = this.c;
-    return new BubbleProjectile(pos.x, pos.y, c.IMAGES_UTLIMATE_ATTACK_BUBBLE, pos.shootToLeft, true);
+    const character = this.character;
+    return new BubbleProjectile(pos.x, pos.y, character.IMAGES_UTLIMATE_ATTACK_BUBBLE, pos.shootToLeft, true);
   }
 
   /**
@@ -107,9 +106,9 @@ class CharacterCombat {
    * @returns {void}
    */
   spawnProjectile(projectile) {
-    const c = this.c;
-    if (!c.world) return;
-    c.world.throwableObjects.push(projectile);
+    const character = this.character;
+    if (!character.world) return;
+    character.world.throwableObjects.push(projectile);
   }
 
   /**

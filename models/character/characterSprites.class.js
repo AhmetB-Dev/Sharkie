@@ -8,7 +8,7 @@ class CharacterSprites {
    */
   constructor(character) {
     /** @type {Character} */
-    this.c = character;
+    this.character = character;
   }
 
   /**
@@ -26,22 +26,22 @@ class CharacterSprites {
    * @returns {void}
    */
   linkAssets() {
-    const c = this.c;
-    c.IMAGES_IDLE = CharacterAssets.IMAGES_IDLE;
-    c.IMAGES_LONG_IDLE = CharacterAssets.IMAGES_LONG_IDLE;
-    c.IMAGES_WALK = CharacterAssets.IMAGES_WALK;
+    const character = this.character;
+    character.IMAGES_IDLE = CharacterAssets.IMAGES_IDLE;
+    character.IMAGES_LONG_IDLE = CharacterAssets.IMAGES_LONG_IDLE;
+    character.IMAGES_WALK = CharacterAssets.IMAGES_WALK;
 
-    c.IMAGES_ATTACK_ANI1 = CharacterAssets.IMAGES_ATTACK_ANI1;
-    c.IMAGES_ATTACK_BUBBLE_ANI1 = CharacterAssets.IMAGES_ATTACK_BUBBLE_ANI1;
-    c.IMAGES_ATTACK_ANI2 = CharacterAssets.IMAGES_ATTACK_ANI2;
+    character.IMAGES_ATTACK_ANI1 = CharacterAssets.IMAGES_ATTACK_ANI1;
+    character.IMAGES_ATTACK_BUBBLE_ANI1 = CharacterAssets.IMAGES_ATTACK_BUBBLE_ANI1;
+    character.IMAGES_ATTACK_ANI2 = CharacterAssets.IMAGES_ATTACK_ANI2;
 
-    c.IMAGES_UTLIMATE_ATTACK = CharacterAssets.IMAGES_UTLIMATE_ATTACK;
-    c.IMAGES_UTLIMATE_ATTACK_BUBBLE = CharacterAssets.IMAGES_UTLIMATE_ATTACK_BUBBLE;
+    character.IMAGES_UTLIMATE_ATTACK = CharacterAssets.IMAGES_UTLIMATE_ATTACK;
+    character.IMAGES_UTLIMATE_ATTACK_BUBBLE = CharacterAssets.IMAGES_UTLIMATE_ATTACK_BUBBLE;
 
-    c.IMAGES_HURT_ANI1 = CharacterAssets.IMAGES_HURT_ANI1;
-    c.IMAGES_HURT_ANI2 = CharacterAssets.IMAGES_HURT_ANI2;
-    c.IMAGES_DEAD_ANI1 = CharacterAssets.IMAGES_DEAD_ANI1;
-    c.IMAGES_DEAD_ANI2 = CharacterAssets.IMAGES_DEAD_ANI2;
+    character.IMAGES_HURT_ANI1 = CharacterAssets.IMAGES_HURT_ANI1;
+    character.IMAGES_HURT_ANI2 = CharacterAssets.IMAGES_HURT_ANI2;
+    character.IMAGES_DEAD_ANI1 = CharacterAssets.IMAGES_DEAD_ANI1;
+    character.IMAGES_DEAD_ANI2 = CharacterAssets.IMAGES_DEAD_ANI2;
   }
 
   /**
@@ -49,9 +49,9 @@ class CharacterSprites {
    * @returns {void}
    */
   loadFirstFrame() {
-    const c = this.c;
-    if (!c.IMAGES_IDLE || !c.IMAGES_IDLE.length) return;
-    c.loadImage(c.IMAGES_IDLE[0]);
+    const character = this.character;
+    if (!character.IMAGES_IDLE || !character.IMAGES_IDLE.length) return;
+    character.loadImage(character.IMAGES_IDLE[0]);
   }
 
   /**
@@ -59,22 +59,19 @@ class CharacterSprites {
    * @returns {void}
    */
   preloadAllFrames() {
-    const c = this.c;
-    this.preloadList(c.IMAGES_IDLE);
-    this.preloadList(c.IMAGES_LONG_IDLE);
-    this.preloadList(c.IMAGES_WALK);
-
-    this.preloadList(c.IMAGES_ATTACK_ANI1);
-    this.preloadList(c.IMAGES_ATTACK_BUBBLE_ANI1);
-    this.preloadList(c.IMAGES_ATTACK_ANI2);
-
-    this.preloadList(c.IMAGES_UTLIMATE_ATTACK);
-    this.preloadList(c.IMAGES_UTLIMATE_ATTACK_BUBBLE);
-
-    this.preloadList(c.IMAGES_HURT_ANI1);
-    this.preloadList(c.IMAGES_HURT_ANI2);
-    this.preloadList(c.IMAGES_DEAD_ANI1);
-    this.preloadList(c.IMAGES_DEAD_ANI2);
+    const character = this.character;
+    this.preloadList(character.IMAGES_IDLE);
+    this.preloadList(character.IMAGES_LONG_IDLE);
+    this.preloadList(character.IMAGES_WALK);
+    this.preloadList(character.IMAGES_ATTACK_ANI1);
+    this.preloadList(character.IMAGES_ATTACK_BUBBLE_ANI1);
+    this.preloadList(character.IMAGES_ATTACK_ANI2);
+    this.preloadList(character.IMAGES_UTLIMATE_ATTACK);
+    this.preloadList(character.IMAGES_UTLIMATE_ATTACK_BUBBLE);
+    this.preloadList(character.IMAGES_HURT_ANI1);
+    this.preloadList(character.IMAGES_HURT_ANI2);
+    this.preloadList(character.IMAGES_DEAD_ANI1);
+    this.preloadList(character.IMAGES_DEAD_ANI2);
   }
 
   /**
@@ -83,6 +80,6 @@ class CharacterSprites {
    */
   preloadList(frames) {
     if (!frames || !frames.length) return;
-    this.c.animationImage(frames);
+    this.character.animationImage(frames);
   }
 }

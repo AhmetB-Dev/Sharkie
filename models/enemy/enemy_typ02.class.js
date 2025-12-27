@@ -107,10 +107,8 @@ class Enemy_Typ02 extends MovableObject {
    * @returns {void}
    */
   animationWalktyp2() {
-    setInterval(() => {
-      if (this.isDead) {
-        return;
-      }
+    this.timers.every(() => {
+      if (this.isDead) return;
 
       if (this.isAttacking) {
         this.playAnimation(this.ENEMIES_ATTACK);
@@ -125,7 +123,7 @@ class Enemy_Typ02 extends MovableObject {
    * @returns {void}
    */
   animationDeadtyp2() {
-    setInterval(() => {
+    this.timers.every(() => {
       if (this.isDead) {
         this.playAnimation(this.ENEMIES_DEAD);
       }

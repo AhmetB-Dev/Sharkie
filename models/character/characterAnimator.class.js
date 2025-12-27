@@ -21,126 +21,126 @@ class CharacterAnimator {
    * @returns {void}
    */
   tick(input) {
-    const c = this.character;
-    const idleMs = this.updateIdleState(c);
+    const character = this.character;
+    const idleMs = this.updateIdleState(character);
 
-    if (this.handleDead(c)) return;
-    if (this.handleHurt(c)) return;
+    if (this.handleDead(character)) return;
+    if (this.handleHurt(character)) return;
     if (this.lock.tick()) return;
-    if (this.handleUltimate(c, input)) return;
-    if (this.handleAttack1(c, input)) return;
-    if (this.handleMelee(c, input)) return;
-    if (this.handleMove(c, input)) return;
-    if (this.handleLongIdle(c, idleMs)) return;
+    if (this.handleUltimate(character, input)) return;
+    if (this.handleAttack1(character, input)) return;
+    if (this.handleMelee(character, input)) return;
+    if (this.handleMove(character, input)) return;
+    if (this.handleLongIdle(character, idleMs)) return;
 
-    c.playAnimation(c.IMAGES_IDLE);
+    character.playAnimation(character.IMAGES_IDLE);
   }
 
   /**
-   * @param {Character} c
+   * @param {Character} character
    * @returns {number}
    */
-  updateIdleState(c) {
+  updateIdleState(character) {
     const now = Date.now();
-    if (c.isPlayerActive() || this.lock.has()) this.resetIdle(c, now);
-    return now - c.lastActionTime;
+    if (character.isPlayerActive() || this.lock.has()) this.resetIdle(character, now);
+    return now - character.lastActionTime;
   }
 
   /**
-   * @param {Character} c
+   * @param {Character} character
    * @param {number} now
    * @returns {void}
    */
-  resetIdle(c, now) {
-    c.lastActionTime = now;
-    c.longIdlePlayed = false;
-    c.longIdleFrame = 0;
+  resetIdle(character, now) {
+    character.lastActionTime = now;
+    character.longIdlePlayed = false;
+    character.longIdleFrame = 0;
   }
 
-  /** @param {Character} c @returns {boolean} */
-  handleDead(c) {
-    if (!c.dead()) return false;
+  /** @param {Character} character @returns {boolean} */
+  handleDead(character) {
+    if (!character.dead()) return false;
     this.lock.cancel();
-    c.playAnimation(c.IMAGES_DEAD_ANI1);
-    c.world?.showEndScreen?.(false);
+    character.playAnimation(character.IMAGES_DEAD_ANI1);
+    character.world?.showEndScreen?.(false);
     return true;
   }
 
-  /** @param {Character} c @returns {boolean} */
-  handleHurt(c) {
-    if (!c.hitHurt()) return false;
+  /** @param {Character} character @returns {boolean} */
+  handleHurt(character) {
+    if (!character.hitHurt()) return false;
     this.lock.cancel();
 
-    const frames = c.lastHitByEnemy1 ? c.IMAGES_HURT_ANI1 : c.IMAGES_HURT_ANI2;
+    const frames = character.lastHitByEnemy1 ? character.IMAGES_HURT_ANI1 : character.IMAGES_HURT_ANI2;
     window.audioManager?.play?.("hitMaker");
-    c.playAnimation(frames);
+    character.playAnimation(frames);
     return true;
   }
 
-  /** @param {Character} c @param {any} input @returns {boolean} */
-  handleUltimate(c, input) {
-    if (!input.ULTIMATE || c.items <= 0) return this.resetUltimateReady(c);
-    if (!c.ultimateReady) return false;
+  /** @param {Character} character @param {any} input @returns {boolean} */
+  handleUltimate(character, input) {
+    if (!input.ULTIMATE || character.items <= 0) return this.resetUltimateReady(character);
+    if (!character.ultimateReady) return false;
 
-    c.ultimateReady = false;
-    this.lock.start(c.IMAGES_UTLIMATE_ATTACK, { onLastFrame: () => c.shootUltimateBubble() });
+    character.ultimateReady = false;
+    this.lock.start(character.IMAGES_UTLIMATE_ATTACK, { onLastFrame: () => character.shootUltimateBubble() });
     return true;
   }
 
-  /** @param {Character} c @returns {boolean} */
-  resetUltimateReady(c) {
-    c.ultimateReady = true;
+  /** @param {Character} character @returns {boolean} */
+  resetUltimateReady(character) {
+    character.ultimateReady = true;
     return false;
   }
 
-  /** @param {Character} c @param {any} input @returns {boolean} */
-  handleAttack1(c, input) {
-    if (!input.ATA1) return this.resetAttack1Ready(c);
-    if (!c.attack1Ready) return false;
+  /** @param {Character} character @param {any} input @returns {boolean} */
+  handleAttack1(character, input) {
+    if (!input.ATA1) return this.resetAttack1Ready(character);
+    if (!character.attack1Ready) return false;
 
-    c.attack1Ready = false;
-    this.lock.start(c.IMAGES_ATTACK_ANI1, { onLastFrame: () => c.shootAttack1Bubble() });
+    character.attack1Ready = false;
+    this.lock.start(character.IMAGES_ATTACK_ANI1, { onLastFrame: () => character.shootAttack1Bubble() });
     return true;
   }
 
-  /** @param {Character} c @returns {boolean} */
-  resetAttack1Ready(c) {
-    c.attack1Ready = true;
+  /** @param {Character} characterc @returns {boolean} */
+  resetAttack1Ready(character) {
+    character.attack1Ready = true;
     return false;
   }
 
-  /** @param {Character} c @param {any} input @returns {boolean} */
-  handleMelee(c, input) {
-    if (!input.ATA2) return this.resetMelee(c);
+  /** @param {Character} character @param {any} input @returns {boolean} */
+  handleMelee(character, input) {
+    if (!input.ATA2) return this.resetMelee(character);
     if (!this.meleeReady) return false;
 
     this.meleeReady = false;
-    this.lock.start(c.IMAGES_ATTACK_ANI2, {
-      onStart: () => (c.hitRange = true),
-      onEnd: () => (c.hitRange = false),
+    this.lock.start(character.IMAGES_ATTACK_ANI2, {
+      onStart: () => (character.hitRange = true),
+      onEnd: () => (character.hitRange = false),
     });
     return true;
   }
 
-  /** @param {Character} c @returns {boolean} */
-  resetMelee(c) {
+  /** @param {Character} character @returns {boolean} */
+  resetMelee(character) {
     this.meleeReady = true;
-    c.hitRange = false;
+    character.hitRange = false;
     return false;
   }
 
-  /** @param {Character} c @param {any} input @returns {boolean} */
-  handleMove(c, input) {
+  /** @param {Character} character @param {any} input @returns {boolean} */
+  handleMove(character, input) {
     if (!(input.RIGHT || input.LEFT || input.UP || input.DOWN)) return false;
-    c.playAnimation(c.IMAGES_WALK);
+    character.playAnimation(character.IMAGES_WALK);
     return true;
   }
 
-  /** @param {Character} c @param {number} idleMs @returns {boolean} */
-  handleLongIdle(c, idleMs) {
-    if (idleMs <= c.delay) return false;
-    if (!c.longIdlePlayed) c.playLongIdleOnce();
-    else c.playLongIdleTail();
+  /** @param {Character} character @param {number} idleMs @returns {boolean} */
+  handleLongIdle(character, idleMs) {
+    if (idleMs <= character.delay) return false;
+    if (!character.longIdlePlayed) character.playLongIdleOnce();
+    else character.playLongIdleTail();
     return true;
   }
 }

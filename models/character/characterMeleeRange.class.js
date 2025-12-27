@@ -8,7 +8,7 @@ class CharacterMeleeRange {
    */
   constructor(character) {
     /** @type {Character} */
-    this.c = character;
+    this.character = character;
   }
 
   /**
@@ -17,7 +17,6 @@ class CharacterMeleeRange {
    * @returns {boolean}
    */
   hitmakerRange(enemy) {
-    const c = this.c;
     if (!this.canUseHitRange(enemy)) return false;
 
     const delta = this.getCenterDelta(enemy);
@@ -31,8 +30,8 @@ class CharacterMeleeRange {
    * @returns {boolean}
    */
   canUseHitRange(enemy) {
-    const c = this.c;
-    if (!c.hitRange) return false;
+    const character = this.character;
+    if (!character.hitRange) return false;
     return !!enemy;
   }
 
@@ -42,8 +41,8 @@ class CharacterMeleeRange {
    * @returns {{dx:number, dy:number}}
    */
   getCenterDelta(enemy) {
-    const c = this.c;
-    const center = this.getCenter(c);
+    const character = this.character;
+    const center = this.getCenter(character);
     const enemyCenter = this.getCenter(enemy);
     return { dx: enemyCenter.x - center.x, dy: enemyCenter.y - center.y };
   }
@@ -62,8 +61,8 @@ class CharacterMeleeRange {
    * @returns {boolean}
    */
   isTargetInFront(dx) {
-    const c = this.c;
-    const facingRight = !c.otherDirection;
+    const character = this.character;
+    const facingRight = !character.otherDirection;
     if (facingRight) return dx > 0;
     return dx < 0;
   }
@@ -82,7 +81,7 @@ class CharacterMeleeRange {
    * @returns {{maxX:number, maxY:number}}
    */
   getHitRangeLimits() {
-    const c = this.c;
-    return { maxX: c.width * 0.9, maxY: c.height * 0.7 };
+    const character = this.character;
+    return { maxX: character.width * 0.9, maxY: character.height * 0.7 };
   }
 }

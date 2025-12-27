@@ -8,7 +8,7 @@ class CharacterDamage {
    */
   constructor(character) {
     /** @type {Character} */
-    this.c = character;
+    this.character = character;
   }
 
   /**
@@ -16,11 +16,11 @@ class CharacterDamage {
    * @returns {void}
    */
   hit() {
-    const c = this.c;
-    c.baseHit();
+    const character = this.character;
+    character.baseHit();
 
-    if (c.dead()) {
-      c.speed = 0;
+    if (character.dead()) {
+      character.speed = 0;
       return;
     }
 
@@ -32,15 +32,16 @@ class CharacterDamage {
    * @returns {void}
    */
   applyHitSlowdown() {
-    const c = this.c;
-    if (c.isSlowed) return;
+    const character = this.character;
+    if (character.isSlowed) return;
 
-    c.isSlowed = true;
-    c.speed = c.normalSpeed * c.hurtSpeedFactor;
+    character.isSlowed = true;
+    character.speed = character.normalSpeed * character.hurtSpeedFactor;
 
     setTimeout(() => {
-      if (!c.dead() && c.world && !c.world.endScreen) c.speed = c.normalSpeed;
-      c.isSlowed = false;
+      if (!character.dead() && character.world && !character.world.endScreen)
+        character.speed = character.normalSpeed;
+      character.isSlowed = false;
     }, 400);
   }
 }

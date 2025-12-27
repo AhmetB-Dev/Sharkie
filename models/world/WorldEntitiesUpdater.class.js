@@ -19,8 +19,8 @@ class WorldEntitiesUpdater {
    * @returns {void}
    */
   updateEnemies(deltaSec) {
-    const w = this.world;
-    for (const enemy of w.level.enemies) {
+    const world = this.world;
+    for (const enemy of world.level.enemies) {
       this.updateSingleEnemy(enemy, deltaSec);
     }
   }
@@ -43,11 +43,14 @@ class WorldEntitiesUpdater {
    * @returns {void}
    */
   updateProjectiles(deltaSec) {
-    const w = this.world;
-    for (let index = w.throwableObjects.length - 1; index >= 0; index--) {
-      const projectile = w.throwableObjects[index];
+    const world = this.world;
+    for (let index = world.throwableObjects.length - 1; index >= 0; index--) {
+      const projectile = world.throwableObjects[index];
       projectile?.update?.(deltaSec);
-      if (this.isOutOfView(projectile)) w.throwableObjects.splice(index, 1);
+      if (this.isOutOfView(projectile)) {
+        projectile?.timers?.clearAll?.();
+        world.throwableObjects.splice(index, 1);
+      }
     }
   }
 
@@ -57,10 +60,10 @@ class WorldEntitiesUpdater {
    * @returns {boolean}
    */
   isOutOfView(projectile) {
-    const w = this.world;
+    const world = this.world;
     if (!projectile) return true;
-    const viewLeft = -w.camera_x;
-    const viewRight = viewLeft + w.canvas.width;
+    const viewLeft = -world.camera_x;
+    const viewRight = viewLeft + world.canvas.width;
     const padding = 300;
     return projectile.x + projectile.width < viewLeft - padding || projectile.x > viewRight + padding;
   }
@@ -71,9 +74,9 @@ class WorldEntitiesUpdater {
    * @returns {void}
    */
   updateBossDeath(deltaSec) {
-    const w = this.world;
-    if (!w.level?.enemies) return;
-    for (const enemy of w.level.enemies) {
+    const world = this.world;
+    if (!world.level?.enemies) return;
+    for (const enemy of world.level.enemies) {
       if (!(enemy instanceof Boss)) continue;
       if (!(enemy.isDead || enemy.dead?.())) continue;
       enemy.update?.(deltaSec);

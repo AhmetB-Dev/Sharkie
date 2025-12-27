@@ -21,15 +21,25 @@ class CharacterController {
   /** @returns {void} */
   start() {
     if (this.intervalId) return;
-    this.intervalId = setInterval(() => this.update(), 1000 / 10);
+    this.intervalId = this.character.timers.every(() => this.update(), 1000 / 10);
   }
 
+  /**
+   * Stops the controller tick loop.
+   * @returns {void}
+   */
+  stop() {
+    if (!this.intervalId) return;
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+  }
+  
   /** @returns {void} */
   update() {
-    const w = this.character.world;
-    if (!w || w.endScreen || w.isPaused) return;
-    if (!w.input) return;
-    this.animator.tick(w.input);
+    const world = this.character.world;
+    if (!world || world.endScreen || world.isPaused) return;
+    if (!world.input) return;
+    this.animator.tick(world.input);
   }
 
   /** @returns {void} */

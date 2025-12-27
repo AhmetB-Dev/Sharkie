@@ -8,7 +8,7 @@ class CharacterIdle {
    */
   constructor(character) {
     /** @type {Character} */
-    this.c = character;
+    this.character = character;
   }
 
   /**
@@ -16,16 +16,15 @@ class CharacterIdle {
    * @returns {boolean}
    */
   isPlayerActive() {
-    const c = this.c;
-    if (!c.world) return false;
-    const input = c.world.input;
+    const character = this.character;
+    if (!character.world) return false;
+    const input = character.world.input;
 
     return (
       input.RIGHT ||
       input.LEFT ||
       input.UP ||
       input.DOWN ||
-      input.SPACE ||
       input.THROW ||
       input.ATA1 ||
       input.ATA2 ||
@@ -38,10 +37,10 @@ class CharacterIdle {
    * @returns {void}
    */
   playLongIdleTail() {
-    const c = this.c;
-    const frames = c.IMAGES_LONG_IDLE;
+    const character = this.character;
+    const frames = character.IMAGES_LONG_IDLE;
     const startIndex = Math.max(frames.length - 4, 0);
-    c.playAnimation(frames.slice(startIndex));
+    character.playAnimation(frames.slice(startIndex));
   }
 
   /**
@@ -49,13 +48,13 @@ class CharacterIdle {
    * @returns {void}
    */
   playLongIdleOnce() {
-    const c = this.c;
-    const frames = c.IMAGES_LONG_IDLE;
+    const character = this.character;
+    const frames = character.IMAGES_LONG_IDLE;
 
-    if (c.longIdleFrame < 0 || c.longIdleFrame >= frames.length) c.longIdleFrame = 0;
-    c.img = c.imageCache[frames[c.longIdleFrame]];
+    if (character.longIdleFrame < 0 || character.longIdleFrame >= frames.length) character.longIdleFrame = 0;
+    character.img = character.imageCache[frames[character.longIdleFrame]];
 
-    if (c.longIdleFrame < frames.length - 1) c.longIdleFrame++;
-    else c.longIdlePlayed = true;
+    if (character.longIdleFrame < frames.length - 1) character.longIdleFrame++;
+    else character.longIdlePlayed = true;
   }
 }

@@ -174,7 +174,10 @@ class EnemyManager {
    */
   handleDeadEnemy(enemy, index, character) {
     if (!enemy?.isDead) return false;
-    if (character.isColliding(enemy)) this.level.enemies.splice(index, 1);
+    if (character.isColliding(enemy)) {
+      enemy?.timers?.clearAll?.();
+      this.level.enemies.splice(index, 1);
+    }
     return true;
   }
 
@@ -257,7 +260,10 @@ class EnemyManager {
       if (!hitEnemy) continue;
 
       const consumed = this.applyProjectileRules(hitEnemy, projectile);
-      if (consumed) projectiles.splice(projectileIndex, 1);
+      if (consumed) {
+        projectile?.timers?.clearAll?.();
+        projectiles.splice(projectileIndex, 1);
+      }
     }
   }
 

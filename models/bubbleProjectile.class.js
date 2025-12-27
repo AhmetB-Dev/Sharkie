@@ -31,7 +31,7 @@ class BubbleProjectile extends MovableObject {
    * @returns {void}
    */
   startAnimation() {
-    setInterval(() => {
+    this.timers.every(() => {
       this.playAnimation(this.animationFrames);
     }, 1000 / 15);
   }
@@ -41,7 +41,7 @@ class BubbleProjectile extends MovableObject {
    * @returns {void}
    */
   startMovement() {
-    setInterval(() => {
+    this.timers.every(() => {
       if (this.otherDirection) {
         this.x -= this.speedX;
       } else {

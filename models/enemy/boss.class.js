@@ -244,16 +244,13 @@ class Boss extends MovableObject {
   playDeathAnimation() {
     const deathFrames = this.ENEMIES_DEAD;
     if (!deathFrames || deathFrames.length === 0) return;
-
     if (this.deathAnimationDone) {
       const lastFrame = deathFrames[deathFrames.length - 1];
       this.img = this.imageCache[lastFrame];
       return;
     }
-
     const frameIndex = Math.min(this.deathFrame, deathFrames.length - 1);
     this.img = this.imageCache[deathFrames[frameIndex]];
-
     if (frameIndex >= deathFrames.length - 1) this.deathAnimationDone = true;
     else this.deathFrame++;
   }

@@ -36,11 +36,9 @@ class Character extends MovableObject {
   constructor() {
     super();
     this.normalSpeed = this.speed;
-
     /** @type {CharacterSprites} */
     this.sprites = new CharacterSprites(this);
     this.sprites.init();
-
     /** @type {CharacterIdle} */
     this.idle = new CharacterIdle(this);
     /** @type {CharacterCombat} */
@@ -49,10 +47,8 @@ class Character extends MovableObject {
     this.melee = new CharacterMeleeRange(this);
     /** @type {CharacterDamage} */
     this.damage = new CharacterDamage(this);
-
     /** @type {CharacterController} */
     this.controller = new CharacterController(this);
-
     this.disableGravity();
     this.groundY = 155;
     this.y = this.groundY;

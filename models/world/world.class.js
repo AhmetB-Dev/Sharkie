@@ -162,6 +162,13 @@ class World {
    * @returns {void}
    */
   initLevel() {
+    // Prefer a factory so each (re)start gets a clean level instance.
+    // Otherwise a soft restart would reuse a mutated singleton (missing enemies/boss, stale HUD state).
+    if (typeof createLevel1 === "function") {
+      this.level = createLevel1();
+      return;
+    }
+
     this.level = this.level || (typeof level1 !== "undefined" ? level1 : null);
     if (!this.level) throw new Error("level1 ist nicht geladen oder hat einen Fehler (level/level1.js)");
   }
@@ -204,7 +211,8 @@ class World {
     this._accMs = 0;
     /** @type {number} */
     this._fixedStepMs = 100;
-    requestAnimationFrame((timestamp) => this.frame(timestamp));
+    this._isDestroyed = false;
+    this._rafId = requestAnimationFrame((timestamp) => this.frame(timestamp));
   }
 
   /**
@@ -213,6 +221,7 @@ class World {
    * @returns {void}
    */
   frame(timestamp) {
+    if (this._isDestroyed) return;
     const deltaMs = timestamp - this._lastTs;
     this._lastTs = timestamp;
 
@@ -220,7 +229,7 @@ class World {
     this.updateFixed(deltaMs);
     this.render();
 
-    requestAnimationFrame((t) => this.frame(t));
+    this._rafId = requestAnimationFrame((t) => this.frame(t));
   }
 
   /**
@@ -231,6 +240,35 @@ class World {
     return this.isPaused || !!this.endScreen;
   }
 
+  /**
+   * Destroys the world instance: stops RAF loop and clears running timers.
+   * Allows returning to the main menu without reloading the whole page.
+   * @returns {void}
+   */
+  destroy() {
+    this._isDestroyed = true;
+    if (this._rafId) cancelAnimationFrame(this._rafId);
+    this.isPaused = true;
+
+    this.cleanupTimers();
+    this.endScreen = null;
+  }
+
+  /**
+   * Clears intervals/timeouts from entities (TimerBag) and controller loops.
+   * @returns {void}
+   */
+  cleanupTimers() {
+    this.character?.controller?.stop?.();
+    this.character?.controller?.stopMovementLoops?.();
+
+    const clearTimers = (obj) => obj?.timers?.clearAll?.();
+    clearTimers(this.character);
+    this.throwableObjects?.forEach(clearTimers);
+    this.level?.enemies?.forEach(clearTimers);
+    this.level?.coin?.forEach(clearTimers);
+    this.level?.ammo?.forEach(clearTimers);
+  }
   /**
    * Fixed-step update (AI/collisions).
    * @param {number} deltaMs

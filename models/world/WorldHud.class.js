@@ -29,9 +29,9 @@ class WorldHud {
    * @returns {void}
    */
   loadAmmoBar() {
-    const w = this.world;
-    w.ammoBar = new Statusbars();
-    w.ammoBar.initAmmoBar(0, 0);
+    const world = this.world;
+    world.ammoBar = new Statusbars();
+    world.ammoBar.initAmmoBar(0, 0);
   }
 
   /**
@@ -39,9 +39,9 @@ class WorldHud {
    * @returns {void}
    */
   loadHealthBar() {
-    const w = this.world;
-    w.healthBar = new Statusbars();
-    w.healthBar.initHealthBar(0, 50);
+    const world = this.world;
+    world.healthBar = new Statusbars();
+    world.healthBar.initHealthBar(0, 50);
   }
 
   /**
@@ -49,9 +49,9 @@ class WorldHud {
    * @returns {void}
    */
   loadCoinBar() {
-    const w = this.world;
-    w.coinBar = new Statusbars();
-    w.coinBar.initCoinBar(0, 105);
+    const world = this.world;
+    world.coinBar = new Statusbars();
+    world.coinBar.initCoinBar(0, 105);
   }
 
   /**
@@ -59,11 +59,11 @@ class WorldHud {
    * @returns {void}
    */
   loadBossBar() {
-    const w = this.world;
-    w.bossBar = new Statusbars();
-    w.bossBar.initBossBar();
+    const world = this.world;
+    world.bossBar = new Statusbars();
+    world.bossBar.initBossBar();
     this.updateBossBarPosition();
-    w.bossBar.hide();
+    world.bossBar.hide();
   }
 
   /**
@@ -80,9 +80,9 @@ class WorldHud {
    * @returns {void}
    */
   updateBossBarPosition(margin = 20) {
-    const w = this.world;
-    if (!w.canvas || !w.bossBar?.setHudPosition) return;
-    const x = Math.max(margin, w.canvas.width - w.bossBar.width - margin);
-    w.bossBar.setHudPosition(x, 10);
+    const world = this.world;
+    if (!world.canvas || !world.bossBar?.setHudPosition) return;
+    const x = Math.max(margin, world.canvas.width - world.bossBar.width - margin);
+    world.bossBar.setHudPosition(x, 10);
   }
 }
