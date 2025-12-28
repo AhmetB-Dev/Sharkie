@@ -21,11 +21,16 @@ const TOUCH_MAX = 1024;
 const ROTATE_OVERLAY_ID = "rotateOverlay";
 const CANVAS_ID = "canvas";
 
+/** Loading overlay id and minimum display time. */
+const LOADING_OVERLAY_ID = "loadingOverlay";
+const LOADING_MIN_MS = 2200;
+
 /**
  * Boots the app: prepares canvas, responsive behavior, start screen and pointer handlers.
  * @returns {void}
  */
 function boot() {
+  showLoadingOverlayFor(LOADING_MIN_MS);
   initCanvas();
   setupResponsive();
   applyResponsiveLayout();
@@ -41,6 +46,27 @@ function initCanvas() {
   canvas = document.getElementById(CANVAS_ID);
   if (!canvas) return;
   canvas.classList.add("d-none");
+}
+
+/**
+ * Shows the loading overlay for a minimum time, then fades it out and removes it.
+ * @param {number} ms
+ * @returns {void}
+ */
+function showLoadingOverlayFor(ms) {
+  const overlay = document.getElementById(LOADING_OVERLAY_ID);
+  if (!overlay) return;
+  window.setTimeout(() => hideAndRemoveLoadingOverlay(overlay), ms);
+}
+
+/**
+ * Fades out and removes the loading overlay.
+ * @param {HTMLElement} overlay
+ * @returns {void}
+ */
+function hideAndRemoveLoadingOverlay(overlay) {
+  overlay.classList.add("hide");
+  window.setTimeout(() => overlay.remove(), 220);
 }
 
 /**
