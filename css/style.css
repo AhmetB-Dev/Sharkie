@@ -86,7 +86,7 @@ button {
 .closeBtn {
   padding: 14px 30px;
   border-radius: 999px;
-  border: 6px solid #fff;
+  border: 5px solid #fff;
   background: #7fffe0;
   color: #2f2a71;
   font-weight: 900;
@@ -123,6 +123,7 @@ button {
   background: rgba(0, 0, 0, 0.18);
   border: 2px solid rgba(255, 255, 255, 0.12);
   text-align: left;
+  color: white;
 }
 
 .settingsPanel.show {
@@ -141,8 +142,8 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin: 10px 0;
+  gap: 4em;
+  margin: 20px 0;
 }
 
 .settingsActions {
@@ -165,11 +166,10 @@ button {
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (min-width: 900px) {
-  .controlsGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+.controlsGrid {
+  grid-template-columns: 1fr 1fr;
 }
+
 .startCard.settingsOpen .startActions {
   display: none;
 }
@@ -181,12 +181,132 @@ button {
   font-weight: 900;
   cursor: pointer;
 }
+
 #muteButton {
   display: none;
 }
+
 #startScreen #muteButton {
   display: inline-block;
 }
+
 #muteButton {
   display: none !important;
+}
+
+.controlsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  margin-top: 10px;
+}
+
+.controlsTable th {
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  padding: 0 8px 4px;
+}
+
+.controlsTable td {
+  padding: 0px 8px;
+}
+
+.keyPill {
+  display: inline-block;
+  min-width: 26px;
+  text-align: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: 900;
+}
+
+.controlsHint {
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+.keyRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.keyRowGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.keyRowSep {
+  font-weight: 900;
+  opacity: 0.8;
+}
+
+.inlineActionBtn {
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.18);
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.inlineActionBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.inlineActionBtn:active {
+  transform: translateY(0);
+}
+
+.settingsPanel input[type="checkbox"],
+#soundToggle {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+
+  display: inline-grid;
+  place-items: center;
+}
+
+.settingsPanel input[type="checkbox"]:checked,
+#soundToggle:checked {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.settingsPanel input[type="checkbox"]::before,
+#soundToggle::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 3px solid rgba(255, 255, 255, 0.9);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.9);
+  transform: rotate(-45deg) translateY(-1px);
+  opacity: 0;
+}
+
+.settingsPanel input[type="checkbox"]:checked::before,
+#soundToggle:checked::before {
+  opacity: 1;
 }

@@ -101,6 +101,8 @@ class StartScreen {
     if (buttonId === "startBtn") return this.onStart?.();
     if (buttonId === "settingsBtn") return this.toggleSettings(true);
     if (buttonId === "closeSettingsBtn") return this.toggleSettings(false);
+    if (buttonId === "controlsBtn") return this.toggleControls(true);
+    if (buttonId === "closeControlsBtn") return this.toggleControls(false);
     if (buttonId === "fsBtn") return window.requestFullscreen?.();
   }
 
@@ -141,18 +143,25 @@ class StartScreen {
   toggleSettings(open) {
     const elements = this.getSettingsElements();
     if (!elements) return;
+
     this.applySettingsClasses(elements, open);
     this.toggleMuteButton(open);
+
+    if (open) this.showSettingsPanelOnly(elements);
+    else this.hideControlsPanel(elements);
+
+    if (open) this.syncSoundToggleState();
   }
 
   /**
-   * @returns {{panel: Element, card: Element}|null}
+   * @returns {{panel: Element, card: Element, controlsPanel: Element|null}|null}
    */
   getSettingsElements() {
     const panel = this.screen.querySelector("#settingsPanel");
+    const controlsPanel = this.screen.querySelector("#controlsPanel");
     const card = this.screen.querySelector(".startCard");
     if (!panel || !card) return null;
-    return { panel, card };
+    return { panel, card, controlsPanel: controlsPanel || null };
   }
 
   /**
@@ -164,6 +173,57 @@ class StartScreen {
   applySettingsClasses({ panel, card }, open) {
     panel.classList.toggle("show", open);
     card.classList.toggle("settingsOpen", open);
+  }
+
+  /**
+   * Ensures settings panel is visible and controls panel is hidden.
+   * @param {{panel: Element, controlsPanel: Element|null}} elements
+   * @returns {void}
+   */
+  showSettingsPanelOnly({ panel, controlsPanel }) {
+    if (controlsPanel) controlsPanel.classList.remove("show");
+    panel.classList.add("show");
+  }
+
+  /**
+   * Hides controls panel when leaving settings.
+   * @param {{controlsPanel: Element|null}} elements
+   * @returns {void}
+   */
+  hideControlsPanel({ controlsPanel }) {
+    if (controlsPanel) controlsPanel.classList.remove("show");
+  }
+
+  /**
+   * Opens/closes the controls panel inside settings.
+   * @param {boolean} open
+   * @returns {void}
+   */
+  toggleControls(open) {
+    const elements = this.getControlsElements();
+    if (!elements) return;
+    this.applyControlsClasses(elements, open);
+  }
+
+  /**
+   * @returns {{settingsPanel: Element, controlsPanel: Element}|null}
+   */
+  getControlsElements() {
+    const settingsPanel = this.screen.querySelector("#settingsPanel");
+    const controlsPanel = this.screen.querySelector("#controlsPanel");
+    if (!settingsPanel || !controlsPanel) return null;
+    return { settingsPanel, controlsPanel };
+  }
+
+  /**
+   * Swaps the visible panel (settings <-> controls).
+   * @param {{settingsPanel: Element, controlsPanel: Element}} elements
+   * @param {boolean} open
+   * @returns {void}
+   */
+  applyControlsClasses({ settingsPanel, controlsPanel }, open) {
+    controlsPanel.classList.toggle("show", open);
+    settingsPanel.classList.toggle("show", !open);
   }
 
   /**
@@ -183,7 +243,6 @@ class StartScreen {
   mountMuteButton() {
     const slot = this.screen.querySelector("#settingsMuteSlot");
     if (!slot || !this.muteBtn) return;
-
     slot.appendChild(this.muteBtn);
     this.muteBtn.classList.add("pillBtn", "pillBtnSmall");
   }
@@ -194,7 +253,6 @@ class StartScreen {
    */
   unmountMuteButton() {
     if (!this.muteBtn || !this.muteHomeParent) return;
-
     this.muteBtn.classList.remove("pillBtn", "pillBtnSmall");
     this.muteHomeParent.insertBefore(this.muteBtn, this.muteHomeNext);
   }

@@ -1,20 +1,25 @@
-/** @type {HTMLCanvasElement|null} */
-let canvas,
-  /** @type {World|undefined} */
-  world,
-  /** @type {Input|undefined} */
-  input,
-  /** @type {StartScreen|undefined} */
-  startScreen;
+"use strict";
 
-/** @type {number} */
+/** @type {HTMLCanvasElement|null} */
+let canvas;
+/** @type {World|undefined} */
+let world;
+/** @type {Input|undefined} */
+let input;
+/** @type {StartScreen|undefined} */
+let startScreen;
+
+/** Base canvas dimensions (game coordinate system). */
 const BASE_W = 720;
-/** @type {number} */
 const BASE_H = 480;
-/** @type {number} */
+
+/** Responsive thresholds. */
 const ROTATE_BREAKPOINT = 900;
-/** @type {number} */
 const TOUCH_MAX = 1024;
+
+/** DOM ids. */
+const ROTATE_OVERLAY_ID = "rotateOverlay";
+const CANVAS_ID = "canvas";
 
 /**
  * Boots the app: prepares canvas, responsive behavior, start screen and pointer handlers.
@@ -33,7 +38,8 @@ function boot() {
  * @returns {void}
  */
 function initCanvas() {
-  canvas = document.getElementById("canvas");
+  canvas = document.getElementById(CANVAS_ID);
+  if (!canvas) return;
   canvas.classList.add("d-none");
 }
 
@@ -52,7 +58,8 @@ function initStartScreen() {
  * @returns {void}
  */
 function startGame() {
-  startScreen.hide();
+  if (!canvas) return;
+  startScreen?.hide?.();
   canvas.classList.remove("d-none");
   canvas.style.display = "block";
   window.audioManager?.playMusic("game");
@@ -86,14 +93,27 @@ function setupResponsive() {
  */
 function applyResponsiveLayout() {
   if (!canvas) return;
-  const overlay = document.getElementById("rotateOverlay");
+
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
+
   const shouldRotate = shouldShowRotateOverlay(viewportWidth, viewportHeight);
-  overlay?.classList.toggle("show", shouldRotate);
+  toggleRotateOverlay(shouldRotate);
 
   if (world) world.isPaused = shouldRotate;
-  world?.touchControls?.setEnabled?.(shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight));
+
+  const touchEnabled = shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight);
+  world?.touchControls?.setEnabled?.(touchEnabled);
+}
+
+/**
+ * Shows/hides the rotate overlay.
+ * @param {boolean} show
+ * @returns {void}
+ */
+function toggleRotateOverlay(show) {
+  const overlay = document.getElementById(ROTATE_OVERLAY_ID);
+  overlay?.classList.toggle("show", show);
 }
 
 /**
@@ -116,8 +136,10 @@ function shouldShowRotateOverlay(viewportWidth, viewportHeight) {
  */
 function shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight) {
   if (shouldRotate) return false;
+
   const isCoarsePointer = window.matchMedia("(pointer:coarse)").matches;
   const isSmallEnough = Math.min(viewportWidth, viewportHeight) <= TOUCH_MAX;
+
   return isCoarsePointer && isSmallEnough;
 }
 
@@ -150,9 +172,10 @@ function showMainMenu() {
     canvas.classList.add("d-none");
     canvas.style.display = "none";
   }
+
   startScreen?.show?.();
   window.audioManager?.playMusic?.("title");
-  applyResponsiveLayout?.();
+  applyResponsiveLayout();
 }
 
 /**
@@ -160,15 +183,14 @@ function showMainMenu() {
  * @returns {Promise<void>}
  */
 async function requestFullscreen() {
-  const full = document.documentElement;
   try {
     if (document.fullscreenElement) {
       await document.exitFullscreen();
       return;
     }
-    if (full.requestFullscreen) await full.requestFullscreen();
+    await document.documentElement.requestFullscreen?.();
   } finally {
-    applyResponsiveLayout?.();
+    applyResponsiveLayout();
   }
 }
 
@@ -177,14 +199,31 @@ async function requestFullscreen() {
  * @returns {void}
  */
 function registerCanvasPointerHandlers() {
+  if (!canvas) return;
   canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
   canvas.addEventListener("pointermove", onPointerMove, { passive: false });
   window.addEventListener("pointerup", onPointerUp);
   window.addEventListener("pointercancel", onPointerUp);
-  canvas.addEventListener("pointermove", () => {
-    canvas.style.cursor = world?.endScreen ? "pointer" : "default";
-  });
-  canvas.addEventListener("pointerleave", () => (canvas.style.cursor = "default"));
+  canvas.addEventListener("pointermove", updateCanvasCursor);
+  canvas.addEventListener("pointerleave", () => setCanvasCursor("default"));
+}
+
+/**
+ * Updates canvas cursor based on end screen.
+ * @returns {void}
+ */
+function updateCanvasCursor() {
+  setCanvasCursor(world?.endScreen ? "pointer" : "default");
+}
+
+/**
+ * Sets canvas cursor style safely.
+ * @param {string} value
+ * @returns {void}
+ */
+function setCanvasCursor(value) {
+  if (!canvas) return;
+  canvas.style.cursor = value;
 }
 
 /**
@@ -193,14 +232,13 @@ function registerCanvasPointerHandlers() {
  * @returns {void}
  */
 function onPointerDown(event) {
+  if (!canvas) return;
   event.preventDefault();
   const pos = getCanvasPointerPos(event);
-
   if (world?.endScreen) {
     world.endScreen.handleClick(pos.x, pos.y);
     return;
   }
-
   world?.touchControls?.pointerDown(pos.x, pos.y, event.pointerId);
 }
 
@@ -210,6 +248,8 @@ function onPointerDown(event) {
  * @returns {void}
  */
 function onPointerMove(event) {
+  if (!canvas) return;
+
   event.preventDefault();
   const pos = getCanvasPointerPos(event);
   world?.touchControls?.pointerMove(pos.x, pos.y, event.pointerId);

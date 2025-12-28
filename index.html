@@ -84,19 +84,55 @@
             <input id="soundToggle" type="checkbox" />
           </label>
 
+          <div class="settingRow">
+            <span>Controls</span>
+            <button id="controlsBtn" type="button" class="inlineActionBtn">OPEN</button>
+          </div>
+
+          <div class="settingsActions">
+            <button id="closeSettingsBtn" type="button" class="inlineActionBtn">BACK</button>
+          </div>
+        </div>
+
+        <div id="controlsPanel" class="settingsPanel">
+          <h3 class="panelTitle">Controls</h3>
+
           <div class="controlsBlock">
-            <h4 class="panelSubTitle">controls</h4>
             <div class="controlsGrid">
               <img class="controlsImg" src="assets/assets_sharkie/6.Botones/controls_primary.png" />
               <img class="controlsImg" src="assets/assets_sharkie/6.Botones/controls_alternative.png" />
             </div>
           </div>
+          <div class="controlsBlock">
+            <table class="controlsTable">
+              <thead>
+                <tr>
+                  <th>Enemy</th>
+                  <th>Keys</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Puffer Fish</td>
+                  <td><span class="keyPill">J</span> <span class="keyPill">Z|Y</span></td>
+                </tr>
+                <tr>
+                  <td>Jelly Fish</td>
+                  <td><span class="keyPill">K</span> <span class="keyPill">X</span></td>
+                </tr>
+                <tr>
+                  <td>Orca (Boss)</td>
+                  <td><span class="keyPill">L</span> <span class="keyPill">C</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="settingsActions">
-            <button id="closeSettingsBtn" type="button" class="pillBtn pillBtnSmall">BACK</button>
+            <button id="closeControlsBtn" type="button" class="inlineActionBtn">BACK</button>
           </div>
         </div>
-      </div></template
-    >
+      </div>
+    </template>
   </body>
 </html>

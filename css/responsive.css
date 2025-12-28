@@ -24,12 +24,6 @@
     padding: 94px 118px;
   }
 
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0;
-    padding: 0px;
-    font-size: 38px;
-  }
-
   .controlsImg {
     width: 450px;
     height: 260px;
@@ -45,12 +39,17 @@
 
   .startCard.settingsOpen .settingsPanel {
     margin-top: 0px;
-    padding: 40px;
-    font-size: 38px;
+    padding: 44px;
+    font-size: 40px;
+  }
+
+  .inlineActionBtn {
+    padding: 8px 14px;
+    font-size: 22px;
   }
 
   input[type="checkbox" i] {
-    transform: scale(2.6);
+    transform: scale(1.8);
   }
 
   canvas {
@@ -153,11 +152,6 @@
     font-size: 32px;
   }
 
-  .controlsImg {
-    width: 380px;
-    height: 260px;
-  }
-
   .controlsGrid {
     margin-top: 20px;
   }
@@ -165,15 +159,19 @@
   .settingsActions {
     margin-top: 50px;
   }
+  .controlsImg {
+    width: 260px;
+    height: 160px;
+  }
 
   .startCard.settingsOpen .settingsPanel {
     margin-top: 0px;
-    padding: 40px;
+    padding: 24px;
     font-size: 38px;
   }
 
   input[type="checkbox" i] {
-    transform: scale(2.2);
+    transform: scale(1.6);
   }
 
   canvas {
@@ -216,8 +214,18 @@
   }
 
   .controlsImg {
-    width: 370px;
-    height: 260px;
+    width: 260px;
+    height: 160px;
+  }
+
+  .startCard.settingsOpen .settingsPanel {
+    margin-top: 0px;
+    padding: 24px;
+    font-size: 38px;
+  }
+
+  input[type="checkbox" i] {
+    transform: scale(1.6);
   }
 
   .controlsGrid {
@@ -226,84 +234,11 @@
 
   .settingsActions {
     margin-top: 50px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 40px;
-    font-size: 38px;
-  }
-
-  input[type="checkbox" i] {
-    transform: scale(2.2);
   }
 
   canvas {
     background-color: black;
     width: 760px;
     height: 500px;
-  }
-}
-
-@media (min-width: 610px) and (max-width: 768px) {
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 16px;
-  }
-
-  .startTitle {
-    font-size: 40px;
-    margin-bottom: 40px;
-  }
-
-  h1 {
-    font-size: 50px;
-    margin: 0;
-    margin-bottom: 5px;
-  }
-
-  .startCard {
-    padding: 54px 38px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 30px;
-    font-size: 32px;
-  }
-
-  .controlsImg {
-    width: 370px;
-    height: 260px;
-  }
-
-  .controlsGrid {
-    margin-top: 20px;
-  }
-
-  .settingsActions {
-    margin-top: 50px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 40px;
-    font-size: 38px;
-  }
-
-  input[type="checkbox" i] {
-    transform: scale(2.2);
-  }
-
-  canvas {
-    background-color: black;
-    width: 600px;
-    height: 450px;
   }
 }
