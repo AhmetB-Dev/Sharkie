@@ -312,6 +312,7 @@ button {
 
 #impressumPanel {
   font-size: 20px;
+  max-width: 960px;
 }
 
 .legalText p {
@@ -329,7 +330,6 @@ button {
   font-size: 14px;
 }
 
-/* --- Loading overlay --- */
 .loadingOverlay {
   position: fixed;
   inset: 0;
