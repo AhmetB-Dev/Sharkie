@@ -1,4 +1,3 @@
-/* Base */
 body {
   display: flex;
   flex-direction: column;
@@ -309,4 +308,23 @@ button {
 .settingsPanel input[type="checkbox"]:checked::before,
 #soundToggle:checked::before {
   opacity: 1;
+}
+
+#impressumPanel {
+  font-size: 20px;
+}
+
+.legalText p {
+  margin: 10px 0;
+  line-height: 1.35;
+}
+
+.legalPlaceholder {
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.legalHint {
+  opacity: 0.9;
+  font-size: 14px;
 }

@@ -103,6 +103,8 @@ class StartScreen {
     if (buttonId === "closeSettingsBtn") return this.toggleSettings(false);
     if (buttonId === "controlsBtn") return this.toggleControls(true);
     if (buttonId === "closeControlsBtn") return this.toggleControls(false);
+    if (buttonId === "impressumBtn") return this.toggleImpressum(true);
+    if (buttonId === "closeImpressumBtn") return this.toggleImpressum(false);
     if (buttonId === "fsBtn") return window.requestFullscreen?.();
   }
 
@@ -203,6 +205,61 @@ class StartScreen {
     const elements = this.getControlsElements();
     if (!elements) return;
     this.applyControlsClasses(elements, open);
+  }
+
+  /**
+   * Opens/closes the impressum (legal) panel.
+   * @param {boolean} open
+   * @returns {void}
+   */
+  toggleImpressum(open) {
+    const elements = this.getImpressumElements();
+    if (!elements) return;
+    if (open) this.closeOtherPanels();
+    this.applyImpressumClasses(elements, open);
+    if (open) this.showImpressumPanelOnly(elements);
+  }
+
+  /**
+   * @returns {{panel: Element, card: Element, settingsPanel: Element|null, controlsPanel: Element|null}|null}
+   */
+  getImpressumElements() {
+    const panel = this.screen.querySelector("#impressumPanel");
+    const settingsPanel = this.screen.querySelector("#settingsPanel");
+    const controlsPanel = this.screen.querySelector("#controlsPanel");
+    const card = this.screen.querySelector(".startCard");
+    if (!panel || !card) return null;
+    return { panel, card, settingsPanel: settingsPanel || null, controlsPanel: controlsPanel || null };
+  }
+
+  /**
+   * @param {{panel: Element, card: Element}} elements
+   * @param {boolean} open
+   * @returns {void}
+   */
+  applyImpressumClasses({ panel, card }, open) {
+    panel.classList.toggle("show", open);
+    card.classList.toggle("settingsOpen", open);
+  }
+
+  /**
+   * Ensures only the impressum panel is visible.
+   * @param {{panel: Element, settingsPanel: Element|null, controlsPanel: Element|null}} elements
+   * @returns {void}
+   */
+  showImpressumPanelOnly({ panel, settingsPanel, controlsPanel }) {
+    if (settingsPanel) settingsPanel.classList.remove("show");
+    if (controlsPanel) controlsPanel.classList.remove("show");
+    panel.classList.add("show");
+  }
+
+  /**
+   * Closes settings/controls and restores moved UI elements (mute button).
+   * @returns {void}
+   */
+  closeOtherPanels() {
+    this.toggleControls(false);
+    this.toggleSettings(false);
   }
 
   /**
