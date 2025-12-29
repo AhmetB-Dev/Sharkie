@@ -16,7 +16,7 @@ class Character extends MovableObject {
   /** @type {number} */ height = 270;
   /** @type {number} */ width = 140;
   /** @type {number} */ y = 155;
-  /** @type {number} */ speed = 70;
+  /** @type {number} */ speed = 28;
   /** @type {number} */ normalSpeed = 60;
   /** @type {number} */ hurtSpeedFactor = 0.3;
   /** @type {boolean} */ isSlowed = false;

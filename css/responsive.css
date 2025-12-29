@@ -56,6 +56,11 @@
     background-color: black;
     width: 1450px;
   }
+
+  #impressumPanel {
+    font-size: 34px;
+    max-width: 1450px;
+  }
 }
 
 @media (min-width: 1440px) and (max-width: 1960px) {
@@ -117,6 +122,11 @@
   canvas {
     background-color: black;
     width: 800px;
+  }
+
+  #impressumPanel {
+    font-size: 24px;
+    max-width: 940px;
   }
 }
 
