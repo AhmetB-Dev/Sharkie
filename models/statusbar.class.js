@@ -74,7 +74,7 @@ class Statusbars extends DrawableObject {
    * @returns {void}
    */
   setStack(stackObjects) {
-    this.stackObjects = stackObjects;
+    this.stackObjects = Math.max(0, Math.min(100, stackObjects));
     const index = this.stackImageIndex();
     const path = this.IMAGES[index];
     this.img = this.imageCache[path];
@@ -98,10 +98,11 @@ class Statusbars extends DrawableObject {
   /**
    * Initializes coin bar (stack-based).
    * @param {number} x
+   * @param {number} [y=25]
    * @param {number} [stackObjects=0]
    * @returns {void}
    */
-  initCoinBar(x, stackObjects = 0) {
+  initCoinBar(x, y = 25, stackObjects = 0) {
     this.IMAGES = this.STATUS_COIN;
     this.animationImage(this.IMAGES);
     this.x = x;
@@ -188,11 +189,11 @@ class Statusbars extends DrawableObject {
    * @returns {number}
    */
   stackImageIndex() {
-    if (this.stackObjects == 0) return 0;
-    else if (this.stackObjects < 20) return 1;
-    else if (this.stackObjects < 40) return 2;
-    else if (this.stackObjects < 60) return 3;
-    else if (this.stackObjects < 80) return 4;
-    else return 5;
+    if (this.stackObjects >= 100) return 5;
+    if (this.stackObjects >= 80) return 4;
+    if (this.stackObjects >= 60) return 3;
+    if (this.stackObjects >= 40) return 2;
+    if (this.stackObjects >= 20) return 1;
+    return 0;
   }
 }

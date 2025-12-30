@@ -71,7 +71,6 @@ class Input extends MovableObject {
     const key = event.key;
     const keyLower = key.toLowerCase();
 
-    // Prevent arrow keys / space from scrolling the page while playing.
     if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(keyLower) || key === " ") {
       event.preventDefault();
     }

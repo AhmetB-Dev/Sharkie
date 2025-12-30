@@ -73,8 +73,6 @@ class World {
     this.input = input;
   }
 
-  // --- Delegated subsystems (kept as World API for backwards compatibility) ---
-
   initStatusBars() {
     this.hud.initStatusBars();
   }
@@ -145,8 +143,6 @@ class World {
     this.endFlow.playEndSfx(hasWon);
   }
 
-  // --- World init + loop ---
-
   /**
    * Initializes mobile touch controls.
    * @returns {void}
@@ -162,15 +158,12 @@ class World {
    * @returns {void}
    */
   initLevel() {
-    // Prefer a factory so each (re)start gets a clean level instance.
-    // Otherwise a soft restart would reuse a mutated singleton (missing enemies/boss, stale HUD state).
     if (typeof createLevel1 === "function") {
       this.level = createLevel1();
       return;
     }
 
     this.level = this.level || (typeof level1 !== "undefined" ? level1 : null);
-    if (!this.level) throw new Error("level1 ist nicht geladen oder hat einen Fehler (level/level1.js)");
   }
 
   /**
