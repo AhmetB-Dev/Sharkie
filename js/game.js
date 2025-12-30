@@ -45,6 +45,11 @@ function boot() {
 function initCanvas() {
   canvas = document.getElementById(CANVAS_ID);
   if (!canvas) return;
+  canvas.style.webkitTouchCallout = "none";
+  canvas.style.webkitUserSelect = "none";
+  canvas.style.userSelect = "none";
+  canvas.style.webkitUserDrag = "none";
+  canvas.style.touchAction = "none";
   canvas.classList.add("d-none");
 }
 
@@ -227,6 +232,11 @@ async function requestFullscreen() {
  */
 function registerCanvasPointerHandlers() {
   if (!canvas) return;
+  canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+  canvas.addEventListener("dragstart", (e) => e.preventDefault());
+  canvas.addEventListener("selectstart", (e) => e.preventDefault());
+  canvas.addEventListener("gesturestart", (e) => e.preventDefault());
+
   canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
   canvas.addEventListener("pointermove", onPointerMove, { passive: false });
   window.addEventListener("pointerup", onPointerUp);
