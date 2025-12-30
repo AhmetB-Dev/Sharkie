@@ -2,14 +2,25 @@
  * Enemy type 2 (jellyfish): patrol + interval-driven walk/attack/death animations.
  * @extends MovableObject
  */
-class Enemy_Typ02 extends MovableObject {
+class Enemy_jellyfish extends MovableObject {
+  /** @type {number} Vertical position in world coordinates. */
   y = 300;
+  /** @type {number} Sprite height in pixels. */
   height = 60;
+  /** @type {number} Sprite width in pixels. */
   width = 90;
+  /** @type {boolean} True once enemy has been killed (dead animation active). */
   isDead = false;
+  /** @type {boolean} True while enemy plays attack animation (AI-driven). */
   isAttacking = false;
+  /** @type {boolean} Short-lived flag used when player gets hit by this enemy. */
   isHittingPlayer = false;
 
+  /**
+   * Creates a new type-2 enemy instance.
+   * Initializes assets, random spawn, speed, patrol and animation intervals.
+   * @constructor
+   */
   constructor() {
     super();
     this.linkAssets();
@@ -68,6 +79,7 @@ class Enemy_Typ02 extends MovableObject {
 
   /**
    * Switches enemy into dead state and changes sprite size.
+   * @override
    * @returns {void}
    */
   die() {
@@ -81,6 +93,7 @@ class Enemy_Typ02 extends MovableObject {
 
   /**
    * Temporary "hit" flag (short window).
+   * Used for damage window / VFX sync.
    * @returns {void}
    */
   startHitAnimation() {
@@ -92,7 +105,7 @@ class Enemy_Typ02 extends MovableObject {
 
   /**
    * Sets attack state based on distance to character.
-   * @param {Character} character
+   * @param {{x:number, y:number}} character Character-like object (needs x/y).
    * @returns {void}
    */
   updateAI(character) {

@@ -27,8 +27,8 @@
     <script defer src="models/character/characterDamage.class.js"></script>
 
     <script defer src="models/character/character.class.js"></script>
-    <script defer src="models/enemy/enemy_typ01.class.js"></script>
-    <script defer src="models/enemy/enemy_typ02.class.js"></script>
+    <script defer src="models/enemy/pufferFish.class.js"></script>
+    <script defer src="models/enemy/jellyfish.class.js"></script>
     <script defer src="models/enemy/boss.class.js"></script>
     <script defer src="models/ambientObject.class.js"></script>
     <script defer src="models/background-object.class.js"></script>
@@ -56,10 +56,11 @@
   </head>
 
   <body onload="boot()">
-<div id="loadingOverlay" class="loadingOverlay" aria-label="Loading" role="status">
-  <div class="spinner" aria-hidden="true"></div>
-  <p>LOADING…</p>
-</div>
+    <div id="loadingOverlay" class="loadingOverlay" aria-label="Loading" role="status">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>LOADING…</p>
+    </div>
+
     <h1>Sharkie</h1>
     <div id="startScreen"></div>
     <canvas id="canvas" width="720" height="480"></canvas>

@@ -62,22 +62,22 @@ class EnemyManager {
   }
 
   /**
-   * Updates AI for Enemy_Typ01 instances.
+   * Updates AI for Enemy_pufferFish instances.
    * @returns {void}
    */
   updateTyp1() {
     for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ01 && !enemy.isDead) enemy.updateAI(this.character);
+      if (enemy instanceof Enemy_pufferFish && !enemy.isDead) enemy.updateAI(this.character);
     }
   }
 
   /**
-   * Updates AI for Enemy_Typ02 instances.
+   * Updates AI for Enemy_jellyfish instances.
    * @returns {void}
    */
   updateTyp2() {
     for (const enemy of this.level.enemies) {
-      if (enemy instanceof Enemy_Typ02 && !enemy.isDead) enemy.updateAI(this.character);
+      if (enemy instanceof Enemy_jellyfish && !enemy.isDead) enemy.updateAI(this.character);
     }
   }
 
@@ -182,13 +182,13 @@ class EnemyManager {
   }
 
   /**
-   * Kills Enemy_Typ01 via melee range check.
+   * Kills Enemy_pufferFish via melee range check.
    * @param {any} enemy
    * @param {Character} character
    * @returns {boolean} True if enemy was killed.
    */
   handleMeleeKill(enemy, character) {
-    if (!(enemy instanceof Enemy_Typ01)) return false;
+    if (!(enemy instanceof Enemy_pufferFish)) return false;
     if (enemy.isDead) return false;
     if (!character.hitmakerRange(enemy)) return false;
 
@@ -244,7 +244,7 @@ class EnemyManager {
    */
   markLastHitSource(enemy, character) {
     if (enemy instanceof Boss) return (character.lastHitByEnemy1 = true);
-    character.lastHitByEnemy1 = !(enemy instanceof Enemy_Typ02);
+    character.lastHitByEnemy1 = !(enemy instanceof Enemy_jellyfish);
   }
 
   /**
@@ -288,7 +288,7 @@ class EnemyManager {
    */
   applyProjectileRules(enemy, projectile) {
     if (enemy instanceof Boss) return this.hitBossWithUltimate(enemy, projectile);
-    if (enemy instanceof Enemy_Typ02) return this.killTyp2WithNormalBubble(enemy, projectile);
+    if (enemy instanceof Enemy_jellyfish) return this.killTyp2WithNormalBubble(enemy, projectile);
     return false;
   }
 
@@ -314,8 +314,8 @@ class EnemyManager {
   }
 
   /**
-   * Enemy_Typ02 can be killed by normal bubble (not ultimate).
-   * @param {Enemy_Typ02} enemy
+   * Enemy_jellyfish can be killed by normal bubble (not ultimate).
+   * @param {Enemy_jellyfish} enemy
    * @param {any} projectile
    * @returns {boolean}
    */

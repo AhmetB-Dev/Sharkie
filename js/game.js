@@ -170,12 +170,13 @@ function shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight) {
 }
 
 /**
- * Reloads the page to restart the game.
+ * Restarts the game immediately ("Try again") without returning to the main menu.
+ * Creates a fresh World instance so the level starts from the beginning.
  * @returns {void}
  */
 function restartGame() {
   stopWorld();
-  showMainMenu();
+  startGame();
 }
 
 /**

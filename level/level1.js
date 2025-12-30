@@ -12,12 +12,12 @@ function createLevel1() {
   return new Level(
     // 1) Enemies
     [
-      new Enemy_Typ01(),
-      new Enemy_Typ01(),
-      new Enemy_Typ01(),
-      new Enemy_Typ02(),
-      new Enemy_Typ02(),
-      new Enemy_Typ02(),
+      new Enemy_pufferFish(),
+      new Enemy_pufferFish(),
+      new Enemy_pufferFish(),
+      new Enemy_jellyfish(),
+      new Enemy_jellyfish(),
+      new Enemy_jellyfish(),
       new Boss(),
     ],
 

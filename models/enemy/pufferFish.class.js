@@ -3,15 +3,33 @@
  * Has a falling death behavior via gravity and a one-time death animation.
  * @extends MovableObject
  */
-class Enemy_Typ01 extends MovableObject {
+class Enemy_pufferFish extends MovableObject {
+  /** @type {number} Vertical position in world coordinates. */
   y = 300;
+  /** @type {number} Sprite height in pixels. */
   height = 70;
+  /** @type {number} Sprite width in pixels. */
   width = 90;
+  /** @type {boolean} True once enemy has been killed (dead behavior active). */
   isDead = false;
+  /** @type {boolean} True while enemy plays attack animation (AI-driven). */
   isAttacking = false;
+  /** @type {boolean} True once the death animation reached its last frame. */
   deathAnimationDone = false;
+  /** @type {number} Current death animation frame index (sticks on last frame). */
   deathFrame = 0;
+  /** @type {number} Seconds between animation frames (accumulator-based). */
+  animStepSec = 0.175;
+  /** @private @type {number} Accumulator for alive animation timing. */
+  _animAcc = 0;
+  /** @private @type {number} Accumulator for death animation timing. */
+  _deathAcc = 0;
 
+  /**
+   * Creates a new type-1 enemy instance.
+   * Initializes assets, random spawn, speed and patrol behavior.
+   * @constructor
+   */
   constructor() {
     super();
     this.linkAssets();
@@ -22,6 +40,8 @@ class Enemy_Typ01 extends MovableObject {
     this.startPatrol(300);
     this.initAnim();
     this.otherDirection = true;
+
+    /** @type {number} Ground level used for gravity drop / landing. */
     this.groundY = 325;
   }
 
@@ -48,7 +68,8 @@ class Enemy_Typ01 extends MovableObject {
 
   /**
    * Per-frame update.
-   * @param {number} dtSec
+   * @override
+   * @param {number} dtSec Delta time in seconds since last frame.
    * @returns {void}
    */
   update(dtSec) {
@@ -121,6 +142,7 @@ class Enemy_Typ01 extends MovableObject {
 
   /**
    * Switches enemy into dead state and enables gravity drop.
+   * @override
    * @returns {void}
    */
   die() {
@@ -154,7 +176,7 @@ class Enemy_Typ01 extends MovableObject {
 
   /**
    * Sets attack state based on distance to character.
-   * @param {Character} character
+   * @param {{x:number, y:number}} character Character-like object (needs x/y).
    * @returns {void}
    */
   updateAI(character) {
