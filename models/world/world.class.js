@@ -76,21 +76,27 @@ class World {
   initStatusBars() {
     this.hud.initStatusBars();
   }
+
   loadAmmoBar() {
     this.hud.loadAmmoBar();
   }
+
   loadHealthBar() {
     this.hud.loadHealthBar();
   }
+
   loadCoinBar() {
     this.hud.loadCoinBar();
   }
+
   loadBossBar() {
     this.hud.loadBossBar();
   }
+
   updateHudPositions() {
     this.hud.updateHudPositions();
   }
+
   updateBossBarPosition(margin = 20) {
     this.hud.updateBossBarPosition(margin);
   }
@@ -98,21 +104,27 @@ class World {
   checkCollisions() {
     this.pickups.checkCollisions();
   }
+
   updateAmmoBar() {
     this.pickups.updateAmmoBar();
   }
+
   tryPickupAmmo(index) {
     this.pickups.tryPickupAmmo(index);
   }
+
   updateCoinBar() {
     this.pickups.updateCoinBar();
   }
+
   tryPickupCoin(index) {
     this.pickups.tryPickupCoin(index);
   }
+
   addCoinToCharacter() {
     this.pickups.addCoinToCharacter();
   }
+
   getCoinPercent() {
     return this.pickups.getCoinPercent();
   }
@@ -120,15 +132,19 @@ class World {
   updateEnemies(deltaSec) {
     this.entities.updateEnemies(deltaSec);
   }
+
   updateSingleEnemy(enemy, deltaSec) {
     this.entities.updateSingleEnemy(enemy, deltaSec);
   }
+
   updateProjectiles(deltaSec) {
     this.entities.updateProjectiles(deltaSec);
   }
+
   isOutOfView(projectile) {
     return this.entities.isOutOfView(projectile);
   }
+
   updateBossDeath(deltaSec) {
     this.entities.updateBossDeath(deltaSec);
   }
@@ -136,9 +152,11 @@ class World {
   showEndScreen(hasWon) {
     this.endFlow.showEndScreen(hasWon);
   }
+
   stopBackgroundMusic() {
     this.endFlow.stopBackgroundMusic();
   }
+
   playEndSfx(hasWon) {
     this.endFlow.playEndSfx(hasWon);
   }
