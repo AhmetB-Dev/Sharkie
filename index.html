@@ -63,7 +63,64 @@
 
     <h1>Sharkie</h1>
     <div id="startScreen"></div>
-    <canvas id="canvas" width="720" height="480"></canvas>
+    <div id="gameStage" class="gameStage d-none">
+      <canvas id="canvas" width="720" height="480"></canvas>
+
+      <button
+        id="gameMenuButton"
+        class="gameMenuButton"
+        type="button"
+        aria-label="Open game menu"
+        aria-controls="pauseMenuOverlay"
+        aria-expanded="false"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <div id="pauseMenuOverlay" class="pauseMenuOverlay" aria-hidden="true">
+        <section
+          class="pauseMenuDialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="pauseMenuTitle"
+          tabindex="-1"
+        >
+          <button
+            class="pauseMenuClose"
+            type="button"
+            data-menu-action="resume"
+            aria-label="Close game menu"
+          >
+            &times;
+          </button>
+
+          <p class="pauseMenuEyebrow">PAUSED</p>
+          <h2 id="pauseMenuTitle" class="pauseMenuTitle">GAME MENU</h2>
+
+          <div class="pauseMenuActions">
+            <button class="pauseMenuAction pauseMenuActionPrimary" type="button" data-menu-action="resume">
+              CONTINUE
+            </button>
+            <button class="pauseMenuAction" type="button" data-menu-action="retry">RETRY</button>
+            <button
+              id="pauseSoundButton"
+              class="pauseMenuAction pauseMenuSound"
+              type="button"
+              data-menu-action="sound"
+              aria-pressed="false"
+            >
+              <span>MUSIC</span>
+              <span id="pauseSoundState" class="pauseSoundState">ON</span>
+            </button>
+            <button class="pauseMenuAction pauseMenuActionDanger" type="button" data-menu-action="main-menu">
+              MAIN MENU
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
     <div id="rotateOverlay">
       <div class="rotateCard">
         <div class="phone"></div>

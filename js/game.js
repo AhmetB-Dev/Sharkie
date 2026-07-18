@@ -8,6 +8,8 @@ let world;
 let input;
 /** @type {StartScreen|undefined} */
 let startScreen;
+/** @type {HTMLElement|null} */
+let pauseMenuReturnFocus = null;
 
 /** Base canvas dimensions (game coordinate system). */
 const BASE_W = 720;
@@ -20,6 +22,9 @@ const TOUCH_MAX = 1024;
 /** DOM ids. */
 const ROTATE_OVERLAY_ID = "rotateOverlay";
 const CANVAS_ID = "canvas";
+const GAME_STAGE_ID = "gameStage";
+const GAME_MENU_BUTTON_ID = "gameMenuButton";
+const PAUSE_MENU_OVERLAY_ID = "pauseMenuOverlay";
 
 /** Loading overlay id and minimum display time. */
 const LOADING_OVERLAY_ID = "loadingOverlay";
@@ -36,6 +41,7 @@ function boot() {
   applyResponsiveLayout();
   initStartScreen();
   registerCanvasPointerHandlers();
+  registerPauseMenuHandlers();
 }
 
 /**
@@ -51,6 +57,7 @@ function initCanvas() {
   canvas.style.webkitUserDrag = "none";
   canvas.style.touchAction = "none";
   canvas.classList.add("d-none");
+  document.getElementById(GAME_STAGE_ID)?.classList.add("d-none");
 }
 
 /**
@@ -90,7 +97,9 @@ function initStartScreen() {
  */
 function startGame() {
   if (!canvas) return;
+  closePauseMenu(false);
   startScreen?.hide?.();
+  document.getElementById(GAME_STAGE_ID)?.classList.remove("d-none");
   canvas.classList.remove("d-none");
   canvas.style.display = "block";
   window.audioManager?.playMusic("game");
@@ -131,9 +140,10 @@ function applyResponsiveLayout() {
   const shouldRotate = shouldShowRotateOverlay(viewportWidth, viewportHeight);
   toggleRotateOverlay(shouldRotate);
 
-  if (world) world.isPaused = shouldRotate;
+  const pauseMenuOpen = isPauseMenuOpen();
+  if (world) world.isPaused = shouldRotate || pauseMenuOpen;
 
-  const touchEnabled = shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight);
+  const touchEnabled = !pauseMenuOpen && shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight);
   world?.touchControls?.setEnabled?.(touchEnabled);
 }
 
@@ -180,6 +190,7 @@ function shouldEnableTouch(shouldRotate, viewportWidth, viewportHeight) {
  * @returns {void}
  */
 function restartGame() {
+  closePauseMenu(false);
   stopWorld();
   startGame();
 }
@@ -189,9 +200,12 @@ function restartGame() {
  * @returns {void}
  */
 function stopWorld() {
+  resetInputState();
   world?.destroy?.();
   world = undefined;
   window.world = undefined;
+  if (typeof Input !== "undefined" && Input.active === input) Input.active = null;
+  if (window.input === input) window.input = undefined;
   input = undefined;
 }
 
@@ -200,14 +214,177 @@ function stopWorld() {
  * @returns {void}
  */
 function showMainMenu() {
+  closePauseMenu(false);
+  stopWorld();
+
   if (canvas) {
     canvas.classList.add("d-none");
     canvas.style.display = "none";
   }
+  document.getElementById(GAME_STAGE_ID)?.classList.add("d-none");
 
   startScreen?.show?.();
+  startScreen?.syncSoundToggleState?.();
   window.audioManager?.playMusic?.("title");
   applyResponsiveLayout();
+  window.setTimeout(() => document.getElementById("startBtn")?.focus?.(), 0);
+}
+
+/**
+ * Registers the in-game pause menu controls.
+ * @returns {void}
+ */
+function registerPauseMenuHandlers() {
+  const menuButton = document.getElementById(GAME_MENU_BUTTON_ID);
+  const overlay = document.getElementById(PAUSE_MENU_OVERLAY_ID);
+  if (!menuButton || !overlay) return;
+
+  menuButton.addEventListener("click", togglePauseMenu);
+  overlay.addEventListener("click", handlePauseMenuClick);
+  window.addEventListener("keydown", handlePauseMenuKeydown);
+}
+
+/**
+ * Opens or closes the pause menu.
+ * @returns {void}
+ */
+function togglePauseMenu() {
+  if (isPauseMenuOpen()) closePauseMenu();
+  else openPauseMenu();
+}
+
+/**
+ * Pauses gameplay and opens the centered menu dialog.
+ * @returns {void}
+ */
+function openPauseMenu() {
+  const overlay = document.getElementById(PAUSE_MENU_OVERLAY_ID);
+  const menuButton = document.getElementById(GAME_MENU_BUTTON_ID);
+  if (!overlay || !world) return;
+
+  pauseMenuReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : menuButton;
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden", "false");
+  menuButton?.setAttribute("aria-expanded", "true");
+  document.body.classList.add("pauseMenuOpen");
+
+  world.isPaused = true;
+  world.touchControls?.setEnabled?.(false);
+  resetInputState();
+  syncPauseSoundState();
+
+  overlay.querySelector('[data-menu-action="resume"]')?.focus?.();
+}
+
+/**
+ * Closes the pause menu and optionally resumes the current game.
+ * @param {boolean} resumeGame
+ * @returns {void}
+ */
+function closePauseMenu(resumeGame = true) {
+  const overlay = document.getElementById(PAUSE_MENU_OVERLAY_ID);
+  const menuButton = document.getElementById(GAME_MENU_BUTTON_ID);
+  if (!overlay) return;
+
+  const wasOpen = overlay.classList.contains("show");
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden", "true");
+  menuButton?.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("pauseMenuOpen");
+
+  if (resumeGame && world) {
+    resetInputState();
+    applyResponsiveLayout();
+  }
+
+  if (wasOpen && resumeGame) (pauseMenuReturnFocus || menuButton)?.focus?.();
+  pauseMenuReturnFocus = null;
+}
+
+/**
+ * Routes clicks within the pause menu.
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function handlePauseMenuClick(event) {
+  const overlay = document.getElementById(PAUSE_MENU_OVERLAY_ID);
+  if (event.target === overlay) return closePauseMenu();
+
+  const actionButton = event.target.closest?.("[data-menu-action]");
+  if (!actionButton) return;
+
+  const action = actionButton.dataset.menuAction;
+  if (action === "resume") return closePauseMenu();
+  if (action === "retry") return restartGame();
+  if (action === "sound") return togglePauseSound();
+  if (action === "main-menu") return showMainMenu();
+}
+
+/**
+ * Handles Escape and keeps the sound label synced with the M shortcut.
+ * @param {KeyboardEvent} event
+ * @returns {void}
+ */
+function handlePauseMenuKeydown(event) {
+  if (!isPauseMenuOpen()) return;
+
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closePauseMenu();
+    return;
+  }
+
+  if (event.key === "m" || event.key === "M") {
+    window.setTimeout(syncPauseSoundState, 0);
+  }
+}
+
+/**
+ * Toggles the existing global music/sound setting from the pause menu.
+ * @returns {void}
+ */
+function togglePauseSound() {
+  window.audioManager?.toggleMute?.();
+  syncPauseSoundState();
+}
+
+/**
+ * Updates the pause menu music state text and accessibility state.
+ * @returns {void}
+ */
+function syncPauseSoundState() {
+  const button = document.getElementById("pauseSoundButton");
+  const state = document.getElementById("pauseSoundState");
+  const enabled = !!window.audioManager?.enabled;
+
+  if (state) state.textContent = enabled ? "ON" : "OFF";
+  button?.classList.toggle("isMuted", !enabled);
+  button?.setAttribute("aria-pressed", String(!enabled));
+  button?.setAttribute("aria-label", enabled ? "Mute music" : "Turn music on");
+}
+
+/**
+ * Returns whether the pause menu is currently visible.
+ * @returns {boolean}
+ */
+function isPauseMenuOpen() {
+  return !!document.getElementById(PAUSE_MENU_OVERLAY_ID)?.classList.contains("show");
+}
+
+/**
+ * Releases keyboard and touch flags so the character cannot keep moving after a pause.
+ * @returns {void}
+ */
+function resetInputState() {
+  if (!input) return;
+
+  ["LEFT", "RIGHT", "UP", "DOWN", "SPACE", "THROW", "ATA1", "ATA2", "ULTIMATE"].forEach((key) => {
+    input[key] = false;
+  });
+
+  Object.values(input._pulseTimers || {}).forEach((timerId) => clearTimeout(timerId));
+  input._pulseTimers = {};
+  world?.touchControls?.clearAll?.();
 }
 
 /**

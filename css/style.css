@@ -370,3 +370,286 @@ button {
     transform: rotate(360deg);
   }
 }
+
+/* In-game pause menu */
+.gameStage {
+  position: relative;
+  display: inline-grid;
+  line-height: normal;
+  isolation: isolate;
+}
+
+.gameStage.d-none {
+  display: none;
+}
+
+.gameStage canvas {
+  display: block;
+}
+
+.gameMenuButton {
+  position: absolute;
+  top: clamp(8px, 2.5%, 18px);
+  right: clamp(8px, 2.5%, 18px);
+  z-index: 20;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  width: clamp(40px, 7vw, 56px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 3px solid rgba(255, 255, 255, 0.88);
+  border-radius: 50%;
+  background: rgba(20, 28, 83, 0.82);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(5px);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.gameMenuButton span {
+  display: block;
+  width: clamp(17px, 3vw, 24px);
+  height: 3px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.gameMenuButton:hover {
+  transform: translateY(-1px) scale(1.04);
+  background: rgba(47, 42, 113, 0.95);
+  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.42);
+}
+
+.gameMenuButton:active {
+  transform: scale(0.97);
+}
+
+.gameMenuButton:focus-visible,
+.pauseMenuClose:focus-visible,
+.pauseMenuAction:focus-visible {
+  outline: 3px solid #fff36b;
+  outline-offset: 3px;
+}
+
+.pauseMenuOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 3vw, 24px);
+  box-sizing: border-box;
+  background: rgba(4, 10, 35, 0.66);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease;
+}
+
+.pauseMenuOverlay.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pauseMenuDialog {
+  position: relative;
+  width: min(380px, calc(100% - 12px));
+  max-height: calc(100% - 12px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: clamp(22px, 4vw, 34px);
+  border: 3px solid rgba(255, 255, 255, 0.82);
+  border-radius: clamp(22px, 5vw, 38px);
+  background: linear-gradient(150deg, rgba(47, 42, 113, 0.97), rgba(8, 19, 59, 0.97));
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #fff;
+  text-align: center;
+  transform: translateY(10px) scale(0.96);
+  transition: transform 180ms ease;
+  scrollbar-width: thin;
+}
+
+.pauseMenuOverlay.show .pauseMenuDialog {
+  transform: translateY(0) scale(1);
+}
+
+.pauseMenuClose {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 27px;
+  line-height: 1;
+}
+
+.pauseMenuClose:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.pauseMenuEyebrow {
+  margin: 0 0 5px;
+  color: #7fffe0;
+  font-size: clamp(11px, 2vw, 14px);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.pauseMenuTitle {
+  margin: 0 32px 20px;
+  font-size: clamp(22px, 5vw, 34px);
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+}
+
+.pauseMenuActions {
+  display: grid;
+  gap: 11px;
+}
+
+.pauseMenuAction {
+  min-height: 48px;
+  padding: 11px 18px;
+  border: 3px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  font-size: clamp(13px, 2.4vw, 16px);
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.pauseMenuAction:hover {
+  transform: translateY(-1px);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.17);
+}
+
+.pauseMenuAction:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.pauseMenuActionPrimary {
+  border-color: #fff;
+  background: #7fffe0;
+  color: #2f2a71;
+}
+
+.pauseMenuActionPrimary:hover {
+  background: #a7ffeb;
+}
+
+.pauseMenuSound {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.pauseSoundState {
+  min-width: 44px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(127, 255, 224, 0.18);
+  color: #7fffe0;
+}
+
+.pauseMenuSound.isMuted .pauseSoundState {
+  background: rgba(255, 160, 160, 0.15);
+  color: #ffb0b0;
+}
+
+.pauseMenuActionDanger {
+  border-color: rgba(255, 184, 184, 0.72);
+  color: #ffd3d3;
+}
+
+@media (max-width: 520px) {
+  .gameMenuButton {
+    width: 40px;
+    border-width: 2px;
+  }
+
+  .pauseMenuDialog {
+    padding: 20px 16px 16px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .pauseMenuOverlay {
+    padding: 6px;
+  }
+
+  .pauseMenuDialog {
+    width: min(520px, calc(100% - 8px));
+    max-height: calc(100% - 8px);
+    padding: 10px 14px 12px;
+    border-width: 2px;
+    border-radius: 20px;
+  }
+
+  .pauseMenuClose {
+    top: 6px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+    font-size: 21px;
+  }
+
+  .pauseMenuEyebrow {
+    margin-bottom: 2px;
+    font-size: 9px;
+  }
+
+  .pauseMenuTitle {
+    margin: 0 28px 8px;
+    font-size: 18px;
+  }
+
+  .pauseMenuActions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .pauseMenuAction {
+    min-height: 34px;
+    padding: 6px 10px;
+    border-width: 2px;
+    font-size: 10px;
+  }
+
+  .pauseSoundState {
+    min-width: 30px;
+    padding: 3px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gameMenuButton,
+  .pauseMenuOverlay,
+  .pauseMenuDialog,
+  .pauseMenuAction {
+    transition: none;
+  }
+}
