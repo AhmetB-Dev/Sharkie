@@ -1,0 +1,25 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  height: 100vh;
+
+  background-image: url("../assets/assets_sharkie/background_title.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+canvas {
+  background-color: black;
+  touch-action: none;
+}
+
+.d-none {
+  display: none;
+}
+.d-show {
+  display: block;
+}
+
