@@ -6,28 +6,28 @@
 class EndScreen extends DrawableObject {
   /** @type {string[]} */
   static WIN_TITLES = [
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 22.png",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Mesa de trabajo 1.png",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 19.png",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 20.png",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 21.png",
+    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 22.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/You win/Mesa de trabajo 1.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 19.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 20.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 21.webp",
   ];
 
   /** @type {string[]} */
   static GAME_OVER_TITLES = [
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 9.png",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 10.png",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 11.png",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 12.png",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 13.png",
+    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 9.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 10.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 11.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 12.webp",
+    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 13.webp",
   ];
 
   /** @type {string[]} */
   static TRY_AGAIN_IMAGES = [
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 16.png",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 15.png",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 17.png",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 18.png",
+    "assets/assets_sharkie/6.Botones/Try again/Recurso 16.webp",
+    "assets/assets_sharkie/6.Botones/Try again/Recurso 15.webp",
+    "assets/assets_sharkie/6.Botones/Try again/Recurso 17.webp",
+    "assets/assets_sharkie/6.Botones/Try again/Recurso 18.webp",
   ];
 
   /**

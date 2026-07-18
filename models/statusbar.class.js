@@ -10,42 +10,42 @@ class Statusbars extends DrawableObject {
 
   /** @type {string[]} */
   STATUS_HEALTH = [
-    "assets/assets_sharkie/4. Marcadores/green/Life/0_  copia 3.png",
-    "assets/assets_sharkie/4. Marcadores/green/Life/20_ copia 4.png",
-    "assets/assets_sharkie/4. Marcadores/green/Life/40_  copia 3.png",
-    "assets/assets_sharkie/4. Marcadores/green/Life/60_  copia 3.png",
-    "assets/assets_sharkie/4. Marcadores/green/Life/80_  copia 3.png",
-    "assets/assets_sharkie/4. Marcadores/green/Life/100_  copia 2.png",
+    "assets/assets_sharkie/4. Marcadores/green/Life/0_  copia 3.webp",
+    "assets/assets_sharkie/4. Marcadores/green/Life/20_ copia 4.webp",
+    "assets/assets_sharkie/4. Marcadores/green/Life/40_  copia 3.webp",
+    "assets/assets_sharkie/4. Marcadores/green/Life/60_  copia 3.webp",
+    "assets/assets_sharkie/4. Marcadores/green/Life/80_  copia 3.webp",
+    "assets/assets_sharkie/4. Marcadores/green/Life/100_  copia 2.webp",
   ];
 
   /** @type {string[]} */
   STATUS_COIN = [
-    "assets/assets_sharkie/4. Marcadores/orange/0_  copia 2.png",
-    "assets/assets_sharkie/4. Marcadores/orange/20_  copia.png",
-    "assets/assets_sharkie/4. Marcadores/orange/40_  copia 2.png",
-    "assets/assets_sharkie/4. Marcadores/orange/60_  copia 2.png",
-    "assets/assets_sharkie/4. Marcadores/orange/80_  copia 2.png",
-    "assets/assets_sharkie/4. Marcadores/orange/100_ copia 2.png",
+    "assets/assets_sharkie/4. Marcadores/orange/0_  copia 2.webp",
+    "assets/assets_sharkie/4. Marcadores/orange/20_  copia.webp",
+    "assets/assets_sharkie/4. Marcadores/orange/40_  copia 2.webp",
+    "assets/assets_sharkie/4. Marcadores/orange/60_  copia 2.webp",
+    "assets/assets_sharkie/4. Marcadores/orange/80_  copia 2.webp",
+    "assets/assets_sharkie/4. Marcadores/orange/100_ copia 2.webp",
   ];
 
   /** @type {string[]} */
   STATUS_AMMO = [
-    "assets/assets_sharkie/4. Marcadores/Purple/0_.png",
-    "assets/assets_sharkie/4. Marcadores/Purple/20_.png",
-    "assets/assets_sharkie/4. Marcadores/Purple/40_.png",
-    "assets/assets_sharkie/4. Marcadores/Purple/60_.png",
-    "assets/assets_sharkie/4. Marcadores/Purple/80_.png",
-    "assets/assets_sharkie/4. Marcadores/Purple/100_.png",
+    "assets/assets_sharkie/4. Marcadores/Purple/0_.webp",
+    "assets/assets_sharkie/4. Marcadores/Purple/20_.webp",
+    "assets/assets_sharkie/4. Marcadores/Purple/40_.webp",
+    "assets/assets_sharkie/4. Marcadores/Purple/60_.webp",
+    "assets/assets_sharkie/4. Marcadores/Purple/80_.webp",
+    "assets/assets_sharkie/4. Marcadores/Purple/100_.webp",
   ];
 
   /** @type {string[]} */
   STATUS_BOSS = [
-    "assets/assets_sharkie/4. Marcadores/boss_bar/0.png",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/20.png",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/40.png",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/60.png",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/80.png",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/100.png",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/0.webp",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/20.webp",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/40.webp",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/60.webp",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/80.webp",
+    "assets/assets_sharkie/4. Marcadores/boss_bar/100.webp",
   ];
 
   constructor() {

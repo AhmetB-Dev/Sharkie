@@ -60,13 +60,13 @@ class TouchControls {
    */
   buildButtons(basePath) {
     return {
-      left: this.createHoldButton("LEFT", basePath + "touch_move_left_circle.png"),
-      right: this.createHoldButton("RIGHT", basePath + "touch_move_right_circle.png"),
-      up: this.createHoldButton("UP", basePath + "touch_jump_circle.png"),
-      down: this.createHoldButton("DOWN", basePath + "touch_move_down_circle.png"),
-      atk1: this.createPulseButton("ATA1", basePath + "touch_attack_bubbleshot_circle.png", 220),
-      melee: this.createPulseButton("ATA2", basePath + "touch_melee_circle.png", 220),
-      ult: this.createPulseButton("ULTIMATE", basePath + "touch_attack_ultimate_bubble_no_cross.png", 260),
+      left: this.createHoldButton("LEFT", basePath + "touch_move_left_circle.webp"),
+      right: this.createHoldButton("RIGHT", basePath + "touch_move_right_circle.webp"),
+      up: this.createHoldButton("UP", basePath + "touch_jump_circle.webp"),
+      down: this.createHoldButton("DOWN", basePath + "touch_move_down_circle.webp"),
+      atk1: this.createPulseButton("ATA1", basePath + "touch_attack_bubbleshot_circle.webp", 220),
+      melee: this.createPulseButton("ATA2", basePath + "touch_melee_circle.webp", 220),
+      ult: this.createPulseButton("ULTIMATE", basePath + "touch_attack_ultimate_bubble_no_cross.webp", 260),
     };
   }
 
