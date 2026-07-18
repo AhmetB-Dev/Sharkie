@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html translate="no" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -61,7 +61,7 @@
       <p>LOADING…</p>
     </div>
 
-    <h1>Sharkie</h1>
+    <!-- <h1>Sharkie</h1> -->
     <div id="startScreen"></div>
     <div id="gameStage" class="gameStage d-none">
       <canvas id="canvas" width="720" height="480"></canvas>
@@ -87,12 +87,7 @@
           aria-labelledby="pauseMenuTitle"
           tabindex="-1"
         >
-          <button
-            class="pauseMenuClose"
-            type="button"
-            data-menu-action="resume"
-            aria-label="Close game menu"
-          >
+          <button class="pauseMenuClose" type="button" data-menu-action="resume" aria-label="Close game menu">
             &times;
           </button>
 
@@ -130,16 +125,19 @@
 
     <template id="startScreenTemplate">
       <div class="startCard">
-        <h2 class="startTitle">SHARKIE</h2>
+        <div class="startMenuIntro">
+          <h2 class="startTitle">SHARKIE</h2>
+        </div>
 
         <div class="startActions">
-          <button id="startBtn" type="button" class="pillBtn">START</button>
+          <button id="startBtn" type="button" class="pillBtn startPrimaryBtn">START GAME</button>
           <button id="settingsBtn" type="button" class="pillBtn">SETTINGS</button>
           <button id="fsBtn" type="button" class="pillBtn">FULLSCREEN</button>
           <button id="impressumBtn" type="button" class="pillBtn pillBtnSmall">IMPRESSUM</button>
         </div>
 
         <div id="settingsPanel" class="settingsPanel">
+          <p class="menuPanelEyebrow">GAME MENU</p>
           <h3 class="panelTitle">Settings</h3>
 
           <label class="settingRow">
@@ -158,6 +156,7 @@
         </div>
 
         <div id="controlsPanel" class="settingsPanel">
+          <p class="menuPanelEyebrow">HOW TO PLAY</p>
           <h3 class="panelTitle">Controls</h3>
 
           <div class="controlsBlock">
@@ -196,6 +195,7 @@
           </div>
         </div>
         <div id="impressumPanel" class="settingsPanel">
+          <p class="menuPanelEyebrow">INFORMATION</p>
           <h3 class="panelTitle">Impressum</h3>
 
           <div class="legalText">
