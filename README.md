@@ -1,14 +1,14 @@
 <div align="center">
-  <img src="assets/assets_sharkie/background_title.png" alt="Sharkie title screen" width="100%" />
 
-  # Sharkie
+# Sharkie
 
-  **A responsive 2D browser game built with object-oriented JavaScript and the HTML5 Canvas API.**
+**A responsive 2D browser game built with object-oriented JavaScript and the HTML5 Canvas API.**
 
-  ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-  ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-  ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=000000)
-  ![Canvas](https://img.shields.io/badge/HTML5_Canvas-111827?style=for-the-badge)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=000000)
+![Canvas](https://img.shields.io/badge/HTML5_Canvas-111827?style=for-the-badge)
+
 </div>
 
 ## About the project
@@ -36,35 +36,35 @@ The main focus of this project is a maintainable, class-based game architecture.
 
 Your goal is to move through the underwater world, collect resources, use the correct attack against each enemy type, and defeat the final boss.
 
-| Enemy | Required attack | Primary key | Alternative key |
-|---|---|---:|---:|
-| Puffer fish | Tail attack | `J` | `Y` or `Z` |
-| Jellyfish | Bubble attack | `K` | `X` |
-| Final boss | Poison bubble | `L` | `C` |
+| Enemy       | Required attack | Primary key | Alternative key |
+| ----------- | --------------- | ----------: | --------------: |
+| Puffer fish | Tail attack     |         `J` |      `Y` or `Z` |
+| Jellyfish   | Bubble attack   |         `K` |             `X` |
+| Final boss  | Poison bubble   |         `L` |             `C` |
 
 ### Movement and general controls
 
-| Action | Keys |
-|---|---|
-| Move left | `A` or `Arrow Left` |
-| Move right | `D` or `Arrow Right` |
-| Move up | `W` or `Arrow Up` |
-| Move down | `S` or `Arrow Down` |
-| Toggle sound | `M` or the menu control |
-| Close the pause menu | `Escape` |
+| Action               | Keys                    |
+| -------------------- | ----------------------- |
+| Move left            | `A` or `Arrow Left`     |
+| Move right           | `D` or `Arrow Right`    |
+| Move up              | `W` or `Arrow Up`       |
+| Move down            | `S` or `Arrow Down`     |
+| Toggle sound         | `M` or the menu control |
+| Close the pause menu | `Escape`                |
 
 > The poison-bubble attack consumes collected poison ammunition. On supported touch devices, mobile controls are displayed automatically in landscape mode.
 
 ## Technology stack
 
-| Technology | Purpose |
-|---|---|
-| HTML5 | Application structure, menus, dialogs, and canvas element |
-| CSS3 | Layout, responsive behavior, overlays, menus, and touch controls |
-| JavaScript | Game logic, input, state management, animations, and audio |
-| Canvas API | Rendering the game world, characters, enemies, and HUD |
-| `requestAnimationFrame` | Browser-synchronized rendering loop |
-| `HTMLAudioElement` | Background music and sound effects |
+| Technology              | Purpose                                                          |
+| ----------------------- | ---------------------------------------------------------------- |
+| HTML5                   | Application structure, menus, dialogs, and canvas element        |
+| CSS3                    | Layout, responsive behavior, overlays, menus, and touch controls |
+| JavaScript              | Game logic, input, state management, animations, and audio       |
+| Canvas API              | Rendering the game world, characters, enemies, and HUD           |
+| `requestAnimationFrame` | Browser-synchronized rendering loop                              |
+| `HTMLAudioElement`      | Background music and sound effects                               |
 
 The project does not require npm, a bundler, a framework, or a build process.
 
