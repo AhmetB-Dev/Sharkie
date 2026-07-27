@@ -11,79 +11,64 @@
 
 </div>
 
-## About the project
+## About
 
-Sharkie is a browser-based underwater adventure game developed without frameworks or external runtime dependencies. The player controls a small shark, explores an animated level, collects coins and poison bottles, defeats different enemy types, and faces a final boss.
+Sharkie is an underwater adventure game that runs directly in the browser without frameworks or external runtime dependencies. Players explore an animated level, collect resources, fight different enemy types, and face a final boss.
 
-The main focus of this project is a maintainable, class-based game architecture. Rendering, movement, combat, collision handling, audio, input, responsive behavior, and game-state management are divided into dedicated components.
+The project uses a modular, class-based architecture that separates rendering, movement, combat, collision handling, input, audio, responsive behavior, and game-state management.
 
-## Key features
+## Features
 
-- Animated 2D gameplay rendered on an HTML5 canvas
+- Animated 2D gameplay rendered with the HTML5 Canvas API
 - Object-oriented JavaScript architecture with separated responsibilities
 - Keyboard and mobile multi-touch controls
-- Responsive game stage with landscape-orientation support
-- Player movement, melee combat, projectiles, and an ultimate attack
-- Multiple enemy types with individual behavior and damage mechanics
-- Collectible coins and poison ammunition
-- Dynamic health, coin, ammunition, and boss status bars
-- Start screen, controls panel, settings, pause menu, retry flow, and end screens
-- Background music and sound effects with persistent mute state
-- Fullscreen support
-- Keyboard-accessible menu controls with semantic HTML and ARIA attributes
+- Responsive landscape layout with fullscreen support
+- Melee combat, projectiles, collectibles, and multiple enemy types
+- Dynamic health, ammunition, coin, and boss status displays
+- Start, settings, controls, pause, retry, and end-game screens
+- Persistent audio settings and accessible keyboard navigation
 
-## Gameplay
+## Gameplay and controls
 
-Your goal is to move through the underwater world, collect resources, use the correct attack against each enemy type, and defeat the final boss.
+Use the correct attack for each enemy type while collecting coins and poison ammunition.
 
-| Enemy       | Required attack | Primary key | Alternative key |
-| ----------- | --------------- | ----------: | --------------: |
-| Puffer fish | Tail attack     |         `J` |      `Y` or `Z` |
-| Jellyfish   | Bubble attack   |         `K` |             `X` |
-| Final boss  | Poison bubble   |         `L` |             `C` |
+| Enemy       | Attack        | Primary key | Alternative |
+| ----------- | ------------- | ----------: | ----------: |
+| Puffer fish | Tail attack   |         `J` |  `Y` or `Z` |
+| Jellyfish   | Bubble attack |         `K` |         `X` |
+| Final boss  | Poison bubble |         `L` |         `C` |
 
-### Movement and general controls
+| Action               | Keys                             |
+| -------------------- | -------------------------------- |
+| Move                 | `W`, `A`, `S`, `D` or arrow keys |
+| Toggle sound         | `M` or the menu control          |
+| Close the pause menu | `Escape`                         |
 
-| Action               | Keys                    |
-| -------------------- | ----------------------- |
-| Move left            | `A` or `Arrow Left`     |
-| Move right           | `D` or `Arrow Right`    |
-| Move up              | `W` or `Arrow Up`       |
-| Move down            | `S` or `Arrow Down`     |
-| Toggle sound         | `M` or the menu control |
-| Close the pause menu | `Escape`                |
+> Poison bubbles consume collected ammunition. Touch controls are displayed automatically on supported devices in landscape mode.
 
-> The poison-bubble attack consumes collected poison ammunition. On supported touch devices, mobile controls are displayed automatically in landscape mode.
+## Tech stack
 
-## Technology stack
+| Technology | Purpose                                                   |
+| ---------- | --------------------------------------------------------- |
+| HTML5      | Application structure, dialogs, menus, and canvas element |
+| CSS3       | Responsive layout, overlays, menus, and touch controls    |
+| JavaScript | Game logic, input, state management, animation, and audio |
+| Canvas API | Rendering the game world, characters, enemies, and HUD    |
 
-| Technology              | Purpose                                                          |
-| ----------------------- | ---------------------------------------------------------------- |
-| HTML5                   | Application structure, menus, dialogs, and canvas element        |
-| CSS3                    | Layout, responsive behavior, overlays, menus, and touch controls |
-| JavaScript              | Game logic, input, state management, animations, and audio       |
-| Canvas API              | Rendering the game world, characters, enemies, and HUD           |
-| `requestAnimationFrame` | Browser-synchronized rendering loop                              |
-| `HTMLAudioElement`      | Background music and sound effects                               |
-
-The project does not require npm, a bundler, a framework, or a build process.
+No package manager, framework, bundler, or build process is required.
 
 ## Architecture
 
-The game is organized around small classes with focused responsibilities:
+The game is divided into focused components:
 
-- **`World`** coordinates the current level and all major gameplay systems.
-- **`WorldRenderer`** renders world objects, status bars, and overlays.
-- **`WorldEntitiesUpdater`** updates moving and interactive entities.
+- **`World`**, **`WorldRenderer`**, and **`WorldEntitiesUpdater`** coordinate game state, rendering, and entity updates.
 - **`Character`** composes movement, animation, combat, idle, and damage behavior.
-- **`EnemyManager`** manages enemy interactions and final-boss behavior.
-- **`CollectibleSystem`** handles coins and ammunition pickups.
-- **`Input`** maps keyboard events to shared gameplay flags.
-- **`TouchControls`** maps pointer input to the same flags used by the keyboard.
-- **`AudioManager`** controls music, sound effects, and mute persistence.
-- **`TimerBag`** centralizes timer cleanup when a game session ends.
+- **`EnemyManager`** controls enemy interactions and final-boss behavior.
+- **`CollectibleSystem`** handles coins and poison ammunition.
+- **`Input`** and **`TouchControls`** map keyboard and pointer input to shared gameplay actions.
+- **`AudioManager`** and **`TimerBag`** manage audio state and reliable cleanup between game sessions.
 
-A fresh level instance is created for each restart so that removed enemies and collected items are not reused accidentally.
+A fresh level instance is created after each restart so collected items and defeated enemies are reset correctly.
 
 ## Project structure
 
@@ -91,7 +76,7 @@ A fresh level instance is created for each restart so that removed enemies and c
 .
 ├── assets/
 │   └── assets_sharkie/        # Images, audio, icons, and game assets
-├── css/                       # Base, menu, pause, loading, and responsive styles
+├── css/                       # Layout, menus, overlays, and responsive styles
 ├── js/
 │   └── game.js                # Application startup and global game flow
 ├── level/
@@ -107,66 +92,28 @@ A fresh level instance is created for each restart so that removed enemies and c
 
 ## Run locally
 
-### 1. Get the project
-
-Download or clone the repository and open a terminal in the project root.
-
-### 2. Start a local server
-
-Using Python:
+Clone or download the repository, open the project directory, and start a local server.
 
 ```bash
 python -m http.server 5500
 ```
 
-Alternatively, open the project with the **Live Server** extension in Visual Studio Code.
-
-### 3. Open the game
+Then open:
 
 ```text
 http://localhost:5500
 ```
 
-A local server is recommended because browsers may restrict asset and audio loading when `index.html` is opened directly from the file system.
-
-## Responsive behavior
-
-The game uses a base canvas resolution of `720 × 480` pixels and scales the game stage according to the available viewport.
-
-- Desktop users can play with the keyboard.
-- Supported touch devices receive on-screen controls.
-- Portrait mode on smaller devices displays an orientation notice.
-- Opening the pause menu or orientation notice pauses active gameplay.
-- Multi-touch input allows movement and attacks at the same time.
-
-## What I practiced
-
-This project strengthened my understanding of:
-
-- Object-oriented programming in JavaScript
-- Separation of concerns and class composition
-- Canvas rendering and sprite animation
-- Collision detection and game-state transitions
-- Keyboard, pointer, and multi-touch input
-- Resource and timer cleanup during restarts
-- Responsive UI design for desktop and mobile devices
-- Accessible menus and dialog interactions
+The project can also be started with the **Live Server** extension in Visual Studio Code. A local server is recommended because browsers may restrict asset and audio loading when `index.html` is opened directly from the file system.
 
 ## Deployment
 
-Sharkie is a static frontend project and can be deployed using:
-
-- GitHub Pages
-- Netlify
-- Vercel
-- Any static web-hosting service
-
-For GitHub Pages, publish the repository root and keep `index.html` as the entry point.
+Sharkie is a static frontend project and can be deployed with GitHub Pages, Netlify, Vercel, or another static hosting service. Keep `index.html` in the repository root as the entry point.
 
 ## Project status
 
-The main gameplay loop, enemy encounters, final-boss fight, responsive controls, sound system, menus, and restart flow are implemented. The project is maintained as a portfolio and learning project.
+The complete gameplay loop, enemy encounters, final-boss fight, responsive controls, audio system, menus, and restart flow are implemented. Sharkie is maintained as part of my software development portfolio.
 
 ## License and asset notice
 
-This repository does not currently provide an open-source software license. The code and included assets may not be copied, modified, or redistributed without permission. Some game assets may be subject to separate third-party terms; their usage rights should be verified before commercial reuse.
+This repository does not currently include an open-source license. The code and included assets may not be copied, modified, or redistributed without permission. Some assets may be subject to separate third-party usage terms and should be reviewed before commercial reuse.
