@@ -57,7 +57,7 @@
     width: 1450px;
   }
 
-  #impressumPanel {
+  .impressumPanel {
     font-size: 34px;
     max-width: 1450px;
   }
@@ -124,7 +124,7 @@
     width: 800px;
   }
 
-  #impressumPanel {
+  .impressumPanel {
     font-size: 24px;
     max-width: 940px;
   }

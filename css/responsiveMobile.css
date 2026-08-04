@@ -1,4 +1,4 @@
-#rotateOverlay {
+.rotateOverlay {
   position: fixed;
   inset: 0;
   display: none;
@@ -10,7 +10,7 @@
   padding: 24px;
 }
 
-#rotateOverlay.show {
+.rotateOverlay.show {
   display: flex;
 }
 
@@ -172,7 +172,7 @@
     cursor: pointer;
   }
 
-  #impressumPanel {
+  .impressumPanel {
     font-size: 6px;
     min-width: 330px;
   }
@@ -280,7 +280,7 @@
     cursor: pointer;
   }
 
-  #impressumPanel {
+  .impressumPanel {
     font-size: 5px;
     min-width: 250px;
   }
@@ -375,7 +375,7 @@
     cursor: pointer;
   }
 
-  #impressumPanel {
+  .impressumPanel {
     font-size: 4px;
     min-width: 220px;
   }
