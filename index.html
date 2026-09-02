@@ -10,51 +10,53 @@
     <link rel="stylesheet" href="css/loading.css" />
     <link rel="stylesheet" href="css/pause-menu.css" />
     <link rel="stylesheet" href="css/responsive.css" />
-    <link rel="stylesheet" href="css/responsiveMobile.css" />
+    <link rel="stylesheet" href="css/responsive-mobile.css" />
+    <link rel="stylesheet" href="css/start-screen.css" />
+    <link rel="stylesheet" href="css/game-responsive.css" />
 
-    <script defer src="models/drawableObject.class.js"></script>
-    <script defer src="models/timerBag.class.js"></script>
+    <script defer src="models/drawable-object.class.js"></script>
+    <script defer src="models/timer-bag.class.js"></script>
     <script defer src="models/movable-object.class.js"></script>
-    <script defer src="models/character/character_assets.class.js"></script>
-    <script defer src="models/enemy/enemy_assets.class.js"></script>
+    <script defer src="models/character/character-assets.class.js"></script>
+    <script defer src="models/enemy/enemy-assets.class.js"></script>
     <script defer src="models/input.class.js"></script>
-    <script defer src="models/statusbar.class.js"></script>
-    <script defer src="models/character/characterActionLock.class.js"></script>
-    <script defer src="models/character/characterMovement.class.js"></script>
-    <script defer src="models/character/characterAnimator.class.js"></script>
-    <script defer src="models/character/character_controll.class.js"></script>
-    <script defer src="models/character/characterSprites.class.js"></script>
-    <script defer src="models/character/characterIdle.class.js"></script>
-    <script defer src="models/character/characterCombat.class.js"></script>
-    <script defer src="models/character/characterMeleeRange.class.js"></script>
-    <script defer src="models/character/characterDamage.class.js"></script>
+    <script defer src="models/status-bars.class.js"></script>
+    <script defer src="models/character/character-action-lock.class.js"></script>
+    <script defer src="models/character/character-movement.class.js"></script>
+    <script defer src="models/character/character-animator.class.js"></script>
+    <script defer src="models/character/character-controller.class.js"></script>
+    <script defer src="models/character/character-sprites.class.js"></script>
+    <script defer src="models/character/character-idle.class.js"></script>
+    <script defer src="models/character/character-combat.class.js"></script>
+    <script defer src="models/character/character-melee-range.class.js"></script>
+    <script defer src="models/character/character-damage.class.js"></script>
 
     <script defer src="models/character/character.class.js"></script>
-    <script defer src="models/enemy/pufferFish.class.js"></script>
+    <script defer src="models/enemy/puffer-fish.class.js"></script>
     <script defer src="models/enemy/jellyfish.class.js"></script>
     <script defer src="models/enemy/boss.class.js"></script>
-    <script defer src="models/ambientObject.class.js"></script>
+    <script defer src="models/ambient-object.class.js"></script>
     <script defer src="models/background-object.class.js"></script>
-    <script defer src="models/backgroundCache.class.js"></script>
-    <script defer src="models/ammoPickup.class.js"></script>
+    <script defer src="models/background-cache.class.js"></script>
+    <script defer src="models/ammo-pickup.class.js"></script>
     <script defer src="models/coin.class.js"></script>
-    <script defer src="models/bubbleProjectile.class.js"></script>
+    <script defer src="models/bubble-projectile.class.js"></script>
     <script defer src="models/throwable-object.class.js"></script>
     <script defer src="models/level.class.js"></script>
     <script defer src="level/level1.js"></script>
-    <script defer src="models/enemy/enemy_Manager.class.js"></script>
-    <script defer src="models/collectibleSystem.class.js"></script>
-    <script defer src="models/world/WorldHud.class.js"></script>
-    <script defer src="models/world/WorldPickups.class.js"></script>
-    <script defer src="models/world/WorldEntitiesUpdater.class.js"></script>
-    <script defer src="models/world/worldEndFlow.class.js"></script>
-    <script defer src="models/world/worldRenderer.class.js"></script>
+    <script defer src="models/enemy/enemy-manager.class.js"></script>
+    <script defer src="models/collectible-system.class.js"></script>
+    <script defer src="models/world/world-hud.class.js"></script>
+    <script defer src="models/world/world-pickups.class.js"></script>
+    <script defer src="models/world/world-entities-updater.class.js"></script>
+    <script defer src="models/world/world-end-flow.class.js"></script>
+    <script defer src="models/world/world-renderer.class.js"></script>
     <script defer src="models/world/world.class.js"></script>
-    <script defer src="models/gameOver.class.js"></script>
-    <script defer src="models/touchControll.class.js"></script>
-    <script defer src="models/touchButton.class.js"></script>
-    <script defer src="models/start.class.js"></script>
-    <script defer src="models/audio.class.js"></script>
+    <script defer src="models/end-screen.class.js"></script>
+    <script defer src="models/touch-controls.class.js"></script>
+    <script defer src="models/touch-button.class.js"></script>
+    <script defer src="models/start-screen.class.js"></script>
+    <script defer src="models/audio-manager.class.js"></script>
     <script defer src="js/game.js"></script>
   </head>
 
@@ -127,13 +129,21 @@
 
     <template id="startScreenTemplate">
       <div class="startCard">
-        <h1 class="startTitle">SHARKIE</h1>
+        <div class="startIntro">
+          <p class="startEyebrow">UNDERWATER ADVENTURE</p>
+          <h1 class="startTitle">SHARKIE</h1>
+          <p class="startDescription">
+            Dive into a colorful ocean world, collect treasures and face the creatures of the deep.
+          </p>
+        </div>
 
         <div class="startActions">
-          <button id="startBtn" type="button" class="pillBtn">START</button>
+          <button id="startBtn" type="button" class="pillBtn startPrimaryBtn">
+            <span>START GAME</span><span class="startArrow" aria-hidden="true">→</span>
+          </button>
           <button id="settingsBtn" type="button" class="pillBtn">SETTINGS</button>
           <button id="fsBtn" type="button" class="pillBtn">FULLSCREEN</button>
-          <button id="impressumBtn" type="button" class="pillBtn pillBtnSmall">IMPRESSUM</button>
+          <button id="impressumBtn" type="button" class="pillBtn pillBtnSmall">IMPRESSUM &amp; LEGAL</button>
         </div>
 
         <div id="settingsPanel" class="settingsPanel">
