@@ -12,11 +12,6 @@
   inset: 0;
 }
 
-.startCard {
-  position: relative;
-  z-index: 1;
-}
-
 .startScreen.show {
   display: flex;
 }
@@ -26,22 +21,21 @@ button {
 }
 
 .startCard {
+  position: relative;
+  z-index: 1;
   padding: 34px 38px;
   border-radius: 64px;
   color: black;
   text-align: center;
 }
 
-.startCard.settingsOpen .startActions {
+.startCard.settingsOpen .startActions,
+.startCard.settingsOpen .startTitle {
   display: none;
 }
 
 .startCard.settingsOpen .settingsPanel {
   margin-top: 0;
-}
-
-.startCard.settingsOpen .startTitle {
-  display: none;
 }
 
 .startTitle {
@@ -54,13 +48,12 @@ button {
 .settingsBtn,
 .closeBtn {
   padding: 14px 30px;
-  border-radius: 999px;
   border: 5px solid #fff;
+  border-radius: 999px;
   background: #7fffe0;
   color: #2f2a71;
   font-weight: 900;
   letter-spacing: 1px;
-  cursor: pointer;
   text-transform: uppercase;
 }
 
@@ -78,9 +71,9 @@ button {
 
 .startActions {
   display: flex;
-  gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
+  gap: 14px;
   margin-top: 10px;
 }
 
@@ -88,11 +81,11 @@ button {
   display: none;
   margin-top: 18px;
   padding: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   background: rgb(0 0 0 / 70%);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  text-align: left;
   color: white;
+  text-align: left;
 }
 
 .settingsPanel.show {
@@ -109,8 +102,8 @@ button {
 
 .settingRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 4em;
   margin: 20px 0;
 }
@@ -122,42 +115,18 @@ button {
 }
 
 .controlsGrid {
-  gap: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 14px;
 }
 
 .controlsImg {
   width: 230px;
   height: 130px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.06);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.controlsGrid {
-  grid-template-columns: 1fr 1fr;
-}
-
-.startCard.settingsOpen .startActions {
-  display: none;
-}
-
-.startScreen .muteButton.pillBtn {
-  border: 6px solid #fff;
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.muteButton {
-  display: none;
-}
-
-.startScreen .muteButton {
-  display: inline-block;
 }
 
 .muteButton {
@@ -166,32 +135,32 @@ button {
 
 .controlsTable {
   width: 100%;
+  margin-top: 10px;
   border-collapse: separate;
   border-spacing: 0 10px;
-  margin-top: 10px;
 }
 
 .controlsTable th {
-  font-size: 24px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  opacity: 0.85;
   padding: 0 8px 4px;
+  font-size: 24px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
 }
 
 .controlsTable td {
-  padding: 0px 8px;
+  padding: 0 8px;
 }
 
 .keyPill {
   display: inline-block;
   min-width: 26px;
-  text-align: center;
   padding: 2px 10px;
-  border-radius: 999px;
   border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
   font-weight: 900;
+  text-align: center;
 }
 
 .controlsHint {
@@ -204,16 +173,16 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 8px;
-  flex-wrap: wrap;
 }
 
 .keyRowGroup {
   display: flex;
-  gap: 8px;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
 .keyRowSep {
@@ -223,15 +192,14 @@ button {
 
 .inlineActionBtn {
   padding: 8px 14px;
-  border-radius: 14px;
   border: 3px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
   background: rgba(0, 0, 0, 0.18);
   color: white;
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 1px;
   text-transform: uppercase;
-  cursor: pointer;
 }
 
 .inlineActionBtn:hover {
@@ -246,17 +214,15 @@ button {
 
 .settingsPanel input[type="checkbox"],
 .soundToggle {
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 8px;
-
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  background: rgba(0, 0, 0, 0.18);
-  cursor: pointer;
-
   display: inline-grid;
   place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  appearance: none;
+  background: rgba(0, 0, 0, 0.18);
+  cursor: pointer;
 }
 
 .settingsPanel input[type="checkbox"]:checked,
@@ -270,8 +236,8 @@ button {
   content: "";
   width: 10px;
   height: 6px;
-  border-left: 3px solid rgba(255, 255, 255, 0.9);
   border-bottom: 3px solid rgba(255, 255, 255, 0.9);
+  border-left: 3px solid rgba(255, 255, 255, 0.9);
   transform: rotate(-45deg) translateY(-1px);
   opacity: 0;
 }
@@ -282,8 +248,8 @@ button {
 }
 
 .impressumPanel {
-  font-size: 20px;
   max-width: 960px;
+  font-size: 20px;
 }
 
 .legalText p {
@@ -292,11 +258,11 @@ button {
 }
 
 .legalPlaceholder {
-  opacity: 0.9;
   font-style: italic;
+  opacity: 0.9;
 }
 
 .legalHint {
-  opacity: 0.9;
   font-size: 14px;
+  opacity: 0.9;
 }

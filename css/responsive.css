@@ -1,34 +1,4 @@
-@media (min-width: 1960px) and (max-width: 3680px) {
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 24px;
-  }
-
-  .startTitle {
-    font-size: 50px;
-    margin: 0;
-    margin-bottom: 50px;
-  }
-
-  h1 {
-    font-size: 50px;
-  }
-
-  .startCard {
-    padding: 94px 118px;
-  }
-
-  .controlsImg {
-    width: 450px;
-    height: 260px;
-  }
-
+@media (min-width: 768px) and (max-width: 3680px) {
   .controlsGrid {
     margin-top: 20px;
   }
@@ -36,219 +6,53 @@
   .settingsActions {
     margin-top: 50px;
   }
+}
+
+@media (min-width: 1960px) and (max-width: 3680px) {
+  .controlsImg {
+    width: 450px;
+    height: 260px;
+  }
 
   .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 44px;
     font-size: 40px;
   }
 
   .inlineActionBtn {
-    padding: 8px 14px;
     font-size: 22px;
   }
 
   input[type="checkbox" i] {
     transform: scale(1.8);
   }
-
-  canvas {
-    background-color: black;
-    width: 1450px;
-  }
-
-  .impressumPanel {
-    font-size: 34px;
-    max-width: 1450px;
-  }
 }
 
 @media (min-width: 1440px) and (max-width: 1960px) {
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 18px;
-  }
-
-  .startTitle {
-    font-size: 44px;
-    margin-bottom: 40px;
-  }
-
-  h1 {
-    font-size: 50px;
-    margin: 0;
-    margin-bottom: 5px;
-  }
-
-  .startCard {
-    padding: 54px 38px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 30px;
-    font-size: 38px;
-  }
-
   .controlsImg {
-    width: 400px;
-    height: 250px;
-  }
-
-  .controlsGrid {
-    margin-top: 20px;
-  }
-
-  .settingsActions {
-    margin-top: 50px;
+    width: clamp(400px, calc(261.5px + 9.615vw), 450px);
+    height: clamp(250px, calc(222.3px + 1.923vw), 260px);
   }
 
   .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 40px;
     font-size: 28px;
   }
 
   input[type="checkbox" i] {
     transform: scale(1.8);
   }
-
-  canvas {
-    background-color: black;
-    width: 800px;
-  }
-
-  .impressumPanel {
-    font-size: 24px;
-    max-width: 940px;
-  }
 }
 
-@media (min-width: 1080px) and (max-width: 1440px) {
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 16px;
-  }
-
-  .startTitle {
-    font-size: 40px;
-    margin-bottom: 40px;
-  }
-
-  h1 {
-    font-size: 50px;
-    margin: 0;
-  }
-
-  .startCard {
-    padding: 54px 38px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 30px;
-    font-size: 32px;
-  }
-
-  .controlsGrid {
-    margin-top: 20px;
-  }
-
-  .settingsActions {
-    margin-top: 50px;
-  }
+@media (min-width: 768px) and (max-width: 1440px) {
   .controlsImg {
     width: 260px;
     height: 160px;
   }
 
   .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 24px;
     font-size: 38px;
   }
 
   input[type="checkbox" i] {
     transform: scale(1.6);
-  }
-
-  canvas {
-    background-color: black;
-    width: 900px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1080px) {
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 16px;
-  }
-
-  .startTitle {
-    font-size: 40px;
-    margin-bottom: 40px;
-  }
-
-  h1 {
-    font-size: 50px;
-    margin: 0;
-    margin-bottom: 5px;
-  }
-
-  .startCard {
-    padding: 54px 38px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 30px;
-    font-size: 32px;
-  }
-
-  .controlsImg {
-    width: 260px;
-    height: 160px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 24px;
-    font-size: 38px;
-  }
-
-  input[type="checkbox" i] {
-    transform: scale(1.6);
-  }
-
-  .controlsGrid {
-    margin-top: 20px;
-  }
-
-  .settingsActions {
-    margin-top: 50px;
-  }
-
-  canvas {
-    background-color: black;
-    width: 760px;
-    height: 500px;
   }
 }

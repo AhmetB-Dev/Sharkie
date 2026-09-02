@@ -1,13 +1,13 @@
 .rotateOverlay {
   position: fixed;
   inset: 0;
-  display: none;
   z-index: 9999;
+  display: none;
   align-items: center;
   justify-content: center;
+  padding: 24px;
   background: black;
   text-align: center;
-  padding: 24px;
 }
 
 .rotateOverlay.show {
@@ -23,107 +23,55 @@
 }
 
 .phone {
+  position: relative;
   width: 70px;
   height: 120px;
+  margin: 0 auto 16px;
   border: 3px solid white;
   border-radius: 12px;
-  margin: 0 auto 16px;
-  position: relative;
   animation: rotatePhone 1.6s ease-in-out infinite;
 }
 
 .phone::after {
   content: "";
   position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 18px;
+  inset: 10px 10px 18px;
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 8px;
 }
 
 @keyframes rotatePhone {
-  0% {
-    transform: rotate(0deg);
-  }
-  40% {
-    transform: rotate(90deg);
-  }
-  60% {
-    transform: rotate(90deg);
-  }
+  0%,
   100% {
     transform: rotate(0deg);
   }
+
+  40%,
+  60% {
+    transform: rotate(90deg);
+  }
 }
 
-@media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1800px) {
-  h1 {
-    font-size: 18px;
-    display: none;
-  }
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 8px;
-    padding: 8px 18px;
-  }
-
-  .pillBtnSmall {
-    padding: 4px;
-    border-width: 4px;
-  }
-
-  .startTitle {
-    font-size: 20px;
-    margin-top: 10px;
-    color: black;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 30px;
-    margin-bottom: 5px;
-  }
-  .startCard {
-    padding: 0px;
-    background-color: unset;
-    padding: 34px 38px;
-    border-radius: 64px;
-    color: #fff;
-    text-align: center;
-  }
-
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1800px),
+  (pointer: coarse) and (orientation: landscape) and (max-height: 600px) and (min-width: 320px) and (max-width: 640px) {
   .controlsImg {
     width: 90px;
     height: 60px;
   }
 
   .controlsTable th {
+    padding: 0 0 2px;
     font-size: 8px;
-    padding: 0 0px 2px;
   }
 
   .controlsTable td {
-    padding: 0px 0px;
+    padding: 0;
   }
 
   .keyPill {
     display: unset;
     min-width: unset;
-    text-align: center;
     padding: 2px 8px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.06);
-    font-weight: 900;
   }
 
   .settingsActions {
@@ -135,215 +83,47 @@
   }
 
   .controlsGrid {
-    display: flex;
-    gap: 14px;
     justify-content: space-between;
   }
 
+  .startCard.settingsOpen .settingsPanel {
+    width: 240px;
+    font-size: 8px;
+  }
+
+  .inlineActionBtn {
+    padding: 4px;
+    font-size: 4px;
+  }
+}
+
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1800px) {
   input[type="checkbox" i] {
     transform: scale(1);
   }
 
-  canvas {
-    background-color: black;
-    width: 640px;
-    height: 320px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 17px;
-    font-size: 12px;
-    width: max(240px, 0px);
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 17px;
-    font-size: 8px;
-    width: max(240px, 0px);
-  }
-
-  .inlineActionBtn {
-    padding: 4px 4px;
-    color: #fff;
-    font-size: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-
   .impressumPanel {
-    font-size: 6px;
     min-width: 330px;
   }
 }
 
 @media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) and (min-width: 320px) and (max-width: 640px) {
-  h1 {
-    font-size: 18px;
-    margin-bottom: 5px;
-    display: none;
-  }
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 8px;
-    padding: 8px 18px;
-  }
-
-  .pillBtnSmall {
-    padding: 4px;
-    border-width: 4px;
-  }
-
-  .startTitle {
-    font-size: 20px;
-    margin-top: 10px;
-    color: black;
-    margin-bottom: 20px;
-  }
-
-  .startCard {
-    padding: 0px;
-    background-color: unset;
-    padding: 34px 38px;
-    border-radius: 64px;
-    color: #fff;
-    text-align: center;
-  }
-
-  .controlsImg {
-    width: 90px;
-    height: 60px;
-  }
-
-  .controlsTable th {
-    font-size: 8px;
-    padding: 0 0px 2px;
-  }
-
-  .controlsTable td {
-    padding: 0px 0px;
-  }
-
-  .keyPill {
-    display: unset;
-    min-width: unset;
-    text-align: center;
-    padding: 2px 8px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.06);
-    font-weight: 900;
-  }
-
-  .settingsActions {
-    margin-top: 21px;
-  }
-
-  tbody {
-    font-size: 8px;
-  }
-
-  .controlsGrid {
-    display: flex;
-    gap: 14px;
-    justify-content: space-between;
-  }
-
   input[type="checkbox" i] {
     transform: scale(0.8);
   }
-  canvas {
-    background-color: black;
-    width: 320px;
-    height: 240px;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 17px;
-    font-size: 8px;
-    width: max(240px, 0px);
-  }
-
-  .inlineActionBtn {
-    padding: 4px 4px;
-    color: #fff;
-    font-size: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
 
   .impressumPanel {
-    font-size: 5px;
     min-width: 250px;
   }
 }
 
-@media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) and (min-width: 0px) and (max-width: 320px) {
-  h1 {
-    font-size: 18px;
-    display: none;
-  }
-  .startCard {
-    padding: 84px 108px;
-  }
-
-  .pillBtn,
-  .startBtn,
-  .settingsBtn,
-  .closeBtn {
-    font-size: 8px;
-    padding: 8px 18px;
-  }
-
-  .pillBtnSmall {
-    padding: 4px;
-    border-width: 4px;
-  }
-
-  .startTitle {
-    font-size: 20px;
-    margin-top: 10px;
-    color: black;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 30px;
-    margin-bottom: 5px;
-  }
-  .startCard {
-    padding: 0px;
-    background-color: unset;
-    width: min(980px, 89vw);
-    padding: 34px 38px;
-    border-radius: 64px;
-    color: #fff;
-    text-align: center;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 10px;
-    font-size: 8px;
-  }
-
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) and (max-width: 320px) {
   .controlsImg {
     width: 110px;
     height: 80px;
   }
 
   .controlsGrid {
-    display: flex;
-    gap: 14px;
     justify-content: space-between;
   }
 
@@ -355,28 +135,16 @@
     transform: scale(0.8);
   }
 
-  canvas {
-    background-color: black;
-    width: 300px;
-    height: 230px;
-  }
-
   .startCard.settingsOpen .settingsPanel {
-    margin-top: 0px;
-    padding: 18px;
     font-size: 8px;
   }
 
   .inlineActionBtn {
-    padding: 4px 4px;
-    color: #fff;
+    padding: 4px;
     font-size: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
   }
 
   .impressumPanel {
-    font-size: 4px;
     min-width: 220px;
   }
 }
