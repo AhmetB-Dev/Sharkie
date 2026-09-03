@@ -83,17 +83,10 @@
   }
 
   .controlsGrid {
-    justify-content: space-between;
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    width: 240px;
-    font-size: 8px;
-  }
-
-  .inlineActionBtn {
-    padding: 4px;
-    font-size: 4px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
   }
 }
 

@@ -246,6 +246,7 @@
     width: min(720px, calc(100vw - 20px));
     max-height: calc(100vh - 20px);
     padding: 12px;
+    max-width: 370px;
   }
 
   .startScreen .startCard.settingsOpen .settingsPanel {
@@ -254,26 +255,6 @@
     border-radius: 18px;
   }
 }
-
-@media (max-width: 420px) {
-  .startScreen .startCard {
-    padding-inline: 18px;
-  }
-
-  .startScreen .startTitle {
-    font-size: clamp(42px, 14vw, 56px);
-  }
-
-  .startScreen .startActions {
-    grid-template-columns: 1fr;
-  }
-
-  .startScreen .startPrimaryBtn,
-  .startScreen .pillBtnSmall {
-    grid-column: 1;
-  }
-}
-
 
 @media (prefers-reduced-motion: reduce) {
   .startScreen .pillBtn {
