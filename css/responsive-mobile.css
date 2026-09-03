@@ -91,20 +91,12 @@
 }
 
 @media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) and (min-width: 610px) and (max-width: 1800px) {
-  input[type="checkbox" i] {
-    transform: scale(1);
-  }
-
   .impressumPanel {
     min-width: 330px;
   }
 }
 
 @media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) and (min-width: 320px) and (max-width: 640px) {
-  input[type="checkbox" i] {
-    transform: scale(0.8);
-  }
-
   .impressumPanel {
     min-width: 250px;
   }
@@ -124,18 +116,6 @@
     margin-top: 50px;
   }
 
-  input[type="checkbox" i] {
-    transform: scale(0.8);
-  }
-
-  .startCard.settingsOpen .settingsPanel {
-    font-size: 8px;
-  }
-
-  .inlineActionBtn {
-    padding: 4px;
-    font-size: 4px;
-  }
 
   .impressumPanel {
     min-width: 220px;
