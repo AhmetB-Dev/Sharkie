@@ -182,14 +182,24 @@ class Boss extends MovableObject {
   followCharacter(character) {
     const deltaX = character.x - this.x;
     const deltaY = character.y - this.y;
-    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
-    const step = 15;
+    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    if (dist === 0) {
+      this.isAttacking = true;
+      return;
+    }
+
+    const step = Math.min(15, dist);
 
     this.x += (deltaX / dist) * step;
     this.y += (deltaY / dist) * step;
 
     this.clampToWorldY();
-    this.otherDirection = deltaX > 0;
+
+    if (Math.abs(deltaX) > 1) {
+      this.otherDirection = deltaX > 0;
+    }
+
     this.isAttacking = dist < this.attackRange;
   }
 
