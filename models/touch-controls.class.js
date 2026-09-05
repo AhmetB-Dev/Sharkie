@@ -50,7 +50,7 @@ class TouchControls {
    * @returns {string}
    */
   getBasePath() {
-    return "assets/assets_sharkie/6.Botones/mobile_controls/";
+    return "assets/controls/mobile/";
   }
 
   /**
@@ -60,13 +60,13 @@ class TouchControls {
    */
   buildButtons(basePath) {
     return {
-      left: this.createHoldButton("LEFT", basePath + "touch_move_left_circle.webp"),
-      right: this.createHoldButton("RIGHT", basePath + "touch_move_right_circle.webp"),
-      up: this.createHoldButton("UP", basePath + "touch_jump_circle.webp"),
-      down: this.createHoldButton("DOWN", basePath + "touch_move_down_circle.webp"),
-      atk1: this.createPulseButton("ATA1", basePath + "touch_attack_bubbleshot_circle.webp", 220),
-      melee: this.createPulseButton("ATA2", basePath + "touch_melee_circle.webp", 220),
-      ult: this.createPulseButton("ULTIMATE", basePath + "touch_attack_ultimate_bubble_no_cross.webp", 260),
+      left: this.createHoldButton("LEFT", basePath + "touch-move-left-circle.webp"),
+      right: this.createHoldButton("RIGHT", basePath + "touch-move-right-circle.webp"),
+      up: this.createHoldButton("UP", basePath + "touch-jump-circle.webp"),
+      down: this.createHoldButton("DOWN", basePath + "touch-move-down-circle.webp"),
+      atk1: this.createPulseButton("ATA1", basePath + "touch-attack-bubbleshot-circle.webp", 220),
+      melee: this.createPulseButton("ATA2", basePath + "touch-melee-circle.webp", 220),
+      ult: this.createPulseButton("ULTIMATE", basePath + "touch-attack-ultimate-bubble-no-cross.webp", 260),
     };
   }
 

@@ -62,20 +62,20 @@ class AudioManager {
   soundData() {
     /** @type {Record<SoundName, HTMLAudioElement>} */
     this.sounds = {
-      coin: this.createSound("assets/assets_sharkie/audio/coin.wav"),
-      tailHit: this.createSound("assets/assets_sharkie/audio/tail.wav"),
-      bubbleShot: this.createSound("assets/assets_sharkie/audio/shot.wav"),
-      ammoPickup: this.createSound("assets/assets_sharkie/audio/ammo.wav"),
-      bossHit: this.createSound("assets/assets_sharkie/audio/boss_hit.wav"),
-      bossIntro: this.createSound("assets/assets_sharkie/audio/boss_roar.wav"),
-      hitMaker: this.createSound("assets/assets_sharkie/audio/hit.wav"),
-      enemyDeath: this.createSound("assets/assets_sharkie/audio/enemy.wav"),
+      coin: this.createSound("assets/audio/coin.wav"),
+      tailHit: this.createSound("assets/audio/tail.wav"),
+      bubbleShot: this.createSound("assets/audio/shot.wav"),
+      ammoPickup: this.createSound("assets/audio/ammo.wav"),
+      bossHit: this.createSound("assets/audio/boss-hit.wav"),
+      bossIntro: this.createSound("assets/audio/boss-roar.wav"),
+      hitMaker: this.createSound("assets/audio/hit.wav"),
+      enemyDeath: this.createSound("assets/audio/enemy.wav"),
     };
 
     /** @type {Record<MusicKey, HTMLAudioElement>} */
     this.music = {
-      title: this.createMusic("assets/assets_sharkie/audio/bg_menu.wav"),
-      game: this.createMusic("assets/assets_sharkie/audio/bg_main.wav"),
+      title: this.createMusic("assets/audio/bg-menu.wav"),
+      game: this.createMusic("assets/audio/bg-main.wav"),
     };
   }
 

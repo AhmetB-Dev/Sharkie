@@ -47,6 +47,9 @@ class DrawableObject {
    */
   loadImage(path) {
     this.img = new Image();
+    this.img.addEventListener("error", () => {
+      console.error(`[Sharkie] Failed to load image: ${path}`);
+    });
     this.img.src = path;
   }
 
@@ -56,8 +59,17 @@ class DrawableObject {
    * @returns {void}
    */
   draw(ctx) {
-    if (!this.img) return;
+    if (!this.isImageReady(this.img)) return;
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+
+  /**
+   * Returns whether an image finished loading successfully.
+   * @param {HTMLImageElement|undefined} img
+   * @returns {boolean}
+   */
+  isImageReady(img) {
+    return !!img && img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
   }
 
   /**
@@ -68,6 +80,9 @@ class DrawableObject {
   animationImage(array) {
     array.forEach((path) => {
       let img = new Image();
+      img.addEventListener("error", () => {
+        console.error(`[Sharkie] Failed to load animation image: ${path}`);
+      });
       img.src = path;
       this.imageCache[path] = img;
     });

@@ -263,6 +263,7 @@ function openPauseMenu() {
   if (!overlay || !world) return;
 
   pauseMenuReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : menuButton;
+  overlay.removeAttribute("inert");
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden", "false");
   menuButton?.setAttribute("aria-expanded", "true");
@@ -287,8 +288,13 @@ function closePauseMenu(resumeGame = true) {
   if (!overlay) return;
 
   const wasOpen = overlay.classList.contains("show");
+  const focusedElement = document.activeElement;
+  if (focusedElement instanceof HTMLElement && overlay.contains(focusedElement)) {
+    focusedElement.blur();
+  }
   overlay.classList.remove("show");
   overlay.setAttribute("aria-hidden", "true");
+  overlay.setAttribute("inert", "");
   menuButton?.setAttribute("aria-expanded", "false");
   document.body.classList.remove("pauseMenuOpen");
 

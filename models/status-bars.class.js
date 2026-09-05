@@ -10,42 +10,42 @@ class Statusbars extends DrawableObject {
 
   /** @type {string[]} */
   STATUS_HEALTH = [
-    "assets/assets_sharkie/4. Marcadores/green/Life/0_  copia 3.webp",
-    "assets/assets_sharkie/4. Marcadores/green/Life/20_ copia 4.webp",
-    "assets/assets_sharkie/4. Marcadores/green/Life/40_  copia 3.webp",
-    "assets/assets_sharkie/4. Marcadores/green/Life/60_  copia 3.webp",
-    "assets/assets_sharkie/4. Marcadores/green/Life/80_  copia 3.webp",
-    "assets/assets_sharkie/4. Marcadores/green/Life/100_  copia 2.webp",
+    "assets/ui/green/life/0-copia-3.webp",
+    "assets/ui/green/life/20-copia-4.webp",
+    "assets/ui/green/life/40-copia-3.webp",
+    "assets/ui/green/life/60-copia-3.webp",
+    "assets/ui/green/life/80-copia-3.webp",
+    "assets/ui/green/life/100-copia-2.webp",
   ];
 
   /** @type {string[]} */
   STATUS_COIN = [
-    "assets/assets_sharkie/4. Marcadores/orange/0_  copia 2.webp",
-    "assets/assets_sharkie/4. Marcadores/orange/20_  copia.webp",
-    "assets/assets_sharkie/4. Marcadores/orange/40_  copia 2.webp",
-    "assets/assets_sharkie/4. Marcadores/orange/60_  copia 2.webp",
-    "assets/assets_sharkie/4. Marcadores/orange/80_  copia 2.webp",
-    "assets/assets_sharkie/4. Marcadores/orange/100_ copia 2.webp",
+    "assets/ui/orange/0-copia-2.webp",
+    "assets/ui/orange/20-copia.webp",
+    "assets/ui/orange/40-copia-2.webp",
+    "assets/ui/orange/60-copia-2.webp",
+    "assets/ui/orange/80-copia-2.webp",
+    "assets/ui/orange/100-copia-2.webp",
   ];
 
   /** @type {string[]} */
   STATUS_AMMO = [
-    "assets/assets_sharkie/4. Marcadores/Purple/0_.webp",
-    "assets/assets_sharkie/4. Marcadores/Purple/20_.webp",
-    "assets/assets_sharkie/4. Marcadores/Purple/40_.webp",
-    "assets/assets_sharkie/4. Marcadores/Purple/60_.webp",
-    "assets/assets_sharkie/4. Marcadores/Purple/80_.webp",
-    "assets/assets_sharkie/4. Marcadores/Purple/100_.webp",
+    "assets/ui/purple/0.webp",
+    "assets/ui/purple/20.webp",
+    "assets/ui/purple/40.webp",
+    "assets/ui/purple/60.webp",
+    "assets/ui/purple/80.webp",
+    "assets/ui/purple/100.webp",
   ];
 
   /** @type {string[]} */
   STATUS_BOSS = [
-    "assets/assets_sharkie/4. Marcadores/boss_bar/0.webp",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/20.webp",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/40.webp",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/60.webp",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/80.webp",
-    "assets/assets_sharkie/4. Marcadores/boss_bar/100.webp",
+    "assets/ui/boss-bar/0.webp",
+    "assets/ui/boss-bar/20.webp",
+    "assets/ui/boss-bar/40.webp",
+    "assets/ui/boss-bar/60.webp",
+    "assets/ui/boss-bar/80.webp",
+    "assets/ui/boss-bar/100.webp",
   ];
 
   constructor() {

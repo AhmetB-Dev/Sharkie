@@ -8,10 +8,10 @@ class Coin extends MovableObject {
 
   /** @type {string[]} */
   IMAGES_COIN = [
-    "assets/assets_sharkie/4. Marcadores/1. Coins/1.webp",
-    "assets/assets_sharkie/4. Marcadores/1. Coins/2.webp",
-    "assets/assets_sharkie/4. Marcadores/1. Coins/3.webp",
-    "assets/assets_sharkie/4. Marcadores/1. Coins/4.webp",
+    "assets/ui/1-coins/1.webp",
+    "assets/ui/1-coins/2.webp",
+    "assets/ui/1-coins/3.webp",
+    "assets/ui/1-coins/4.webp",
   ];
 
   /**

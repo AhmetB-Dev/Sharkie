@@ -74,8 +74,7 @@ A fresh level instance is created after each restart so collected items and defe
 
 ```text
 .
-├── assets/
-│   └── assets_sharkie/        # Images, audio, icons, and game assets
+├── assets/                    # Images, audio, icons, and game assets
 ├── css/                       # Layout, menus, overlays, and responsive styles
 ├── js/
 │   └── game.js                # Application startup and global game flow

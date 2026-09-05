@@ -6,28 +6,28 @@
 class EndScreen extends DrawableObject {
   /** @type {string[]} */
   static WIN_TITLES = [
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 22.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Mesa de trabajo 1.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 19.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 20.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/You win/Recurso 21.webp",
+    "assets/controls/tittles/you-win/recurso-22.webp",
+    "assets/controls/tittles/you-win/mesa-de-trabajo-1.webp",
+    "assets/controls/tittles/you-win/recurso-19.webp",
+    "assets/controls/tittles/you-win/recurso-20.webp",
+    "assets/controls/tittles/you-win/recurso-21.webp",
   ];
 
   /** @type {string[]} */
   static GAME_OVER_TITLES = [
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 9.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 10.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 11.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 12.webp",
-    "assets/assets_sharkie/6.Botones/Tittles/Game Over/Recurso 13.webp",
+    "assets/controls/tittles/game-over/recurso-9.webp",
+    "assets/controls/tittles/game-over/recurso-10.webp",
+    "assets/controls/tittles/game-over/recurso-11.webp",
+    "assets/controls/tittles/game-over/recurso-12.webp",
+    "assets/controls/tittles/game-over/recurso-13.webp",
   ];
 
   /** @type {string[]} */
   static TRY_AGAIN_IMAGES = [
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 16.webp",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 15.webp",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 17.webp",
-    "assets/assets_sharkie/6.Botones/Try again/Recurso 18.webp",
+    "assets/controls/try-again/recurso-16.webp",
+    "assets/controls/try-again/recurso-15.webp",
+    "assets/controls/try-again/recurso-17.webp",
+    "assets/controls/try-again/recurso-18.webp",
   ];
 
   /**
