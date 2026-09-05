@@ -203,7 +203,7 @@
 
   .startScreen .startCard {
     width: min(608px, calc(100vw - 20px));
-    padding: clamp(18px, 5vw, 28px) clamp(20px, 5.5vw, 30px) clamp(20px, 5vw, 28px);
+    padding: clamp(18px, 1vw, 28px) clamp(20px, 5.5vw, 30px) clamp(10px, 1vw, 28px);
     border-radius: 28px;
   }
 
@@ -214,7 +214,7 @@
 
   .startScreen .startTitle {
     margin-bottom: 8px;
-    font-size: clamp(48px, 11vw, 62px);
+    font-size: clamp(48px, 8vw, 62px);
     line-height: 1;
   }
 
